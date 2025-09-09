@@ -133,6 +133,7 @@ public class AprilTagDetectionTest extends LinearOpMode {
         }
 
         servo = hardwareMap.get(Servo.class, "servo");
+        servo.setDirection(Servo.Direction.FORWARD);
         servo.setPosition(0.5);
     }
 
@@ -158,7 +159,7 @@ public class AprilTagDetectionTest extends LinearOpMode {
             servo.setPosition(servo.getPosition() - servoChange);
             telemetry.addLine("TURNING LEFT");
         }
-        else if(detection.ftcPose.x < -2){ //The positive of that arbitrary number
+        else if(detection.ftcPose.x < -2){ //The negative of that arbitrary number
             servo.setPosition(servo.getPosition() + servoChange);
             telemetry.addLine("TURNING RIGHT");
         }
