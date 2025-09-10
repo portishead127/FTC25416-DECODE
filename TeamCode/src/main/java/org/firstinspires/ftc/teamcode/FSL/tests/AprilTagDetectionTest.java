@@ -78,7 +78,8 @@ public class AprilTagDetectionTest extends LinearOpMode {
      */
     private VisionPortal visionPortal;
     private Servo servo;
-    final double servoChange = 0.01;
+    final double outerServoChange = 0.005;
+    final double innerServoChange = 0.001;
     private boolean lastLookedRight = false;
 
     @Override
@@ -158,12 +159,12 @@ public class AprilTagDetectionTest extends LinearOpMode {
         telemetry.addLine(String.format(Locale.ENGLISH ,"\n==== (ID %d) %s", detection.id, detection.metadata.name));
         telemetry.addLine(String.format(Locale.ENGLISH ,"XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
 
-        if(detection.ftcPose.x > 2) { //Some arbitrary number
-            servo.setPosition(servo.getPosition() - servoChange);
+        if(detection.ftcPose.x > 1) { //Some arbitrary number
+            servo.setPosition(servo.getPosition() + innerServoChange);
             telemetry.addLine("TURNING LEFT");
         }
-        else if(detection.ftcPose.x < -2){ //The negative of that arbitrary number
-            servo.setPosition(servo.getPosition() + servoChange);
+        else if(detection.ftcPose.x < -1){ //The negative of that arbitrary number
+            servo.setPosition(servo.getPosition() - innerServoChange);
             telemetry.addLine("TURNING RIGHT");
         }
     }
@@ -172,10 +173,10 @@ public class AprilTagDetectionTest extends LinearOpMode {
         telemetry.addLine("LOOKING FOR APRILTAGS");
 
         if(lastLookedRight){
-            servo.setPosition(servo.getPosition() - servoChange);
+            servo.setPosition(servo.getPosition() - outerServoChange);
         }
         else{
-            servo.setPosition(servo.getPosition() + servoChange);
+            servo.setPosition(servo.getPosition() + outerServoChange);
         }
 
         if(servo.getPosition() == 0 || servo.getPosition() == 1) lastLookedRight = !lastLookedRight;
