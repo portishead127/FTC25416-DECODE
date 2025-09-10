@@ -5,13 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 @TeleOp(name = "Test: Motor Test", group = "Test")
 public class MotorTest extends LinearOpMode
 {
-    DcMotor testMotor;
+    DcMotorEx testMotor;
     @Override
     public void runOpMode() throws InterruptedException {
         testMotor = hardwareMap.get(DcMotorEx.class, "test");
+        testMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -26,9 +29,12 @@ public class MotorTest extends LinearOpMode
             if(gamepad1.dpad_right) currentPower -= 0.05;
             if(gamepad1.circle) storedPower = currentPower;
             if(gamepad1.triangle) currentPower = storedPower;
+            if(gamepad1.square) currentPower = 0;
 
             testMotor.setPower(currentPower);
 
+            telemetry.addData("RADIANS?", testMotor.getVelocity(AngleUnit.RADIANS));
+            telemetry.addData("RPM", testMotor.getVelocity(AngleUnit.RADIANS) * 60/ (2 * Math.PI));
             telemetry.addData("CURRENT MOTOR POWER: ", currentPower);
             telemetry.addData("STORED MOTOR POWER: ", storedPower);
 
