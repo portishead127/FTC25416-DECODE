@@ -28,6 +28,15 @@ public class MotorTest extends LinearOpMode
             if(gamepad1.triangle) currentPower = storedPower;
 
             testMotor.setPower(currentPower);
+
+            telemetry.addData("CURRENT MOTOR POWER: ", currentPower);
+            telemetry.addData("STORED MOTOR POWER: ", storedPower);
+
+            telemetry.update();
+
+            sleep(50);
+
+
         }
 
     }
