@@ -141,7 +141,10 @@ public class AprilTagDetectionTest extends LinearOpMode {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
 
-        if(currentDetections.isEmpty()) lookForAprilTags();
+        if(currentDetections.isEmpty()) {
+            lookForAprilTags();
+            return;
+        }
 
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata == null) continue;
