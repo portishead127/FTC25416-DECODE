@@ -31,6 +31,9 @@ public class MotorTest extends LinearOpMode
             if(gamepad1.triangle) currentPower = storedPower;
             if(gamepad1.square) currentPower = 0;
 
+            if(currentPower > 1.0) currentPower = 1.0;
+            if(currentPower < -1.0) currentPower = -1.0;
+
             testMotor.setPower(currentPower);
 
             telemetry.addData("RADIANS?", testMotor.getVelocity(AngleUnit.RADIANS));
