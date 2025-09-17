@@ -10,7 +10,7 @@ import dev.nextftc.ftc.Gamepads;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
-@TeleOp
+@TeleOp(name = "Test: Shooter Test", group = "Test")
 public class ShooterTest extends NextFTCOpMode {
     public ShooterTest(){
         addComponents(

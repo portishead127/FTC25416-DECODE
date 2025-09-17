@@ -1,38 +1,44 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-public class MecanumSet {
-    public DcMotor frontRightMotor;
-    public DcMotor frontLeftMotor;
-    public DcMotor backRightMotor;
-    public DcMotor backLeftMotor;
+import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.utility.LambdaCommand;
+import dev.nextftc.core.subsystems.Subsystem;
+import dev.nextftc.core.subsystems.SubsystemGroup;
+import dev.nextftc.ftc.Gamepads;
+import dev.nextftc.hardware.driving.DriverControlledCommand;
+import dev.nextftc.hardware.driving.HolonomicMode;
+import dev.nextftc.hardware.driving.MecanumDriverControlled;
+import dev.nextftc.hardware.impl.MotorEx;
 
-    public MecanumSet(DcMotor frontRightMotor, DcMotor frontLeftMotor, DcMotor backRightMotor, DcMotor backLeftMotor){
-        this.frontRightMotor = frontRightMotor;
-        this.frontLeftMotor = frontLeftMotor;
-        this.backRightMotor = backRightMotor;
-        this.backLeftMotor = backLeftMotor;
-    }
+public class MecanumSet implements Subsystem {
+    public final MotorEx frontLeftMotor = new MotorEx("FLW")
+            .brakeMode();
+    public final MotorEx frontRightMotor = new MotorEx("FRW")
+            .brakeMode()
+            .reversed();
+    public final MotorEx backLeftMotor = new MotorEx("BLW")
+            .brakeMode();
+    public final MotorEx backRightMotor = new MotorEx("BRW")
+            .brakeMode()
+            .reversed();
+    private MecanumSet(){}
+    public static final MecanumSet INSTANCE = new MecanumSet();
+    public final MecanumDriverControlled driverController = new MecanumDriverControlled(
+            frontLeftMotor,
+            frontRightMotor,
+            backLeftMotor,
+            backRightMotor,
+            Gamepads.gamepad1().leftStickY(),
+            Gamepads.gamepad1().leftStickX(),
+            Gamepads.gamepad1().rightStickX()
+    );
 
-    public void Drive(Gamepad gamepad){
-        double y = -gamepad.left_stick_y; // Remember, Y stick value is reversed
-        double x = gamepad.left_stick_x * 1.1; // Counteract imperfect strafing
-        double rx = gamepad.right_stick_x;
-
-        // Denominator is the largest motor power (absolute value) or 1
-        // This ensures all the powers maintain the same ratio,
-        // but only if at least one is out of the range [-1, 1]
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = (y + x + rx) / denominator;
-        double backLeftPower = (y - x + rx) / denominator;
-        double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x - rx) / denominator;
-
-        frontLeftMotor.setPower(frontLeftPower);
-        backLeftMotor.setPower(backLeftPower);
-        frontRightMotor.setPower(frontRightPower);
-        backRightMotor.setPower(backRightPower);
-    }
+    public void setSlow(){driverController.setScalar(0.4);}
+    public void setMedium(){driverController.setScalar(0.7);}
+    public void setFast(){driverController.setScalar(1);}
 }
