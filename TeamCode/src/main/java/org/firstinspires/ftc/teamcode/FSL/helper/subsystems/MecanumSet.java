@@ -10,12 +10,25 @@ import dev.nextftc.core.commands.utility.LambdaCommand;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 import dev.nextftc.ftc.Gamepads;
+import dev.nextftc.hardware.controllable.MotorGroup;
 import dev.nextftc.hardware.driving.DriverControlledCommand;
 import dev.nextftc.hardware.driving.HolonomicMode;
 import dev.nextftc.hardware.driving.MecanumDriverControlled;
 import dev.nextftc.hardware.impl.MotorEx;
 
 public class MecanumSet implements Subsystem {
+    private final MotorGroup mecanumSetMotors = new MotorGroup(
+            new MotorEx("FLW")
+                    .brakeMode(),
+            new MotorEx("FRW")
+                    .brakeMode()
+                    .reversed(),
+            new MotorEx("BLW")
+                    .brakeMode(),
+            new MotorEx("BRW")
+                    .brakeMode()
+                    .reversed()
+    );
     public final MotorEx frontLeftMotor = new MotorEx("FLW")
             .brakeMode();
     public final MotorEx frontRightMotor = new MotorEx("FRW")
