@@ -29,23 +29,13 @@ public class MecanumSet implements Subsystem {
                     .brakeMode()
                     .reversed()
     );
-    public final MotorEx frontLeftMotor = new MotorEx("FLW")
-            .brakeMode();
-    public final MotorEx frontRightMotor = new MotorEx("FRW")
-            .brakeMode()
-            .reversed();
-    public final MotorEx backLeftMotor = new MotorEx("BLW")
-            .brakeMode();
-    public final MotorEx backRightMotor = new MotorEx("BRW")
-            .brakeMode()
-            .reversed();
     private MecanumSet(){}
     public static final MecanumSet INSTANCE = new MecanumSet();
     public final MecanumDriverControlled driverController = new MecanumDriverControlled(
-            frontLeftMotor,
-            frontRightMotor,
-            backLeftMotor,
-            backRightMotor,
+            mecanumSetMotors.getLeader(),
+            mecanumSetMotors.getFollowers()[0],
+            mecanumSetMotors.getFollowers()[1],
+            mecanumSetMotors.getFollowers()[2],
             Gamepads.gamepad1().leftStickY(),
             Gamepads.gamepad1().leftStickX(),
             Gamepads.gamepad1().rightStickX()
