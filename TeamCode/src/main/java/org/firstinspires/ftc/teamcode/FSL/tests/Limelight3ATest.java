@@ -18,9 +18,15 @@ public class Limelight3ATest extends NextFTCOpMode {
                 BindingsComponent.INSTANCE
         );
     }
+
+    @Override
+    public void onInit() {
+        Shooter.INSTANCE.initLimeLight3A.schedule();
+    }
+
     @Override
     public void onStartButtonPressed() {
-        Shooter.INSTANCE.limelightDetection.schedule();
+        Shooter.INSTANCE.focusOnAprilTag.schedule();
         updateTelemetry(telemetry);
     }
 }

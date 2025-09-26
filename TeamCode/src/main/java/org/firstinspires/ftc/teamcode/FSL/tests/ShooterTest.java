@@ -21,7 +21,13 @@ public class ShooterTest extends NextFTCOpMode {
     }
 
     @Override
+    public void onInit() {
+        Shooter.INSTANCE.initLimeLight3A.schedule();
+    }
+
+    @Override
     public void onStartButtonPressed() {
+        Shooter.INSTANCE.focusOnAprilTag.schedule();
         Gamepads.gamepad1().square().whenBecomesTrue(Shooter.INSTANCE.fire);
         Gamepads.gamepad1().triangle().whenBecomesTrue(Shooter.INSTANCE.fireHalf);
         Gamepads.gamepad1().cross().whenBecomesTrue(Shooter.INSTANCE.stop);
