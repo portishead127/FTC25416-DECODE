@@ -22,8 +22,6 @@ import dev.nextftc.hardware.powerable.SetPower;
 public class Shooter implements Subsystem {
     public static Shooter INSTANCE = new Shooter();
     private Shooter(){}
-    private Limelight3A limelight3A;
-    private final ServoEx swivelServo = new ServoEx("SS");
     private final MotorGroup shooterMotors = new MotorGroup(
             new MotorEx("SM1")
                     .reversed()
@@ -32,55 +30,6 @@ public class Shooter implements Subsystem {
                     .reversed()
                     .brakeMode()
     );
-
-    private boolean lastScannedRight = false;
-    public Command initLimeLight3A = new InstantCommand(() -> {
-        limelight3A = ActiveOpMode.hardwareMap().get(com.qualcomm.hardware.limelightvision.Limelight3A.class, "limelight");
-    });
-    public Command focusOnAprilTag = new LambdaCommand()
-            .setStart(() -> {
-                limelight3A.pipelineSwitch(0);
-                limelight3A.start();
-            })
-            .setUpdate(() -> {
-                ActiveOpMode.telemetry().addLine("LimeLight3A\n");
-                LLResult result = limelight3A.getLatestResult();
-                if (result != null) {
-                    if (result.isValid()) {
-                        //CAREFUL! THIS WILL ONLY RECEIVE ONE APRIL TAG'S DATA SO MAY REQUIRE ID CHECKER!
-                        Pose3D botPose = result.getBotpose();
-                        ActiveOpMode.telemetry().addData("tx", result.getTx());
-                        ActiveOpMode.telemetry().addData("ty", result.getTy());
-                        ActiveOpMode.telemetry().addData("Bot Pose", botPose.toString());
-
-                        evaluateTx(result.getTx()).schedule();
-                    }
-                }else{
-                    determineScan().schedule();
-                }
-            });
-    public Command evaluateTx(double tx){
-        if(tx < -Limelight3ADetectionConfig.CENTRALTOLERANCE) return focusRight;
-        else if (tx > Limelight3ADetectionConfig.CENTRALTOLERANCE) return focusLeft;
-        else return new NullCommand();
-    }
-    public Command determineScan(){
-        if(swivelServo.getPosition() == 1){
-            lastScannedRight = true;
-            return scanRight;
-        }
-        else if(swivelServo.getPosition() == 0){
-            lastScannedRight = false;
-            return scanLeft;
-        }
-
-        if(lastScannedRight) return scanLeft;
-        return scanRight;
-    }
-    public Command focusLeft = new SetPosition(swivelServo, swivelServo.getPosition() - Limelight3ADetectionConfig.FOCUSDX);
-    public Command focusRight = new SetPosition(swivelServo, swivelServo.getPosition() + Limelight3ADetectionConfig.FOCUSDX);
-    public Command scanLeft = new SetPosition(swivelServo, swivelServo.getPosition() - Limelight3ADetectionConfig.SCANDX);
-    public Command scanRight = new SetPosition(swivelServo, swivelServo.getPosition() + Limelight3ADetectionConfig.SCANDX);
 
     public Command fire = new SetPower(shooterMotors,1);
     public Command fireHalf = new SetPower(shooterMotors, 0.5);

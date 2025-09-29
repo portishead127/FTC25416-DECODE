@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
 import dev.nextftc.core.components.BindingsComponent;
@@ -13,7 +14,7 @@ import dev.nextftc.ftc.components.BulkReadComponent;
 public class Limelight3ATest extends NextFTCOpMode {
     public Limelight3ATest(){
         addComponents(
-                new SubsystemComponent(Shooter.INSTANCE),
+                new SubsystemComponent(CameraSwivel.INSTANCE),
                 BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE
         );
@@ -21,12 +22,12 @@ public class Limelight3ATest extends NextFTCOpMode {
 
     @Override
     public void onInit() {
-        Shooter.INSTANCE.initLimeLight3A.schedule();
+        CameraSwivel.INSTANCE.initLimeLight3A.schedule();
     }
 
     @Override
     public void onStartButtonPressed() {
-        Shooter.INSTANCE.focusOnAprilTag.schedule();
+        CameraSwivel.INSTANCE.focusOnAprilTag.schedule();
         updateTelemetry(telemetry);
     }
 }

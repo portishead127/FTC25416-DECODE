@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
 import dev.nextftc.core.components.BindingsComponent;
@@ -14,7 +15,10 @@ import dev.nextftc.ftc.components.BulkReadComponent;
 public class ShooterTest extends NextFTCOpMode {
     public ShooterTest(){
         addComponents(
-                new SubsystemComponent(Shooter.INSTANCE),
+                new SubsystemComponent(
+                        Shooter.INSTANCE,
+                        CameraSwivel.INSTANCE
+                ),
                 BulkReadComponent.INSTANCE,
                 BindingsComponent.INSTANCE
         );
@@ -22,12 +26,12 @@ public class ShooterTest extends NextFTCOpMode {
 
     @Override
     public void onInit() {
-        Shooter.INSTANCE.initLimeLight3A.schedule();
+        CameraSwivel.INSTANCE.initLimeLight3A.schedule();
     }
 
     @Override
     public void onStartButtonPressed() {
-        Shooter.INSTANCE.focusOnAprilTag.schedule();
+        CameraSwivel.INSTANCE.focusOnAprilTag.schedule();
         Gamepads.gamepad1().square().whenBecomesTrue(Shooter.INSTANCE.fire);
         Gamepads.gamepad1().triangle().whenBecomesTrue(Shooter.INSTANCE.fireHalf);
         Gamepads.gamepad1().cross().whenBecomesTrue(Shooter.INSTANCE.stop);
