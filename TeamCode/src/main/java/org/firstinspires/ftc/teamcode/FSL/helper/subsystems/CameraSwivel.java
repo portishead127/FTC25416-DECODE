@@ -69,7 +69,7 @@ public class CameraSwivel implements Subsystem {
                 visionPortal.close();
             })
             .setInterruptible(true)
-    ;
+            .perpetually();
 
     public Command evaluateBearing(double tx){
         if(tx < -CameraDetectionConfig.CENTRALTOLERANCE) return focusRight;

@@ -34,5 +34,5 @@ public class Shooter implements Subsystem {
     public Command telemetryServo = new LambdaCommand()
             .setUpdate(() -> {
                 ActiveOpMode.telemetry().addData("Servo", servo.getPosition());
-            });
+            }).perpetually();
 }
