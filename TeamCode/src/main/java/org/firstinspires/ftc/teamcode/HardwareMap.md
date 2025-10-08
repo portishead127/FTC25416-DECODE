@@ -10,4 +10,4 @@
 | shooterServo    | Servo                    | SHS         | CH-S1 |
 | spinServo       | Servo                    | SPS         | CH-S2 |
 | flipServo       | Servo                    | FLS         | CH-S3 |
-| colorSensor     | ColorRangeSensor         | CS          | IC2-0 |
+| colorSensor     | ColorRangeSensor         | CS          | I2C-0 |
