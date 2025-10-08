@@ -48,5 +48,10 @@ public class Robot extends SubsystemGroup {
                     scoreGreen,
                     scorePurple,
                     scorePurple
+            ))
+            .withDefault(new SequentialGroup(
+                    scorePurple,
+                    scorePurple,
+                    scoreGreen
             ));
 }

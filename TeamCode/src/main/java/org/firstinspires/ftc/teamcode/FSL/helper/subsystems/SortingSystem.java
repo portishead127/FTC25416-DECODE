@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Colors;
@@ -21,6 +22,7 @@ public class SortingSystem implements Subsystem {
     public final CRServoEx flickServo = new CRServoEx("FLS");
     private SortingSystem(){
         initColourSensor.schedule();
+        setColorNone.schedule();
     }
     public static SortingSystem INSTANCE = new SortingSystem();
     public final Command initColourSensor = new InstantCommand(() -> {
@@ -30,11 +32,25 @@ public class SortingSystem implements Subsystem {
     public final Command searchForBallColor = new LambdaCommand()
             .setIsDone(() -> ColorMethods.fromSensor(colorSensor) == searchColor)
             .setUpdate(() -> {
-                new SetPower(spinServo, 0.7);
+                new SetPower(spinServo, 0.2);
             })
             .setStop((interrupted) -> new SetPower(flickServo, 1));
 
-    public final Command setColorNone = new InstantCommand(() -> searchColor = Colors.NONE);
-    public final Command setColorGreen = new InstantCommand(() -> searchColor = Colors.GREEN);
-    public final Command setColorPurple = new InstantCommand(() -> searchColor = Colors.PURPLE);
+    public final Command spin = new LambdaCommand()
+            .setUpdate(() -> {
+                new SetPower(spinServo, 0.2);
+            });
+
+    public final Command setColorNone = new InstantCommand(() -> {
+        searchColor = Colors.NONE;
+        ActiveOpMode.gamepad2().setLedColor(0,0,0, Gamepad.LED_DURATION_CONTINUOUS);
+    });
+    public final Command setColorGreen = new InstantCommand(() -> {
+        searchColor = Colors.GREEN;
+        ActiveOpMode.gamepad2().setLedColor(0,255,0, Gamepad.LED_DURATION_CONTINUOUS);
+    });
+    public final Command setColorPurple = new InstantCommand(() -> {
+        searchColor = Colors.PURPLE;
+        ActiveOpMode.gamepad2().setLedColor(255,0,255, Gamepad.LED_DURATION_CONTINUOUS);
+    });
 }
