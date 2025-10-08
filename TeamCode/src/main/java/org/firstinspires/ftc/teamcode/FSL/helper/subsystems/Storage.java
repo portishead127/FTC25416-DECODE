@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -27,7 +28,7 @@ public class Storage implements Subsystem {
 
     @Override
     public void initialize() {
-        colorSensor = ActiveOpMode.hardwareMap().get(ColorSensor.class, "CS");
+        colorSensor = ActiveOpMode.hardwareMap().get(ColorRangeSensor.class, "CS");
         colorSensor.enableLed(true);
         setColorNone.schedule();
     }
@@ -35,7 +36,7 @@ public class Storage implements Subsystem {
     public final Command stop = new SetPower(spinServo, 0);
     public final Command flickBall = new SequentialGroup(
         new SetPower(flickServo, 1),
-        new Delay(100),
+        new Delay(0.1),
         new SetPower(flickServo, 0)
     );
     public final Command searchForBallColor = new LambdaCommand()

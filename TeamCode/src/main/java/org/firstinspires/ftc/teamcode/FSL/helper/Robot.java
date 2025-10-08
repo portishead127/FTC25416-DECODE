@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.conditionals.SwitchCommand;
+import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -31,6 +32,7 @@ public class Robot extends SubsystemGroup {
                     Storage.INSTANCE.searchForBallColor,
                     Shooter.INSTANCE.fire
             ),
+            new Delay(1),
             Shooter.INSTANCE.stop,
             Storage.INSTANCE.setColorNone,
             Storage.INSTANCE.searchForBallColor
@@ -42,6 +44,7 @@ public class Robot extends SubsystemGroup {
                     Storage.INSTANCE.searchForBallColor,
                     Shooter.INSTANCE.fire
             ),
+            new Delay(1),
             Shooter.INSTANCE.stop,
             Storage.INSTANCE.setColorNone,
             Storage.INSTANCE.searchForBallColor
