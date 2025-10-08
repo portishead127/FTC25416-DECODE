@@ -11,3 +11,4 @@
 | spinServo       | Servo                    | SPS         | CH-S2 |
 | flipServo       | Servo                    | FLS         | CH-S3 |
 | colorSensor     | ColorRangeSensor         | CS          | I2C-0 |
+| --------------- | Webcam                   | Webcam 1    | USB   |
