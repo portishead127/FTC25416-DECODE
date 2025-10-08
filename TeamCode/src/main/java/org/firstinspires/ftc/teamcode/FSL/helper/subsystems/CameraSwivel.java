@@ -20,7 +20,7 @@ import dev.nextftc.hardware.impl.ServoEx;
 import dev.nextftc.hardware.positionable.SetPosition;
 
 public class CameraSwivel implements Subsystem {
-    public int motifNumber;
+    public int motifNumber = 1;
     public static CameraSwivel INSTANCE = new CameraSwivel();
     private VisionPortal visionPortal;
     private final AprilTagProcessor aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();

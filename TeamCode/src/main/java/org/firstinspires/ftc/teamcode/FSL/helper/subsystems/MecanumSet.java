@@ -31,6 +31,12 @@ public class MecanumSet implements Subsystem {
                     .reversed()
     );
     private MecanumSet(){}
+
+    @Override
+    public void initialize() {
+        setMedium.schedule();
+    }
+
     public static final MecanumSet INSTANCE = new MecanumSet();
     public final MecanumDriverControlled driverController = new MecanumDriverControlled(
             mecanumSetMotors.getLeader(),
