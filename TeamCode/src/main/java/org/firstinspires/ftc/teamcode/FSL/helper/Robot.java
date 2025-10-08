@@ -27,16 +27,22 @@ public class Robot extends SubsystemGroup {
 
     public final Command scorePurple = new SequentialGroup(
             Storage.INSTANCE.setColorPurple,
-            Storage.INSTANCE.searchForBallColor,
-            Shooter.INSTANCE.fire,
+            new ParallelGroup(
+                    Storage.INSTANCE.searchForBallColor,
+                    Shooter.INSTANCE.fire
+            ),
+            Shooter.INSTANCE.stop,
             Storage.INSTANCE.setColorNone,
             Storage.INSTANCE.searchForBallColor
     );
 
     public final Command scoreGreen = new SequentialGroup(
             Storage.INSTANCE.setColorGreen,
-            Storage.INSTANCE.searchForBallColor,
-            Shooter.INSTANCE.fire,
+            new ParallelGroup(
+                    Storage.INSTANCE.searchForBallColor,
+                    Shooter.INSTANCE.fire
+            ),
+            Shooter.INSTANCE.stop,
             Storage.INSTANCE.setColorNone,
             Storage.INSTANCE.searchForBallColor
     );

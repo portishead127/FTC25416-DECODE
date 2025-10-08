@@ -23,9 +23,7 @@ public class Shooter implements Subsystem {
                     .reversed()
                     .brakeMode()
     );
-
     public final ServoEx servo = new ServoEx("SHS");
-
     public Command fire = new SetPower(shooterMotors,1);
     public Command fireHalf = new SetPower(shooterMotors, 0.5);
     public Command stop = new SetPower(shooterMotors, 0);
