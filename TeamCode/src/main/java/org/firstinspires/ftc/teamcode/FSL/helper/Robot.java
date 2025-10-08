@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode.FSL.helper;
 
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.MecanumSet;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.SortingSystem;
 
+import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.conditionals.SwitchCommand;
+import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.subsystems.SubsystemGroup;
 
 public class Robot extends SubsystemGroup {
@@ -10,10 +15,38 @@ public class Robot extends SubsystemGroup {
     private Robot(){
         super(
                 Shooter.INSTANCE,
-                MecanumSet.INSTANCE
+                SortingSystem.INSTANCE,
+                MecanumSet.INSTANCE,
+                CameraSwivel.INSTANCE
         );
     };
 
-//    private final Command win;
+    private final Command scorePurple = new SequentialGroup(
+            SortingSystem.INSTANCE.setColorPurple,
+            SortingSystem.INSTANCE.searchForBallColor,
+            Shooter.INSTANCE.fire
+    );
 
+    private final Command scoreGreen = new SequentialGroup(
+            SortingSystem.INSTANCE.setColorGreen,
+            SortingSystem.INSTANCE.searchForBallColor,
+            Shooter.INSTANCE.fire
+    );
+
+    private final Command scoreMotif = new SwitchCommand<>(() -> CameraSwivel.INSTANCE.motifNumber)
+            .withCase(1, new SequentialGroup(
+                    scorePurple,
+                    scorePurple,
+                    scoreGreen
+            ))
+            .withCase(2, new SequentialGroup(
+                    scorePurple,
+                    scoreGreen,
+                    scorePurple
+            ))
+            .withCase(3, new SequentialGroup(
+                    scoreGreen,
+                    scorePurple,
+                    scorePurple
+            ));
 }

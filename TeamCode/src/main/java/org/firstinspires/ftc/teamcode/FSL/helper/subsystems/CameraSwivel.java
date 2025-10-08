@@ -20,6 +20,7 @@ import dev.nextftc.hardware.impl.ServoEx;
 import dev.nextftc.hardware.positionable.SetPosition;
 
 public class CameraSwivel implements Subsystem {
+    public int motifNumber;
     public static CameraSwivel INSTANCE = new CameraSwivel();
     private VisionPortal visionPortal;
     private final AprilTagProcessor aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
@@ -49,7 +50,7 @@ public class CameraSwivel implements Subsystem {
 
                 // Step through the list of detections and display info for each one.
                 for (AprilTagDetection detection : currentDetections) {
-                    if (detection.id == 20) {
+                    if (detection.id == 20 /*blue, 24 for red*/) {
                         ActiveOpMode.telemetry().addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                         ActiveOpMode.telemetry().addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
                         ActiveOpMode.telemetry().addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
@@ -70,6 +71,23 @@ public class CameraSwivel implements Subsystem {
             })
             .setInterruptible(true)
             .perpetually();
+
+    public Command readMotif = new InstantCommand(() -> {
+        AprilTagDetection currentDetection = aprilTagProcessor.getDetections().get(0);
+        switch(currentDetection.id){
+            case 21:
+                motifNumber = 1;
+                break;
+            case 22:
+                motifNumber = 2;
+                break;
+            case 23:
+                motifNumber = 3;
+                break;
+            default:
+                motifNumber = 0;
+        }
+    });
 
     public Command evaluateBearing(double tx){
         if(tx < -CameraDetectionConfig.CENTRALTOLERANCE) return focusRight;

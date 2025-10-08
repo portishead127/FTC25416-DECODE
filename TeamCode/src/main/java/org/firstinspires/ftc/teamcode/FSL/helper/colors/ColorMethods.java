@@ -1,15 +1,10 @@
-package org.firstinspires.ftc.teamcode.FSL.helper;
+package org.firstinspires.ftc.teamcode.FSL.helper.colors;
 
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 public class ColorMethods {
-    public enum Colors{
-        GREEN,
-        PURPLE,
-        NONE
-    }
     public static Colors fromSensor(ColorSensor sensor) {
         float[] hsv = new float[3];
 
@@ -28,7 +23,7 @@ public class ColorMethods {
         return fromHsv(hsv);
     }
 
-    public static Colors fromHsv(float[] hsv) {
+    private static Colors fromHsv(float[] hsv) {
         float hue = hsv[0];
         float sat = hsv[1];
         float val = hsv[2];
