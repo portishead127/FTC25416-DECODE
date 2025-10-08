@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.FSL.helper;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.MecanumSet;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.SortingSystem;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.conditionals.SwitchCommand;
@@ -15,21 +15,21 @@ public class Robot extends SubsystemGroup {
     private Robot(){
         super(
                 Shooter.INSTANCE,
-                SortingSystem.INSTANCE,
+                Storage.INSTANCE,
                 MecanumSet.INSTANCE,
                 CameraSwivel.INSTANCE
         );
     };
 
     private final Command scorePurple = new SequentialGroup(
-            SortingSystem.INSTANCE.setColorPurple,
-            SortingSystem.INSTANCE.searchForBallColor,
+            Storage.INSTANCE.setColorPurple,
+            Storage.INSTANCE.searchForBallColor,
             Shooter.INSTANCE.fire
     );
 
     private final Command scoreGreen = new SequentialGroup(
-            SortingSystem.INSTANCE.setColorGreen,
-            SortingSystem.INSTANCE.searchForBallColor,
+            Storage.INSTANCE.setColorGreen,
+            Storage.INSTANCE.searchForBallColor,
             Shooter.INSTANCE.fire
     );
 

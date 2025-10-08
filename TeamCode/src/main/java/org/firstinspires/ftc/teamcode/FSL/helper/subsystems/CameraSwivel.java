@@ -27,12 +27,12 @@ public class CameraSwivel implements Subsystem {
     private final ServoEx swivelServo = new ServoEx("SWS");
     private boolean lastScannedRight = false;
 
-    public Command initLimeLight3A = new InstantCommand(() -> {
+    @Override
+    public void initialize() {
         visionPortal = VisionPortal.easyCreateWithDefaults(
-            ActiveOpMode.hardwareMap().get(WebcamName.class, "Webcam 1"), aprilTagProcessor
+                ActiveOpMode.hardwareMap().get(WebcamName.class, "Webcam 1"), aprilTagProcessor
         );
-    });
-
+    }
     public Command stopStreaming = new InstantCommand(() -> {
         visionPortal.stopStreaming();
     });

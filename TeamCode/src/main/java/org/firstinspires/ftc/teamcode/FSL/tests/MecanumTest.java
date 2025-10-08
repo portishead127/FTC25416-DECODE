@@ -21,9 +21,9 @@ public class MecanumTest extends NextFTCOpMode {
     }
     @Override
     public void onStartButtonPressed() {
-        Gamepads.gamepad1().rightBumper().whenFalse(MecanumSet.INSTANCE::setMedium);
-        Gamepads.gamepad1().leftBumper().whenTrue(MecanumSet.INSTANCE::setSlow);
-        Gamepads.gamepad1().rightBumper().whenTrue(MecanumSet.INSTANCE::setFast);
+        Gamepads.gamepad1().rightBumper().whenFalse(MecanumSet.INSTANCE.setMedium);
+        Gamepads.gamepad1().leftBumper().whenTrue(MecanumSet.INSTANCE.setSlow);
+        Gamepads.gamepad1().rightBumper().whenTrue(MecanumSet.INSTANCE.setFast);
         MecanumSet.INSTANCE.driverController.schedule();
     }
 }

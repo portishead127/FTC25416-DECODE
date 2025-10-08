@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import dev.nextftc.core.commands.Command;
+import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.LambdaCommand;
 import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.core.subsystems.SubsystemGroup;
@@ -41,7 +42,7 @@ public class MecanumSet implements Subsystem {
             Gamepads.gamepad1().rightStickX()
     );
 
-    public void setSlow(){driverController.setScalar(0.4);}
-    public void setMedium(){driverController.setScalar(0.7);}
-    public void setFast(){driverController.setScalar(1);}
+    public Command setSlow = new InstantCommand(() -> driverController.setScalar(0.4));
+    public Command setMedium = new InstantCommand(() -> driverController.setScalar(0.7));
+    public Command setFast = new InstantCommand(() -> driverController.setScalar(1));
 }
