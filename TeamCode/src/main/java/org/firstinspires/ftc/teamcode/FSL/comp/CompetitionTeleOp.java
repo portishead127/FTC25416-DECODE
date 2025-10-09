@@ -31,11 +31,11 @@ public class CompetitionTeleOp extends NextFTCOpMode {
 
         Gamepads.gamepad2().touchpad().whenBecomesTrue(Robot.INSTANCE.manualMotifControl);
         Robot.INSTANCE.telemetryMotif.schedule();
-
-        Gamepads.gamepad2().square().whenBecomesTrue(Robot.INSTANCE.scoreMotif);
-        Gamepads.gamepad2().triangle().whenBecomesTrue(Robot.INSTANCE.scoreGreen);
-        Gamepads.gamepad2().circle().whenBecomesTrue(Robot.INSTANCE.scorePurple);
-        //Gamepads.gamepad2().rightBumper().whenTrue(intake)
+//
+//        Gamepads.gamepad2().square().whenBecomesTrue(Robot.INSTANCE.scoreMotif);
+//        Gamepads.gamepad2().triangle().whenBecomesTrue(Robot.INSTANCE.scoreGreen);
+//        Gamepads.gamepad2().circle().whenBecomesTrue(Robot.INSTANCE.scorePurple);
+//        //Gamepads.gamepad2().rightBumper().whenTrue(intake)
 
         CameraSwivel.INSTANCE.focusOnAprilTag.schedule();
         updateTelemetry(telemetry);

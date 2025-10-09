@@ -26,51 +26,51 @@ public class Robot extends SubsystemGroup {
         );
     };
 
-    public final Command scorePurple = new SequentialGroup(
-            Storage.INSTANCE.setColorPurple,
-            new ParallelGroup(
-                    Storage.INSTANCE.searchForBallColor,
-                    Shooter.INSTANCE.fire
-            ),
-            new Delay(1),
-            Shooter.INSTANCE.stop,
-            Storage.INSTANCE.setColorNone,
-            Storage.INSTANCE.searchForBallColor
-    );
+//    public final Command scorePurple = new SequentialGroup(
+//            Storage.INSTANCE.setColorPurple,
+//            new ParallelGroup(
+//                    Storage.INSTANCE.searchForBallColor,
+//                    Shooter.INSTANCE.fire
+//            ),
+//            new Delay(1),
+//            Shooter.INSTANCE.stop,
+//            Storage.INSTANCE.setColorNone,
+//            Storage.INSTANCE.searchForBallColor
+//    );
+//
+//    public final Command scoreGreen = new SequentialGroup(
+//            Storage.INSTANCE.setColorGreen,
+//            new ParallelGroup(
+//                    Storage.INSTANCE.searchForBallColor,
+//                    Shooter.INSTANCE.fire
+//            ),
+//            new Delay(1),
+//            Shooter.INSTANCE.stop,
+//            Storage.INSTANCE.setColorNone,
+//            Storage.INSTANCE.searchForBallColor
+//    );
 
-    public final Command scoreGreen = new SequentialGroup(
-            Storage.INSTANCE.setColorGreen,
-            new ParallelGroup(
-                    Storage.INSTANCE.searchForBallColor,
-                    Shooter.INSTANCE.fire
-            ),
-            new Delay(1),
-            Shooter.INSTANCE.stop,
-            Storage.INSTANCE.setColorNone,
-            Storage.INSTANCE.searchForBallColor
-    );
-
-    public final Command scoreMotif = new SwitchCommand<>(() -> CameraSwivel.INSTANCE.motifNumber)
-            .withCase(1, new SequentialGroup(
-                    scorePurple,
-                    scorePurple,
-                    scoreGreen
-            ))
-            .withCase(2, new SequentialGroup(
-                    scorePurple,
-                    scoreGreen,
-                    scorePurple
-            ))
-            .withCase(3, new SequentialGroup(
-                    scoreGreen,
-                    scorePurple,
-                    scorePurple
-            ))
-            .withDefault(new SequentialGroup(
-                    scorePurple,
-                    scorePurple,
-                    scoreGreen
-            ));
+//    public final Command scoreMotif = new SwitchCommand<>(() -> CameraSwivel.INSTANCE.motifNumber)
+//            .withCase(1, new SequentialGroup(
+//                    scorePurple,
+//                    scorePurple,
+//                    scoreGreen
+//            ))
+//            .withCase(2, new SequentialGroup(
+//                    scorePurple,
+//                    scoreGreen,
+//                    scorePurple
+//            ))
+//            .withCase(3, new SequentialGroup(
+//                    scoreGreen,
+//                    scorePurple,
+//                    scorePurple
+//            ))
+//            .withDefault(new SequentialGroup(
+//                    scorePurple,
+//                    scorePurple,
+//                    scoreGreen
+//            ));
 
     public Command manualMotifControl = new InstantCommand(() -> {
         if(CameraSwivel.INSTANCE.motifNumber < 3) CameraSwivel.INSTANCE.motifNumber++;

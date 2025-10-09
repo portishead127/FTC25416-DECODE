@@ -8,7 +8,6 @@ public class ColorMethods {
     public static Colors fromSensor(ColorSensor sensor) {
         float[] hsv = new float[3];
 
-        //This is normalising the values :)
         double scalingFactor = 255.0f / sensor.alpha();
         int red = (int)((double)sensor.red() * scalingFactor);
         int green = (int)((double)sensor.green() * scalingFactor);
