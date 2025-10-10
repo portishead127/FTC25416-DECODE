@@ -48,7 +48,7 @@ public class MecanumSet implements Subsystem {
             Gamepads.gamepad1().rightStickX()
     );
 
-    public Command setSlow = new InstantCommand(() -> driverController.setScalar(0.4));
-    public Command setMedium = new InstantCommand(() -> driverController.setScalar(0.7));
-    public Command setFast = new InstantCommand(() -> driverController.setScalar(1));
+    public Command setSlow = new InstantCommand(() -> driverController.setScalar(0.4)).requires(this);
+    public Command setMedium = new InstantCommand(() -> driverController.setScalar(0.7)).requires(this);
+    public Command setFast = new InstantCommand(() -> driverController.setScalar(1)).requires(this);
 }

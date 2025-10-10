@@ -35,11 +35,11 @@ public class CameraSwivel implements Subsystem {
     }
     public Command stopStreaming = new InstantCommand(() -> {
         visionPortal.stopStreaming();
-    });
+    }).requires(this);
 
     public Command resumeStreaming = new InstantCommand(() -> {
         visionPortal.resumeStreaming();
-    });
+    }).requires(this);
     @SuppressLint("DefaultLocale")
     public Command focusOnAprilTag = new LambdaCommand()
             .setUpdate(() -> {
@@ -70,6 +70,7 @@ public class CameraSwivel implements Subsystem {
                 visionPortal.close();
             })
             .setInterruptible(true)
+            .requires(this)
             .perpetually();
 
     public Command readMotif = new InstantCommand(() -> {
@@ -87,7 +88,7 @@ public class CameraSwivel implements Subsystem {
             default:
                 motifNumber = 0;
         }
-    });
+    }).requires(this);
 
     public Command evaluateBearing(double tx){
         if(tx < -CameraDetectionConfig.CENTRALTOLERANCE) return focusRight;
@@ -107,9 +108,9 @@ public class CameraSwivel implements Subsystem {
         if(lastScannedRight) return scanLeft;
         return scanRight;
     }
-    public Command focusLeft = new SetPosition(swivelServo, swivelServo.getPosition() - CameraDetectionConfig.FOCUSDX);
-    public Command focusRight = new SetPosition(swivelServo, swivelServo.getPosition() + CameraDetectionConfig.FOCUSDX);
-    public Command scanLeft = new SetPosition(swivelServo, swivelServo.getPosition() - CameraDetectionConfig.SCANDX);
-    public Command scanRight = new SetPosition(swivelServo, swivelServo.getPosition() + CameraDetectionConfig.SCANDX);
+    public Command focusLeft = new SetPosition(swivelServo, swivelServo.getPosition() - CameraDetectionConfig.FOCUSDX).requires(this);
+    public Command focusRight = new SetPosition(swivelServo, swivelServo.getPosition() + CameraDetectionConfig.FOCUSDX).requires(this);
+    public Command scanLeft = new SetPosition(swivelServo, swivelServo.getPosition() - CameraDetectionConfig.SCANDX).requires(this);
+    public Command scanRight = new SetPosition(swivelServo, swivelServo.getPosition() + CameraDetectionConfig.SCANDX).requires(this);
 
 }

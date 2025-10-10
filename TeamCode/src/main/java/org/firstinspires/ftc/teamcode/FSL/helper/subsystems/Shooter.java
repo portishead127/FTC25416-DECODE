@@ -24,13 +24,13 @@ public class Shooter implements Subsystem {
                     .brakeMode()
     );
     public final ServoEx servo = new ServoEx("SHS");
-    public Command fire = new SetPower(shooterMotors,1);
-    public Command fireHalf = new SetPower(shooterMotors, 0.5);
-    public Command stop = new SetPower(shooterMotors, 0);
-    public Command addToServo = new SetPosition(servo, servo.getPosition() + 0.01);
-    public Command subtractFromServo = new SetPosition(servo, servo.getPosition() - 0.01);
+    public Command fire = new SetPower(shooterMotors,1).requires(this);
+    public Command fireHalf = new SetPower(shooterMotors, 0.5).requires(this);
+    public Command stop = new SetPower(shooterMotors, 0).requires(this);
+    public Command addToServo = new SetPosition(servo, servo.getPosition() + 0.01).requires(this);
+    public Command subtractFromServo = new SetPosition(servo, servo.getPosition() - 0.01).requires(this);
     public Command telemetryServo = new LambdaCommand()
             .setUpdate(() -> {
                 ActiveOpMode.telemetry().addData("Servo", servo.getPosition());
-            }).perpetually();
+            }).perpetually().requires(this);
 }
