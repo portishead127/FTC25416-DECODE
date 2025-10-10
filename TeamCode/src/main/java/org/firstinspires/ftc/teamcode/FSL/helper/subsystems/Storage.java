@@ -40,6 +40,7 @@ public class Storage implements Subsystem {
         new SetPower(flickServo, 0)
     ).requires(this);
     public final Command searchForBallColor = new LambdaCommand()
+            .setIsDone(() -> ColorMethods.fromSensor(colorSensor) == searchColor)
             .setUpdate(spin)
             .setStop((interrupted) -> new SequentialGroup(
                 stop,
