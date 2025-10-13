@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 
 import dev.nextftc.core.commands.groups.SequentialGroup;
@@ -26,7 +25,7 @@ public class StorageTest extends NextFTCOpMode {
     @Override
     public void onStartButtonPressed() {
         Storage.INSTANCE.tele.schedule();
-        Gamepads.gamepad2().square().whenTrue(Storage.INSTANCE.spin);
+        Gamepads.gamepad2().square().whenTrue(Storage.INSTANCE.reload);
         Gamepads.gamepad2().square().whenFalse(Storage.INSTANCE.stop);
         Gamepads.gamepad2().circle().whenBecomesTrue(Storage.INSTANCE.flickBall);
         Gamepads.gamepad2().triangle().whenBecomesTrue(

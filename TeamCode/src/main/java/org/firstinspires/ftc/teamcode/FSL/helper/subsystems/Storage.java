@@ -7,8 +7,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Colors;
 
+import java.util.LinkedList;
+
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
+import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.commands.utility.LambdaCommand;
@@ -16,7 +19,6 @@ import dev.nextftc.core.subsystems.Subsystem;
 import dev.nextftc.ftc.ActiveOpMode;
 import dev.nextftc.hardware.impl.CRServoEx;
 import dev.nextftc.hardware.powerable.SetPower;
-import kotlin.Unit;
 
 public class Storage implements Subsystem {
     private Colors searchColor = Colors.NONE; //default
@@ -32,7 +34,8 @@ public class Storage implements Subsystem {
         colorSensor.enableLed(true);
         setColorNone.schedule();
     }
-    public final Command spin = new SetPower(spinServo, 0.6).requires(this);
+    public final Command reload = new SetPower(spinServo, 0.6).requires(this);
+
     public final Command stop = new SetPower(spinServo, 0).requires(this);
     public final Command flickBall = new SequentialGroup(
         new SetPower(flickServo, 1),
@@ -41,7 +44,7 @@ public class Storage implements Subsystem {
     ).requires(this);
     public final Command searchForBallColor = new LambdaCommand()
             .setIsDone(() -> ColorMethods.fromSensor(colorSensor) == searchColor)
-            .setUpdate(spin)
+            .setUpdate(reload)
             .setStop((interrupted) -> new SequentialGroup(
                 stop,
                 flickBall

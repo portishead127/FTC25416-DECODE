@@ -36,7 +36,7 @@ public class ColorMethods {
         } else if (hue >= 140 && hue <= 200) { //THIS IS BLUE
             return Colors.PURPLE;
         } else {
-            return Colors.NONE;
+            return Colors.BLACK;
         }
     }
 }
