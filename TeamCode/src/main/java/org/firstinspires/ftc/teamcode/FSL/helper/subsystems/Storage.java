@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.FSL.helper.colors.Colors;
 
 import java.util.LinkedList;
 
+import dev.nextftc.control.ControlSystem;
+import dev.nextftc.control.KineticState;
 import dev.nextftc.control.feedback.PIDCoefficients;
 import dev.nextftc.control.feedback.PIDController;
 import dev.nextftc.core.commands.Command;
@@ -30,7 +32,9 @@ public class Storage implements Subsystem {
     private Colors searchColor = Colors.NONE; //default
     private ColorSensor colorSensor;
     private final MotorEx spinMotor = new MotorEx("SPM");
-    private final PIDController motorController = new PIDController(new PIDCoefficients(0.01, 0, 0.01));
+    private final ControlSystem motorController = ControlSystem.builder()
+            .posPid(0.5)
+            .build();
     private final CRServoEx flickServo = new CRServoEx("FLS");
     private final double encoderTicksPerThirdRev = 46.7;
     private Storage(){}
@@ -43,7 +47,7 @@ public class Storage implements Subsystem {
         setColorNone.schedule();
     }
     public final Command reload = new SequentialGroup(
-            new SetPower(spinMotor, motorController.calculate())
+            new SetPower(spinMotor, motorController.calculate(new KineticState(spinMotor.getCurrentPosition(), 0, 0)))
     );
 
     public final Command stop = new SetPower(spinMotor, 0).requires(this);
