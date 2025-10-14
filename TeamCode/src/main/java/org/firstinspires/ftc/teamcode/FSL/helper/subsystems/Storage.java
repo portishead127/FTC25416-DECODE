@@ -75,18 +75,18 @@ public class Storage implements Subsystem {
                 }).requires(this)
         ).requires(this);
     }
-    public final int findSlotWithColor(Colors color){
-        int slotWithAColor = -1;
-        for(int i = 0; i < bankedArties.size(); i++){
-            if(bankedArties.get(i) == color) return i;
-            else if(bankedArties.get(i) != Colors.NONE) slotWithAColor = 1;
-        }
-        return slotWithAColor;
-    }
     public final Command releaseSlot(int slot){
         return new SequentialGroup(
                 runToSlot(slot),
                 flickBall
         ).requires(this);
+    }
+    public final int findSlotWithColor(Colors color){
+        int slotWithAColor = -1;
+        for(int i = 0; i < bankedArties.size(); i++){
+            if(bankedArties.get(i) == color) return i;
+            else if(bankedArties.get(i) != Colors.NONE) slotWithAColor = i;
+        }
+        return slotWithAColor;
     }
 }

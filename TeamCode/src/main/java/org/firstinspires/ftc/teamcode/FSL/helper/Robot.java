@@ -59,6 +59,10 @@ public class Robot extends SubsystemGroup {
                     scoreGreen
             ));
 
+    public final Command intake = new SequentialGroup(
+            Storage.INSTANCE.reload
+            //intake
+    );
     public Command manualMotifControl = new InstantCommand(() -> {
         if(CameraSwivel.INSTANCE.motifNumber < 3) CameraSwivel.INSTANCE.motifNumber++;
         else CameraSwivel.INSTANCE.motifNumber = 1;
