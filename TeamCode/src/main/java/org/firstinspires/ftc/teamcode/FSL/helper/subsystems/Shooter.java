@@ -31,6 +31,6 @@ public class Shooter implements Subsystem {
     public Command subtractFromServo = new SetPosition(servo, servo.getPosition() - 0.01).requires(this);
     public Command telemetryServo = new LambdaCommand()
             .setUpdate(() -> {
-                ActiveOpMode.telemetry().addData("Servo", servo.getPosition());
+                ActiveOpMode.telemetry().addData("SHOOTER SERVO", servo.getPosition());
             }).perpetually().requires(this);
 }

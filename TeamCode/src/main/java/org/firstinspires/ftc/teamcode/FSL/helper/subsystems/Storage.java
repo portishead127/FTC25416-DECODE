@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Colors;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
@@ -89,4 +90,12 @@ public class Storage implements Subsystem {
         }
         return slotWithAColor;
     }
+    public Command telemetryStorage = new LambdaCommand()
+            .setUpdate(() -> {
+                ActiveOpMode.telemetry().addData("SLOT 0", Objects.requireNonNull(bankedArties.get(0)).name());
+                ActiveOpMode.telemetry().addData("SLOT 1", Objects.requireNonNull(bankedArties.get(1)).name());
+                ActiveOpMode.telemetry().addData("SLOT 2", Objects.requireNonNull(bankedArties.get(2)).name());
+            })
+            .perpetually()
+            .requires(this);
 }

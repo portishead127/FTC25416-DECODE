@@ -30,12 +30,12 @@ public class Robot extends SubsystemGroup {
     public final Command scorePurple = new SequentialGroup(
             Storage.INSTANCE.releaseSlot(Storage.INSTANCE.findSlotWithColor(Colors.PURPLE)),
             Shooter.INSTANCE.fire
-    );
+    ).requires(Shooter.INSTANCE, Storage.INSTANCE);
 
     public final Command scoreGreen = new SequentialGroup(
             Storage.INSTANCE.releaseSlot(Storage.INSTANCE.findSlotWithColor(Colors.GREEN)),
             Shooter.INSTANCE.fire
-    );
+    ).requires(Shooter.INSTANCE, Storage.INSTANCE);
 
     public final Command scoreMotif = new SwitchCommand<>(() -> CameraSwivel.INSTANCE.motifNumber)
             .withCase(1, new SequentialGroup(
@@ -57,16 +57,17 @@ public class Robot extends SubsystemGroup {
                     scorePurple,
                     scorePurple,
                     scoreGreen
-            ));
+            ))
+            .requires(scoreGreen.getRequirements(), CameraSwivel.INSTANCE);
 
-    public final Command intake = new SequentialGroup(
+    public final Command intake = new ParallelGroup(
             Storage.INSTANCE.reload
             //intake
-    );
+    ).requires(Storage.INSTANCE);
     public Command manualMotifControl = new InstantCommand(() -> {
         if(CameraSwivel.INSTANCE.motifNumber < 3) CameraSwivel.INSTANCE.motifNumber++;
         else CameraSwivel.INSTANCE.motifNumber = 1;
-    });
+    }).requires(CameraSwivel.INSTANCE);
 
     public Command telemetryMotif = new LambdaCommand()
             .setUpdate(() -> {
