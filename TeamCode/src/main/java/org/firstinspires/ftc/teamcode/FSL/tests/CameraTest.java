@@ -19,7 +19,7 @@ public class CameraTest extends NextFTCOpMode {
         );
     }
     @Override
-    public void onStartButtonPressed() {
+    public void onUpdate() {
         CameraSwivel.INSTANCE.focusOnAprilTag.schedule();
         updateTelemetry(telemetry);
     }
