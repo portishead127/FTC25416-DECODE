@@ -25,11 +25,20 @@ public class ShooterTest extends NextFTCOpMode {
 
     @Override
     public void onStartButtonPressed() {
-        Shooter.INSTANCE.telemetryServo.schedule();
         Gamepads.gamepad1().dpadUp().whenBecomesTrue(Shooter.INSTANCE.addToServo);
         Gamepads.gamepad1().dpadDown().whenBecomesTrue(Shooter.INSTANCE.subtractFromServo);
         Gamepads.gamepad1().square().whenBecomesTrue(Shooter.INSTANCE.fire);
         Gamepads.gamepad1().triangle().whenBecomesTrue(Shooter.INSTANCE.fireHalf);
         Gamepads.gamepad1().cross().whenBecomesTrue(Shooter.INSTANCE.stop);
+        Gamepads.gamepad1().dpadRight().whenBecomesTrue(Shooter.INSTANCE.addToPower);
+        Gamepads.gamepad1().dpadLeft().whenBecomesTrue(Shooter.INSTANCE.subtractFromPower);
+        Gamepads.gamepad1().circle().whenBecomesTrue(Shooter.INSTANCE.fireAtPower);
+    }
+
+    @Override
+    public void onUpdate() {
+        Shooter.INSTANCE.telemetryServo.schedule();
+        Shooter.INSTANCE.updateServo.schedule();
+        updateTelemetry(telemetry);
     }
 }

@@ -13,10 +13,13 @@ import dev.nextftc.bindings.BindingManager;
 public class MotorTest extends LinearOpMode
 {
     DcMotorEx testMotor;
+    DcMotorEx testMotor2;
     @Override
     public void runOpMode() throws InterruptedException {
-        testMotor = hardwareMap.get(DcMotorEx.class, "test");
+        testMotor = hardwareMap.get(DcMotorEx.class, "SM1");
         testMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        testMotor2 = hardwareMap.get(DcMotorEx.class, "SM2");
+        testMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
