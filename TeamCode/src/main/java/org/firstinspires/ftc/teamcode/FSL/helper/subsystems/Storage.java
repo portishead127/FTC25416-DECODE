@@ -51,8 +51,8 @@ public class Storage implements Subsystem {
         return new LambdaCommand()
             .setStart(() -> motorController.setGoal(destination))
             .setIsDone(() -> motorController.isWithinTolerance(new KineticState(2)))
-            .setUpdate(new SetPower(spinMotor, motorController.calculate(spinMotor.getState()))
-        ).requires(this);
+            .setUpdate(() -> spinMotor.setPower(motorController.calculate(spinMotor.getState())))
+            .requires(this);
     }
     public final Command reload = new SequentialGroup(
             updateArtySlot(0),
@@ -96,6 +96,5 @@ public class Storage implements Subsystem {
                 ActiveOpMode.telemetry().addData("SLOT 1", Objects.requireNonNull(bankedArties.get(1)).name());
                 ActiveOpMode.telemetry().addData("SLOT 2", Objects.requireNonNull(bankedArties.get(2)).name());
             })
-            .perpetually()
             .requires(this);
 }

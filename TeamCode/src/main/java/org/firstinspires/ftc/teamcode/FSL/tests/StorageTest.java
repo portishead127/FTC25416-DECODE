@@ -25,9 +25,14 @@ public class StorageTest extends NextFTCOpMode {
     }
     @Override
     public void onStartButtonPressed() {
-        Storage.INSTANCE.telemetryStorage.schedule();
         Gamepads.gamepad1().cross().whenBecomesTrue(Storage.INSTANCE.releaseSlot(Storage.INSTANCE.findSlotWithColor(Colors.PURPLE)));
         Gamepads.gamepad1().square().whenBecomesTrue(Storage.INSTANCE.releaseSlot(Storage.INSTANCE.findSlotWithColor(Colors.GREEN)));
         Gamepads.gamepad1().rightBumper().whenTrue(Storage.INSTANCE.reload);
+    }
+
+    @Override
+    public void onUpdate() {
+        Storage.INSTANCE.telemetryStorage.schedule();
+        updateTelemetry(telemetry);
     }
 }
