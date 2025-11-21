@@ -10,8 +10,8 @@ public class Shooter{
     private final DcMotorEx motor1;
     private final DcMotorEx motor2;
     private final Servo servo;
-    private Telemetry telemetry;
-    private Shooter(HardwareMap hm, Telemetry telemetry){
+    private final Telemetry telemetry;
+    public Shooter(HardwareMap hm, Telemetry telemetry){
         motor1 = hm.get(DcMotorEx.class, "SM1");
         motor2 = hm.get(DcMotorEx.class, "SM2");
         servo = hm.get(Servo.class, "SHS");
@@ -19,7 +19,7 @@ public class Shooter{
     }
     public void fire(){
         motor1.setVelocity(2 * Math.PI);
-        motor2.setPower(2 * Math.PI);
+        motor2.setVelocity(2 * Math.PI);
     }
     public void fireHalf(){
         motor1.setVelocity(Math.PI);
