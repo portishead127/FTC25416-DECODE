@@ -1,36 +1,35 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
 
-import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.commands.utility.LambdaCommand;
-import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.ftc.ActiveOpMode;
-import dev.nextftc.hardware.controllable.MotorGroup;
-import dev.nextftc.hardware.impl.MotorEx;
-import dev.nextftc.hardware.impl.ServoEx;
-import dev.nextftc.hardware.positionable.ServoGroup;
-import dev.nextftc.hardware.positionable.SetPosition;
-import dev.nextftc.hardware.powerable.SetPower;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
-public class Shooter implements Subsystem {
-    public static Shooter INSTANCE = new Shooter();
-    private Shooter(){}
-    private final MotorGroup shooterMotors = new MotorGroup(
-            new MotorEx("SM1")
-                    .reversed()
-                    .brakeMode(),
-            new MotorEx("SM2")
-                    .reversed()
-                    .brakeMode()
-    );
-    public final ServoEx servo = new ServoEx("SHS");
-    public Command fire = new SetPower(shooterMotors,1).requires(this);
-    public Command fireHalf = new SetPower(shooterMotors, 0.5).requires(this);
-    public Command stop = new SetPower(shooterMotors, 0).requires(this);
-    public Command addToServo = new SetPosition(servo, servo.getPosition() + 0.01).requires(this);
-    public Command subtractFromServo = new SetPosition(servo, servo.getPosition() - 0.01).requires(this);
-    public Command telemetryServo = new LambdaCommand()
-            .setUpdate(() -> {
-                ActiveOpMode.telemetry().addData("SHOOTER SERVO", servo.getPosition());
-            }).perpetually().requires(this);
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+public class Shooter{
+    private final DcMotorEx motor1;
+    private final DcMotorEx motor2;
+    private final Servo servo;
+    private Telemetry telemetry;
+    private Shooter(HardwareMap hm, Telemetry telemetry){
+        motor1 = hm.get(DcMotorEx.class, "SM1");
+        motor2 = hm.get(DcMotorEx.class, "SM2");
+        servo = hm.get(Servo.class, "SHS");
+        this.telemetry = telemetry;
+    }
+    public void fire(){
+        motor1.setVelocity(2 * Math.PI);
+        motor2.setPower(2 * Math.PI);
+    }
+    public void fireHalf(){
+        motor1.setVelocity(Math.PI);
+        motor2.setVelocity(Math.PI);
+    };
+    public void stop() {
+        motor1.setVelocity(0);
+        motor2.setVelocity(0);
+    }
+    public void addToServo(){ servo.setPosition(servo.getPosition() + 0.01); }
+    public void substractFromServo(){ servo.setPosition(servo.getPosition() - 0.01); }
+    public void telemetryServo(){ telemetry.addData("SHOOTER SERVO", servo.getPosition()); }
 }
