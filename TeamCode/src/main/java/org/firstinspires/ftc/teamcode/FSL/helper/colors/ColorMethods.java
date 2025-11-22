@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.colors;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 public class ColorMethods {
-    public static Colors fromSensor(ColorSensor sensor) {
+    public static Color fromSensor(ColorSensor sensor) {
         float[] hsv = new float[3];
 
         double scalingFactor = 255.0f / sensor.alpha();
@@ -13,7 +11,7 @@ public class ColorMethods {
         int green = (int)((double)sensor.green() * scalingFactor);
         int blue = (int)((double)sensor.blue() * scalingFactor);
 
-        Color.RGBToHSV(
+        android.graphics.Color.RGBToHSV(
                 red,
                 green,
                 blue,
@@ -22,21 +20,21 @@ public class ColorMethods {
         return fromHsv(hsv);
     }
 
-    private static Colors fromHsv(float[] hsv) {
+    private static Color fromHsv(float[] hsv) {
         float hue = hsv[0];
         float sat = hsv[1];
         float val = hsv[2];
 
         if(sat < 0.3 || val < 0.2) {
-            return Colors.NONE;
+            return Color.NONE;
         }
 
         if ((hue >= 0 && hue < 20) || (hue >= 320 && hue < 360)) { //THIS IS RED
-            return Colors.GREEN;
+            return Color.GREEN;
         } else if (hue >= 140 && hue <= 200) { //THIS IS BLUE
-            return Colors.PURPLE;
+            return Color.PURPLE;
         } else {
-            return Colors.BLACK;
+            return Color.BLACK;
         }
     }
 }

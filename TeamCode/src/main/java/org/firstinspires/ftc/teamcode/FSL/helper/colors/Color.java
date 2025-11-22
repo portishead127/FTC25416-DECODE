@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.colors;
 
-public enum Colors {
+public enum Color {
         GREEN,
         PURPLE,
         BLACK,

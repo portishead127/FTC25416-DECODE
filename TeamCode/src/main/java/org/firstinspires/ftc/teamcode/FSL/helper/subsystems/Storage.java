@@ -2,100 +2,52 @@ package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
-import org.firstinspires.ftc.teamcode.FSL.helper.colors.Colors;
+import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.LinkedList;
 
-import dev.nextftc.control.ControlSystem;
-import dev.nextftc.control.KineticState;
-import dev.nextftc.core.commands.Command;
-import dev.nextftc.core.commands.delays.Delay;
-import dev.nextftc.core.commands.groups.SequentialGroup;
-import dev.nextftc.core.commands.utility.InstantCommand;
-import dev.nextftc.core.commands.utility.LambdaCommand;
-import dev.nextftc.core.commands.utility.NullCommand;
-import dev.nextftc.core.subsystems.Subsystem;
-import dev.nextftc.ftc.ActiveOpMode;
-import dev.nextftc.hardware.impl.CRServoEx;
-import dev.nextftc.hardware.impl.MotorEx;
-import dev.nextftc.hardware.powerable.SetPower;
-
-public class Storage implements Subsystem {
-    public final HashMap<Integer, Colors> bankedArties = new HashMap<>(3);
-    private ColorSensor colorSensor;
-    private final MotorEx spinMotor = new MotorEx("SPM");
-    private final ControlSystem motorController = ControlSystem.builder()
-            .posPid(0.5)
-            .build();
-    private final CRServoEx flickServo = new CRServoEx("FLS");
-
-    private Storage(){}
-    public static Storage INSTANCE = new Storage();
-
-    @Override
-    public void initialize() {
-        colorSensor = ActiveOpMode.hardwareMap().get(ColorRangeSensor.class, "CS");
+public class Storage {
+    private final LinkedList<Color> queue = new LinkedList<Color>();
+    private final ColorSensor colorSensor;
+    private final DcMotorEx motor;
+    private final Servo servo;
+    private final Telemetry telemetry;
+    public Storage(HardwareMap hm, Telemetry telemetry) {
+        motor = hm.get(DcMotorEx.class, "SPM");
+        servo = hm.get(Servo.class, "FLS");
+        colorSensor = hm.get(ColorRangeSensor.class, "CS");
         colorSensor.enableLed(true);
-        bankedArties.put(0, Colors.NONE);
-        bankedArties.put(1, Colors.NONE);
-        bankedArties.put(2, Colors.NONE);
-    }
-    public final Command stop = new SetPower(spinMotor, 0).requires(this);
-    public Command runToSlot(int slot){
-        if(slot == -1) return new NullCommand().requires(this);
-        double encoderTicksPerThirdRev = 46.7;
-        KineticState destination = new KineticState(slot * encoderTicksPerThirdRev);
-        return new LambdaCommand()
-            .setStart(() -> motorController.setGoal(destination))
-            .setIsDone(() -> motorController.isWithinTolerance(new KineticState(2)))
-            .setUpdate(new SetPower(spinMotor, motorController.calculate(spinMotor.getState()))
-        ).requires(this);
-    }
-    public final Command reload = new SequentialGroup(
-            updateArtySlot(0),
-            updateArtySlot(1),
-            updateArtySlot(2),
-            stop,
-            new InstantCommand(spinMotor::zero).requires(this)
-    ).requires(this);
 
-    public final Command flickBall = new SequentialGroup(
-        new SetPower(flickServo, 1),
-        new Delay(0.1),
-        new SetPower(flickServo, 0)
-    ).requires(this);
-
-    public final Command updateArtySlot(int slot){
-        return new SequentialGroup(
-                runToSlot(slot),
-                new InstantCommand(() -> {
-                    bankedArties.replace(slot, ColorMethods.fromSensor(colorSensor));
-                }).requires(this)
-        ).requires(this);
+        this.telemetry = telemetry;
     }
-    public final Command releaseSlot(int slot){
-        return new SequentialGroup(
-                runToSlot(slot),
-                flickBall
-        ).requires(this);
+    public void stop(){ motor.setVelocity(0);}
+    public void spin(){ motor.setVelocity(motor.getMotorType().getAchieveableMaxTicksPerSecond() / 2); }
+    public void setQueue(LinkedList<Color> colors){
+        queue.clear();
+        queue.addAll(colors);
     }
-    public final int findSlotWithColor(Colors color){
-        int slotWithAColor = -1;
-        for(int i = 0; i < bankedArties.size(); i++){
-            if(bankedArties.get(i) == color) return i;
-            else if(bankedArties.get(i) != Colors.NONE) slotWithAColor = i;
+    public void spinThroughQueue() {
+        if (queue.isEmpty()) {
+            stop();
+            return;
         }
-        return slotWithAColor;
+        if (ColorMethods.fromSensor(colorSensor) == queue.peek()) {
+            flickBall();
+            queue.remove();
+            return;
+        }
+        spin();
     }
-    public Command telemetryStorage = new LambdaCommand()
-            .setUpdate(() -> {
-                ActiveOpMode.telemetry().addData("SLOT 0", Objects.requireNonNull(bankedArties.get(0)).name());
-                ActiveOpMode.telemetry().addData("SLOT 1", Objects.requireNonNull(bankedArties.get(1)).name());
-                ActiveOpMode.telemetry().addData("SLOT 2", Objects.requireNonNull(bankedArties.get(2)).name());
-            })
-            .perpetually()
-            .requires(this);
+    public final void flickBall(){ /*do something*/ }
+    public void sendTelemetry() {
+        telemetry.addLine("STORAGE\n");
+        telemetry.addData("SERVO POS", servo.getPosition());
+        telemetry.addData("MOTOR VEL", motor.getVelocity());
+    }
 }
