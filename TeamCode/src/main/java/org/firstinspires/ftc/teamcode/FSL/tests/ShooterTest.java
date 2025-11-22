@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
-import com.bylazar.gamepad.Gamepad;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.EdgeDetector;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 @TeleOp(name = "Test: Shooter Test", group = "Test")
 public class ShooterTest extends LinearOpMode {
@@ -21,9 +18,9 @@ public class ShooterTest extends LinearOpMode {
             if(gamepad1.crossWasPressed()){ shooter.fireHalf(); }
             if(gamepad1.circleWasPressed()){ shooter.stop(); }
             if(gamepad1.dpadUpWasPressed()){ shooter.addToServo(); }
-            if(gamepad1.dpadDownWasPressed()){ shooter.substractFromServo(); }
+            if(gamepad1.dpadDownWasPressed()){ shooter.subtractFromServo(); }
 
-            shooter.telemetryServo();
+            shooter.sendTelemetry();
             telemetry.update();
         }
     }
