@@ -1,48 +1,31 @@
 package org.firstinspires.ftc.teamcode.FSL.comp;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.Robot;
+import org.firstinspires.ftc.teamcode.FSL.helper.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.MecanumSet;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 
-import dev.nextftc.core.components.BindingsComponent;
-import dev.nextftc.core.components.SubsystemComponent;
-import dev.nextftc.ftc.Gamepads;
-import dev.nextftc.ftc.NextFTCOpMode;
-import dev.nextftc.ftc.components.BulkReadComponent;
-
 @TeleOp(name = "Competition: TeleOp", group = "Competition")
-public class CompetitionTeleOp extends NextFTCOpMode {
-    public CompetitionTeleOp(){
-        addComponents(
-                new SubsystemComponent(Robot.INSTANCE),
-                BulkReadComponent.INSTANCE,
-                BindingsComponent.INSTANCE
-        );
-    }
-
+public class CompetitionTeleOp extends LinearOpMode {
+    Robot robot = new Robot(hardwareMap, telemetry);
     @Override
-    public void onStartButtonPressed() {
-        MecanumSet.INSTANCE.driverController.schedule();
-        Gamepads.gamepad1().rightBumper().whenFalse(MecanumSet.INSTANCE.setMedium);
-        Gamepads.gamepad1().leftBumper().whenTrue(MecanumSet.INSTANCE.setSlow);
-        Gamepads.gamepad1().rightBumper().whenTrue(MecanumSet.INSTANCE.setFast);
+    public void runOpMode() throws InterruptedException {
+        telemetry.addData("STATUS", "INITIALISED");
+        telemetry.update();
+        waitForStart();
+        while(opModeIsActive()){
+            if(gamepad1.right_bumper){ robot.storage.spin(); }
+            else{ robot.storage.spinThroughQueue(); }
 
-        Gamepads.gamepad2().touchpad().whenBecomesTrue(Robot.INSTANCE.manualMotifControl);
-        Robot.INSTANCE.telemetryMotif.schedule();
-
-        Gamepads.gamepad2().square().whenBecomesTrue(Robot.INSTANCE.scoreMotif);
-        Gamepads.gamepad2().triangle().whenBecomesTrue(Robot.INSTANCE.scoreGreen);
-        Gamepads.gamepad2().circle().whenBecomesTrue(Robot.INSTANCE.scorePurple);
-        Gamepads.gamepad2().rightBumper().whenTrue(Robot.INSTANCE.intake);
-
-        CameraSwivel.INSTANCE.focusOnAprilTag.schedule();
-    }
-
-    @Override
-    public void onUpdate() {
-        updateTelemetry(telemetry);
+            if(gamepad1.squareWasPressed()){ robot.storage.setQueue(Scoring.PPG); }
+            if(gamepad1.triangleWasPressed()){ robot.storage.setQueue(Scoring.G); }
+            if(gamepad1.crossWasPressed()){ robot.storage.setQueue(Scoring.P); }
+            if(gamepad1.circleWasPressed()){ robot.storage.setQueue(Scoring.NONE); }
+            robot.fireManagement();
+        }
     }
 }

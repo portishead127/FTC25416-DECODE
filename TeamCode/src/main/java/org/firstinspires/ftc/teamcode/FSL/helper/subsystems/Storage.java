@@ -32,6 +32,7 @@ public class Storage {
         queue.clear();
         queue.addAll(colors);
     }
+    public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void spinThroughQueue() {
         if (queue.isEmpty()) {
             stop();
