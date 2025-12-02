@@ -9,7 +9,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Shooter{
-    private static final double MAX_MOTOR_RPM = 933;
     private final DcMotorEx motor1;
     private final DcMotorEx motor2;
     private final Servo servo;

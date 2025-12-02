@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-import dev.nextftc.bindings.BindingManager;
-
 @TeleOp(name = "Test: Motor Test", group = "Test")
 public class MotorTest extends LinearOpMode
 {

@@ -56,8 +56,8 @@ public class MecanumSet {
     public void sendTelemetry(){
         telemetry.addLine("DRIVETRAIN\n");
         telemetry.addData("FRONT LEFT VEL", frontLeft.getVelocity());
-        telemetry.addData("FRONT LEFT VEL", frontLeft.getVelocity());
-        telemetry.addData("FRONT LEFT VEL", frontLeft.getVelocity());
-        telemetry.addData("FRONT LEFT VEL", frontLeft.getVelocity());
+        telemetry.addData("FRONT RIGHT VEL", frontRight.getVelocity());
+        telemetry.addData("BACK LEFT VEL", backLeft.getVelocity());
+        telemetry.addData("BACK RIGHT VEL", backRight.getVelocity());
     }
 }

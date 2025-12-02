@@ -35,15 +35,12 @@ public class Storage {
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void spinThroughQueue() {
         if (queue.isEmpty()) {
-            stop();
             return;
         }
         if (ColorMethods.fromSensor(colorSensor) == queue.peek()) {
             flickBall();
             queue.remove();
-            return;
         }
-        spin();
     }
     public final void flickBall(){ /*do something*/ }
     public void sendTelemetry() {
