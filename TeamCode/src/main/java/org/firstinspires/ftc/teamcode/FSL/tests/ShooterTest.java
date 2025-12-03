@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 @TeleOp(name = "Test: Shooter Test", group = "Test")
 public class ShooterTest extends LinearOpMode {
-    Shooter shooter = new Shooter(hardwareMap, telemetry);
     @Override
     public void runOpMode() throws InterruptedException {
+        Shooter shooter = new Shooter(hardwareMap, telemetry);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
         waitForStart();

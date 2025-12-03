@@ -14,6 +14,7 @@ import java.util.LinkedList;
 
 public class Storage {
     private final LinkedList<Color> queue = new LinkedList<Color>();
+    private Color currentColor = Color.NONE;
     private final ColorSensor colorSensor;
     private final DcMotorEx motor;
     private final Servo servo;
@@ -34,10 +35,9 @@ public class Storage {
     }
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void spinThroughQueue() {
-        if (queue.isEmpty()) {
-            return;
-        }
-        if (ColorMethods.fromSensor(colorSensor) == queue.peek()) {
+        currentColor = ColorMethods.fromSensor(colorSensor);
+        if (queue.isEmpty()) { return; }
+        if (currentColor == queue.peek()) {
             flickBall();
             queue.remove();
         }
@@ -47,5 +47,6 @@ public class Storage {
         telemetry.addLine("STORAGE\n");
         telemetry.addData("SERVO POS", servo.getPosition());
         telemetry.addData("MOTOR VEL", motor.getVelocity());
+        telemetry.addData("COLOR SENSOR", currentColor.name());
     }
 }

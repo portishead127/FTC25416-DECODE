@@ -25,6 +25,7 @@ public class CompetitionTeleOp extends LinearOpMode {
             if(gamepad1.triangleWasPressed()){ robot.storage.setQueue(Scoring.G); }
             if(gamepad1.crossWasPressed()){ robot.storage.setQueue(Scoring.P); }
             if(gamepad1.circleWasPressed()){ robot.storage.setQueue(Scoring.NONE); }
+            robot.mecanumSet.drive(gamepad1, 0.67);
             robot.fireManagement();
         }
     }

@@ -13,9 +13,9 @@ import java.util.LinkedList;
 
 @TeleOp(name= "Test: Storage Test", group = "Test")
 public class StorageTest extends LinearOpMode {
-    Storage storage = new Storage(hardwareMap, telemetry);
     @Override
     public void runOpMode() throws InterruptedException {
+        Storage storage = new Storage(hardwareMap, telemetry);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
 

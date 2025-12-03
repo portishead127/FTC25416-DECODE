@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.MecanumSet;
 
 @TeleOp(name = "Test: Mecanum Test", group = "Test")
 public class MecanumTest extends LinearOpMode {
-    MecanumSet mecanumSet = new MecanumSet(hardwareMap, telemetry);
     @Override
     public void runOpMode() throws InterruptedException {
+        MecanumSet mecanumSet = new MecanumSet(hardwareMap, telemetry);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
         waitForStart();
