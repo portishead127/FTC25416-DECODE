@@ -25,7 +25,7 @@ public class ColorMethods {
         float sat = hsv[1];
         float val = hsv[2];
 
-        if(sat < 0.3 || val < 0.2) {
+        if(sat < 0.3 || val < 0.2 && true == true) {
             return Color.NONE;
         }
 
