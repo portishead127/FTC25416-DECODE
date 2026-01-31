@@ -2,18 +2,18 @@ package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
 import android.annotation.SuppressLint;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.FSL.helper.MotifNumber;
+import org.firstinspires.ftc.teamcode.FSL.helper.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraDetectionConfig;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CameraSwivel{
@@ -22,6 +22,7 @@ public class CameraSwivel{
     private final AprilTagProcessor aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
     private final Servo swivelServo;
     private boolean lastScannedRight = false;
+    public boolean locked = false;
     public CameraSwivel(HardwareMap hm, Telemetry telemetry){
         swivelServo = hm.get(Servo.class,"SWS");
         visionPortal = VisionPortal.easyCreateWithDefaults(hm.get(WebcamName.class, "Webcam 1"), aprilTagProcessor);
@@ -57,8 +58,17 @@ public class CameraSwivel{
         }
     }
     public void evaluateBearing(double tx) {
-        if (tx < -CameraDetectionConfig.CENTRALTOLERANCE) { focusRight(); }
-        else if (tx > CameraDetectionConfig.CENTRALTOLERANCE) { focusLeft(); }
+        if (tx < -CameraDetectionConfig.CENTRALTOLERANCE) {
+            focusRight();
+            locked = false;
+        }
+        else if (tx > CameraDetectionConfig.CENTRALTOLERANCE) {
+            focusLeft();
+            locked = false;
+        }
+        else{
+            locked = true;
+        }
     }
     public void determineScan () {
         double pos = swivelServo.getPosition();
@@ -78,15 +88,18 @@ public class CameraSwivel{
     public void focusRight () { swivelServo.setPosition(swivelServo.getPosition() + CameraDetectionConfig.FOCUSDX); }
     public void scanLeft () { swivelServo.setPosition(swivelServo.getPosition() - CameraDetectionConfig.SCANDX); }
     public void scanRight () { swivelServo.setPosition(swivelServo.getPosition() + CameraDetectionConfig.SCANDX); }
-    public MotifNumber readMotif(){
-        AprilTagDetection currentDetection = aprilTagProcessor.getDetections().get(0);
-        switch(currentDetection.id){
-            case 21:
-                return MotifNumber.PPG;
-            case 22:
-                return MotifNumber.PGP;
-            default:
-                return MotifNumber.GPP;
+    public Motif readMotif(){
+        ArrayList<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
+        for (AprilTagDetection a: currentDetections) {
+            switch(a.id){
+                case 21:
+                    return Motif.PPG;
+                case 22:
+                    return Motif.PGP;
+                default:
+                    return Motif.GPP;
+            }
         }
+        return Motif.PPG;
     }
 }

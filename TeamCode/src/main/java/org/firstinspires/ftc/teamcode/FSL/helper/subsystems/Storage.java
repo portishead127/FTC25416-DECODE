@@ -35,14 +35,23 @@ public class Storage {
     }
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void spinThroughQueue() {
+        spin();
+        unflickBall();
+
         currentColor = ColorMethods.fromSensor(colorSensor);
-        if (queue.isEmpty()) { return; }
         if (currentColor == queue.peek()) {
+            stop();
             flickBall();
             queue.remove();
         }
     }
-    public final void flickBall(){ /*do something*/ }
+    public final void flickBall(){
+        servo.setPosition(1);
+    }
+
+    public final void unflickBall(){
+        servo.setPosition(0);
+    }
     public void sendTelemetry() {
         telemetry.addLine("STORAGE\n");
         telemetry.addData("SERVO POS", servo.getPosition());

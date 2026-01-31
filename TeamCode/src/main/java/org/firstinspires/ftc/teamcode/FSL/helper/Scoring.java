@@ -15,4 +15,14 @@ public class Scoring{
     public static final LinkedList<Color> PGP = new LinkedList<Color>(List.of(Color.PURPLE, Color.GREEN, Color.PURPLE));
     public static final LinkedList<Color> GPP = new LinkedList<Color>(List.of(Color.GREEN, Color.PURPLE, Color.PURPLE));
 
+    public static LinkedList<Color> convertToScoringPattern(Motif m){
+        switch (m){
+            case GPP:
+                return GPP;
+            case PGP:
+                return PGP;
+            case PPG:
+                return PPG;
+        }
+    }
 }
