@@ -34,7 +34,7 @@ public class BlueSafeAuto extends OpMode {
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(20, 123, Math.toRadians(-35)));
+        follower.setStartingPose(new Pose(56, 8, Math.toRadians(90)));
 
         paths = new Paths(follower); // Build paths
         setPathState(0);

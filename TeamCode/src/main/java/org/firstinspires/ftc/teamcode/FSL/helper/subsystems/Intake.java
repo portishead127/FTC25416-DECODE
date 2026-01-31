@@ -23,6 +23,9 @@ public class Intake{
     public void stop(){
         motor1.setVelocity(0);
     }
+    public boolean isBusy(){
+        return motor1.isBusy();
+    }
     public void sendTelemetry(){
         telemetry.addLine("INTAKE\n--------------`----------------------");
         telemetry.addData("INTAKE MOTOR VEL", motor1.getVelocity());

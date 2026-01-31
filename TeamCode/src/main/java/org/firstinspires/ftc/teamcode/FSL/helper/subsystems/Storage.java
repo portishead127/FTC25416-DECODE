@@ -34,7 +34,7 @@ public class Storage {
         queue.addAll(colors);
     }
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
-    public void spinThroughQueue() {
+    public void loadIntoShooter() {
         spin();
         unflickBall();
 

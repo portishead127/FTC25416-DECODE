@@ -22,16 +22,21 @@ public class Robot{
         intake = new Intake(hm, telemetry);
     };
 
-    public void update(){
-        if(storage.queueIsEmpty()){
-            shooter.stop();
-            storage.stop();
-            return;
-        }
-        shooter.fire();
+    public void update() {
         cameraSwivel.focusOnAprilTag(false);
-        if(cameraSwivel.locked){
-            storage.spinThroughQueue();
+
+        if (storage.queueIsEmpty()) {
+            shooter.stop();
+        } else {
+            shooter.fire();
+        }
+
+        if (intake.isBusy()) {
+            storage.spin();
+        } else if (cameraSwivel.locked && !storage.queueIsEmpty() && shooter.isWarmedUp()) {
+            storage.loadIntoShooter();
+        } else {
+            storage.stop();
         }
     }
 }
