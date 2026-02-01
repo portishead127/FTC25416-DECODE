@@ -145,12 +145,12 @@ public class CameraSwivel {
     }
 
     public Motif readMotif() {
-        ArrayList<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
+        List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
         for (AprilTagDetection a : currentDetections) {
             switch (a.id) {
                 case 21: return Motif.PPG;
                 case 22: return Motif.PGP;
-                default: return Motif.GPP;
+                case 23: return Motif.GPP;
             }
         }
         return Motif.PPG;
