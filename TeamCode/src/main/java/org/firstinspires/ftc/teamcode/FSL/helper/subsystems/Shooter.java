@@ -64,7 +64,6 @@ public class Shooter {
         telemetry.addData("Motor Vel (actual)", String.format("%.0f tps", motor1.getVelocity()));
         telemetry.addData("Target Vel", String.format("%.0f tps", MOTOR1_MAX_TICKS_PER_SECOND));
         telemetry.addData("Warmed Up", isWarmedUp() ? "YES" : "NO");
-        telemetry.addData("Vel % of Target", String.format("%.1f%%",
-                (motor1.getVelocity() / MOTOR1_MAX_TICKS_PER_SECOND) * 100));
+        telemetry.addData("Vel % of Target", String.format("%.1f%%", (motor1.getVelocity() / MOTOR1_MAX_TICKS_PER_SECOND) * 100));
     }
 }

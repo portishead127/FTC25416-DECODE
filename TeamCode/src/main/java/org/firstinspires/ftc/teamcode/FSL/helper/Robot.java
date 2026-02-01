@@ -15,7 +15,8 @@ public class Robot{
     public Storage storage;
     public MecanumSet mecanumSet;
     public Intake intake;
-    public Robot(HardwareMap hm, Telemetry telemetry){
+    public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue){
+        cameraSwivel = new CameraSwivel(hm, telemetry, isBlue);
         shooter = new Shooter(hm, telemetry);
         storage = new Storage(hm, telemetry);
         mecanumSet = new MecanumSet(hm, telemetry);
