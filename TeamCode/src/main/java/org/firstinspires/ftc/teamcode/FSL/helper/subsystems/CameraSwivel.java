@@ -127,19 +127,11 @@ public class CameraSwivel {
         locked = Math.abs(bearing) < CameraDetectionConfig.CENTRALTOLERANCE;
     }
 
-
     public void stop() {
         swivelMotor.setPower(0);
         swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);  // Back to velocity if needed
     }
-
-    // Optional: manual jog (for testing/tuning)
-    public void jogLeft(double power) {
-        swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        swivelMotor.setPower(-power);  // Direction depends on wiring
-    }
-
-    public void jogRight(double power) {
+    public void jog(double power) {
         swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         swivelMotor.setPower(power);
     }
