@@ -12,6 +12,7 @@ public class Shooter {
     private final DcMotorEx motor1;
     private final Servo servo;
     private final Telemetry telemetry;
+    private double target;
 
     // Tunable warm-up threshold (90% is a good starting point for most FTC flywheels)
     private static final double WARM_UP_THRESHOLD = 0.90;
@@ -26,8 +27,9 @@ public class Shooter {
         MOTOR1_MAX_TICKS_PER_SECOND = motor1.getMotorType().getAchieveableMaxTicksPerSecond();
     }
 
-    public void fire() {
-        motor1.setVelocity(MOTOR1_MAX_TICKS_PER_SECOND);
+    public void fire(double scalar) {
+        target = scalar * MOTOR1_MAX_TICKS_PER_SECOND;
+        motor1.setVelocity(target);
     }
 
     /**

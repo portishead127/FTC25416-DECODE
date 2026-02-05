@@ -29,7 +29,7 @@ public class Robot{
         if (storage.queueIsEmpty()) {
             shooter.stop();
         } else {
-            shooter.fire();
+            shooter.fire(0.9);
         }
 
         if (intake.isBusy()) {

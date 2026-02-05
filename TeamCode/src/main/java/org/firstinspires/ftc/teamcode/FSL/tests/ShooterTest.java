@@ -14,8 +14,8 @@ public class ShooterTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            if(gamepad1.squareWasPressed()){ shooter.fire(); }
-            if(gamepad1.crossWasPressed()){ shooter.fireHalf(); }
+            if(gamepad1.squareWasPressed()){ shooter.fire(0.9); }
+            if(gamepad1.crossWasPressed()){ shooter.fire(0.75); }
             if(gamepad1.circleWasPressed()){ shooter.stop(); }
             if(gamepad1.dpadUpWasPressed()){ shooter.addToServo(); }
             if(gamepad1.dpadDownWasPressed()){ shooter.subtractFromServo(); }

@@ -16,7 +16,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.geometry.Pose;
 
-@Autonomous(name = "Pedro Pathing Autonomous", group = "Autonomous")
+@Autonomous(name = "Red - Greedy", group = "RED")
 @Configurable // Panels
 public class RedGreedyAuto extends OpMode {
     private Robot robot;
