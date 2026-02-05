@@ -16,8 +16,6 @@ public class MecanumTest extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             mecanumSet.drive(gamepad1, 0.7);
-            mecanumSet.sendTelemetry();
-            telemetry.update();
         }
     }
 }

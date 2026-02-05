@@ -24,6 +24,5 @@ public class Scoring{
             case PPG:
                 return PPG;
         }
-        return GPP;
     }
 }
