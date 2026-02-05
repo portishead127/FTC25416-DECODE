@@ -18,12 +18,14 @@ public class MecanumSet {
     public MecanumSet(HardwareMap hm, Telemetry telemetry){
         frontLeft = hm.get(DcMotorEx.class, "FLW");
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontRight = hm.get(DcMotorEx.class, "FRW");
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         backLeft = hm.get(DcMotorEx.class, "BLW");
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         backRight = hm.get(DcMotorEx.class, "BRW");
@@ -34,8 +36,6 @@ public class MecanumSet {
     }
 
     public void drive(Gamepad gp, double scalar){
-        scalar = Math.max(0, Math.min(1, scalar));
-        double velocity = scalar * frontLeft.getMotorType().getAchieveableMaxTicksPerSecond();
 
         double y = -gp.left_stick_y;
         double x = gp.left_stick_x * 1.1;
@@ -47,17 +47,17 @@ public class MecanumSet {
         double frontRightPowerMod = (y - x - rx) / denominator;
         double backRightPowerMod = (y + x - rx) / denominator;
 
-        frontLeft.setVelocity(frontLeftPowerMod * velocity);
-        backLeft.setVelocity(backLeftPowerMod * velocity);
-        frontRight.setVelocity(frontRightPowerMod * velocity);
-        backRight.setVelocity(backRightPowerMod * velocity);
+        frontLeft.setPower(frontLeftPowerMod * scalar);
+        backLeft.setPower(backLeftPowerMod * scalar);
+        frontRight.setPower(frontRightPowerMod * scalar);
+        backRight.setPower(backRightPowerMod * scalar);
     }
 
     public void sendTelemetry(){
         telemetry.addLine("DRIVETRAIN\n");
-        telemetry.addData("FRONT LEFT VEL", frontLeft.getVelocity());
-        telemetry.addData("FRONT RIGHT VEL", frontRight.getVelocity());
-        telemetry.addData("BACK LEFT VEL", backLeft.getVelocity());
-        telemetry.addData("BACK RIGHT VEL", backRight.getVelocity());
+        telemetry.addData("FRONT LEFT VEL", frontLeft.getPower());
+        telemetry.addData("FRONT RIGHT VEL", frontRight.getPower());
+        telemetry.addData("BACK LEFT VEL", backLeft.getPower());
+        telemetry.addData("BACK RIGHT VEL", backRight.getPower());
     }
 }

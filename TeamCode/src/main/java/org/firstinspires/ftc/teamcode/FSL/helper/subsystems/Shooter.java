@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Shooter {
     private static double MOTOR1_MAX_TICKS_PER_SECOND;
     private final DcMotorEx motor1;
     private final Servo servo;
     private final Telemetry telemetry;
+    private double target;
 
     // Tunable warm-up threshold (90% is a good starting point for most FTC flywheels)
     private static final double WARM_UP_THRESHOLD = 0.90;
@@ -24,30 +24,34 @@ public class Shooter {
         servo.setPosition(0.5);
         this.telemetry = telemetry;
         MOTOR1_MAX_TICKS_PER_SECOND = motor1.getMotorType().getAchieveableMaxTicksPerSecond();
+        target = 0;
     }
 
     public void fire() {
         motor1.setVelocity(MOTOR1_MAX_TICKS_PER_SECOND);
     }
 
-    /**
-     * Returns true when the flywheel has reached at least 90% of full commanded velocity.
-     * Useful for delaying shots until the shooter is stable/speed-consistent.
-     */
     public boolean isWarmedUp() {
         double currentVelocity = motor1.getVelocity();  // ticks per second (actual measured)
-        double target = MOTOR1_MAX_TICKS_PER_SECOND;
 
         // True if within 90% or better, with a small epsilon to stabilize near boundary
         return currentVelocity >= (target * WARM_UP_THRESHOLD) - VELOCITY_EPSILON;
     }
 
-    public void fireHalf() {
-        motor1.setVelocity(0.5 * MOTOR1_MAX_TICKS_PER_SECOND);
+    //75% at top d
+    //90% at 3 pointer
+    public void fireTopOfTriangle() {
+        target = 0.75 * MOTOR1_MAX_TICKS_PER_SECOND;
+        motor1.setVelocity(target);
+    }
+    public void fire3Pointer() {
+        target = 0.90 * MOTOR1_MAX_TICKS_PER_SECOND;
+        motor1.setVelocity(target);
     }
 
     public void stop() {
-        motor1.setVelocity(0);
+        target = 0;
+        motor1.setVelocity(target);
     }
 
     public void addToServo() {

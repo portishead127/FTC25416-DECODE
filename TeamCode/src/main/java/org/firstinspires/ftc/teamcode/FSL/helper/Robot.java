@@ -34,7 +34,7 @@ public class Robot{
 
         if (intake.isBusy()) {
             storage.spin();
-        } else if (cameraSwivel.locked && !storage.queueIsEmpty() && shooter.isWarmedUp()) {
+        } else if (cameraSwivel.locked && (!storage.queueIsEmpty() || storage.anyColor) && shooter.isWarmedUp()) {
             storage.loadIntoShooter();
         } else {
             storage.stop();

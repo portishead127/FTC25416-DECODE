@@ -17,11 +17,13 @@ public class StorageTest extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             if (gamepad1.right_bumper) { storage.spin(); }
-            else{ storage.loadIntoShooter(); }
+            else if(gamepad1.left_bumper){ storage.loadIntoShooter(); }
+            else{storage.stop();}
             if (gamepad1.squareWasPressed()) { storage.setQueue(Scoring.PPG); }
             if (gamepad1.crossWasPressed()) { storage.setQueue(Scoring.P); }
             if (gamepad1.circleWasPressed()) { storage.setQueue(Scoring.G); }
-            if (gamepad1.triangleWasPressed()) { storage.setQueue(Scoring.NONE); }
+            if (gamepad1.triangleWasPressed()) { storage.toggleAnyColor(); }
+
 
             storage.sendTelemetry();
             telemetry.update();

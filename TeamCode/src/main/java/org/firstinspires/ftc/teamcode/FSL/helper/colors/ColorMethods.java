@@ -25,16 +25,16 @@ public class ColorMethods {
         float sat = hsv[1];
         float val = hsv[2];
 
-        if(sat < 0.3 || val < 0.2 && true == true) {
+        if(sat < 0.3 || val < 0.2) {
             return Color.NONE;
         }
 
-        if ((hue >= 0 && hue < 20) || (hue >= 320 && hue < 360)) { //THIS IS RED
+        if ((hue >= 100 && hue < 135)) {
             return Color.GREEN;
-        } else if (hue >= 140 && hue <= 200) { //THIS IS BLUE
+        } else if (hue >= 320 && hue <= 355) {
             return Color.PURPLE;
         } else {
-            return Color.BLACK;
+            return Color.ANY;
         }
     }
 }
