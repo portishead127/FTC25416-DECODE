@@ -11,4 +11,8 @@ public class ShooterConfig {
     public static double MOTORVELSCALARFORLAYUP = 0.75;
     public static double SERVOPOSFOR3POINTER = 0.3;
     public static double SERVOPOSFORLAYUP = 0.7;
+    public static final double WARM_UP_THRESHOLD = 0.90;
+    public static final double VELOCITY_EPSILON = 20.0;
+
+
 }

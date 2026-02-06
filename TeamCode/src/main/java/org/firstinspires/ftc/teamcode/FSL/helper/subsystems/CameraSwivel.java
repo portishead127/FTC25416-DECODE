@@ -25,6 +25,7 @@ public class CameraSwivel {
     private final DcMotorEx swivelMotor;
     private final PIDController pidController;
     private final int targetID;
+    public double range;
 
     public boolean locked = false;
     public CameraSwivel(HardwareMap hm, Telemetry telemetry, boolean isBlue) {
@@ -32,6 +33,7 @@ public class CameraSwivel {
         swivelMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);  // Or RUN_TO_POSITION if preferred
         swivelMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.telemetry = telemetry;
 
         visionPortal = VisionPortal.easyCreateWithDefaults(
                 hm.get(WebcamName.class, "Webcam 1"),
@@ -39,8 +41,7 @@ public class CameraSwivel {
         );
 
         pidController = new PIDController(CameraDetectionConfig.KP, CameraDetectionConfig.KI, CameraDetectionConfig.KD, CameraDetectionConfig.CENTRALTOLERANCE);
-
-        this.telemetry = telemetry;
+        range = 0;
 
         if(isBlue){ targetID = 20;}
         else{ targetID = 24; }
@@ -74,6 +75,7 @@ public class CameraSwivel {
                 if(Math.abs(swivelMotor.getCurrentPosition() + tickBearing) <= CameraDetectionConfig.MAXOFFSET){
                     pidController.setTarget(tickBearing, true);
                 }
+                range = detection.ftcPose.range;
             }
         }
 

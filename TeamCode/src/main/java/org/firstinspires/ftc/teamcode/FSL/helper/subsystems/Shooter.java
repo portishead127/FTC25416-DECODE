@@ -14,11 +14,6 @@ public class Shooter {
     private final Telemetry telemetry;
     private double motorScalar;
 
-    // Tunable warm-up threshold (90% is a good starting point for most FTC flywheels)
-    private static final double WARM_UP_THRESHOLD = 0.90;
-    // Small deadband to prevent oscillation near threshold (in ticks/sec)
-    private static final double VELOCITY_EPSILON = 20.0;
-
     public Shooter(HardwareMap hm, Telemetry telemetry) {
         motor1 = hm.get(DcMotorEx.class, "SM1");
         servo = hm.get(Servo.class, "SHS");
@@ -43,33 +38,32 @@ public class Shooter {
             else{
                 motorScalar = ShooterConfig.MOTORVELSCALARFORLAYUP;
             }
-            motor1.setVelocity(MOTOR1_MAX_TICKS_PER_SECOND * motorScalar);
         }
+        else{
+            motorScalar = 0;
+        }
+        motor1.setVelocity(MOTOR1_MAX_TICKS_PER_SECOND * motorScalar);
     }
     public boolean isWarmedUp() {
         double currentVelocity = motor1.getVelocity();  // ticks per second (actual measured)
         double target = MOTOR1_MAX_TICKS_PER_SECOND * motorScalar;
 
         // True if within 90% or better, with a small epsilon to stabilize near boundary
-        return currentVelocity >= (target * WARM_UP_THRESHOLD) - VELOCITY_EPSILON;
+        return currentVelocity >= (target * ShooterConfig.WARM_UP_THRESHOLD) - ShooterConfig.VELOCITY_EPSILON;
     }
 
-    public void fireHalf() {
-        motor1.setVelocity(1 * MOTOR1_MAX_TICKS_PER_SECOND);
+    public void fire(double scalar) {
+        motor1.setVelocity(scalar * MOTOR1_MAX_TICKS_PER_SECOND);
     }
-
     public void stop() {
         motor1.setVelocity(0);
     }
-
     public void addToServo() {
         servo.setPosition(servo.getPosition() + 0.1);
     }
-
     public void subtractFromServo() {
         servo.setPosition(servo.getPosition() - 0.05);
     }
-
     public void sendTelemetry() {
         telemetry.addLine("SHOOTER\n------------------------------");
         telemetry.addData("Servo POS", String.format("%.3f", servo.getPosition()));

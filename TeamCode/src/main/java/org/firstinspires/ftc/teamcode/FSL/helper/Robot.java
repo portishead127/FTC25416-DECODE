@@ -26,12 +26,7 @@ public class Robot{
 
     public void update() {
         cameraSwivel.update(true);
-        if (storage.queueIsEmpty()) {
-            shooter.stop();
-        } else {
-            shooter.fire(0.9);
-        }
-
+        shooter.update(storage.queueIsEmpty(), cameraSwivel.range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
         intake.run(!storage.isFull());
     }
