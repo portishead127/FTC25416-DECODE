@@ -12,15 +12,11 @@ public class CameraTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         cameraSwivel = new CameraSwivel(hardwareMap, telemetry, true);
         telemetry.addData("STATUS:", "INITIALISED");
+        telemetry.addData("MOTIF:", cameraSwivel.motif.name());
         telemetry.update();
         waitForStart();
         while(opModeIsActive()){
-            if(Math.abs(gamepad1.left_stick_x) < 0.2){
-                cameraSwivel.update(true);
-            } else {
-                cameraSwivel.jog(gamepad1.left_stick_x);
-                cameraSwivel.sendTelemetry();
-            }
+            cameraSwivel.update(true, gamepad1.left_stick_x);
             telemetry.addData("GAMEPAD 1 L_X:", gamepad1.left_stick_x);
             telemetry.update();
         }

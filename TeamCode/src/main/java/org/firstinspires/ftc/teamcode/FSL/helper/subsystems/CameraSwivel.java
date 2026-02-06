@@ -24,6 +24,7 @@ public class CameraSwivel {
     private final AprilTagProcessor aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
     private final DcMotorEx swivelMotor;
     private final PIDController pidController;
+    public Motif motif;
     private final int targetID;
     public double range;
 
@@ -39,12 +40,11 @@ public class CameraSwivel {
                 hm.get(WebcamName.class, "Webcam 1"),
                 aprilTagProcessor
         );
-
         pidController = new PIDController(CameraDetectionConfig.KP, CameraDetectionConfig.KI, CameraDetectionConfig.KD, CameraDetectionConfig.CENTRALTOLERANCE);
         range = 0;
-
         if(isBlue){ targetID = 20;}
         else{ targetID = 24; }
+        motif = readMotif();
     }
 
     public void stopStreaming() { visionPortal.stopStreaming(); }
@@ -86,6 +86,19 @@ public class CameraSwivel {
 
         if (!tagFound) {
             pidController.reset();
+        }
+    }
+
+    public void update(boolean sendTelemetry, double lateralOverride){
+        if(Math.abs(lateralOverride) < 0.2){
+            focusOnAprilTag(sendTelemetry);
+            swivelMotor.setVelocity(CameraDetectionConfig.MAXVEL * pidController.calculateScalar(swivelMotor.getCurrentPosition()));
+        }
+        else{
+            jog(lateralOverride);
+        }
+        if(sendTelemetry){
+            sendTelemetry();
         }
     }
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FSL.helper;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -24,10 +25,16 @@ public class Robot{
         intake = new Intake(hm, telemetry);
     };
 
-    public void update() {
-        cameraSwivel.update(true);
+    public void update(Gamepad gamepad1, Gamepad gamepad2) {
+        cameraSwivel.update(true, gamepad2.left_stick_x);
         shooter.update(storage.queueIsEmpty(), cameraSwivel.range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
         intake.run(!storage.isFull());
+        mecanumSet.drive(gamepad1, 0.7);
+
+        if(gamepad2.squareWasPressed()){ storage.setQueue(Scoring.convertToScoringPattern(cameraSwivel.motif)); }
+        if(gamepad2.triangleWasPressed()){ storage.setQueue(Scoring.G); }
+        if(gamepad2.crossWasPressed()){ storage.setQueue(Scoring.P); }
+        if(gamepad2.circleWasPressed()){ storage.setQueue(Scoring.NONE); }
     }
 }

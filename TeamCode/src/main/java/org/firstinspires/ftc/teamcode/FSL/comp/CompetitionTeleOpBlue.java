@@ -12,23 +12,15 @@ import org.firstinspires.ftc.teamcode.FSL.helper.Scoring;
 @Configurable
 public class CompetitionTeleOpBlue extends LinearOpMode {
     Robot robot;
-    Motif motif;
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new Robot(hardwareMap, telemetry, true);
-        motif = robot.cameraSwivel.readMotif();
 
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
         waitForStart();
         while(opModeIsActive()){
-            if(gamepad2.squareWasPressed()){ robot.storage.setQueue(Scoring.convertToScoringPattern(motif)); }
-            if(gamepad2.triangleWasPressed()){ robot.storage.setQueue(Scoring.G); }
-            if(gamepad2.crossWasPressed()){ robot.storage.setQueue(Scoring.P); }
-            if(gamepad2.circleWasPressed()){ robot.storage.setQueue(Scoring.NONE); }
-
-            robot.mecanumSet.drive(gamepad1, 0.67);
-            robot.update();
+            robot.update(gamepad1, gamepad2);
         }
     }
 }

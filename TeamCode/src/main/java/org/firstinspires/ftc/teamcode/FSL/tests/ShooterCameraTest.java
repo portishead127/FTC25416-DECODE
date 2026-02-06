@@ -19,7 +19,7 @@ public class ShooterCameraTest extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            cameraSwivel.update(true);
+            cameraSwivel.update(true, gamepad1.left_stick_x);
             shooter.update(gamepad1.right_bumper, cameraSwivel.range);
             telemetry.update();
         }

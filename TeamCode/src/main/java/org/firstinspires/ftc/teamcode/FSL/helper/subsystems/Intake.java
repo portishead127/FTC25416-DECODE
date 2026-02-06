@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.IntakeConfig;
 
 public class Intake{
     private static double MOTOR1_MAX_TICKS_PER_SECOND;
@@ -19,10 +20,10 @@ public class Intake{
     }
     public void run(boolean forward){
         if(forward){
-            motor1.setVelocity(MOTOR1_MAX_TICKS_PER_SECOND);
+            motor1.setVelocity(IntakeConfig.FORWARDSCALAR * MOTOR1_MAX_TICKS_PER_SECOND);
         }
         else{
-            motor1.setVelocity(0.2 * -MOTOR1_MAX_TICKS_PER_SECOND);
+            motor1.setVelocity(IntakeConfig.BACKWARDSCALAR * -MOTOR1_MAX_TICKS_PER_SECOND);
         }
     }
     public void stop(){
