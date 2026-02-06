@@ -25,8 +25,7 @@ public class Robot{
     };
 
     public void update() {
-        cameraSwivel.focusOnAprilTag(false);
-
+        cameraSwivel.update(true);
         if (storage.queueIsEmpty()) {
             shooter.stop();
         } else {

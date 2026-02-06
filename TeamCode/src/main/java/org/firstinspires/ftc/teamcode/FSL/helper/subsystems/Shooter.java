@@ -5,14 +5,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.ShooterConfig;
 
 public class Shooter {
     private static double MOTOR1_MAX_TICKS_PER_SECOND;
     private final DcMotorEx motor1;
     private final Servo servo;
     private final Telemetry telemetry;
-    private double target;
+    private double motorScalar;
 
     // Tunable warm-up threshold (90% is a good starting point for most FTC flywheels)
     private static final double WARM_UP_THRESHOLD = 0.90;
@@ -27,25 +27,35 @@ public class Shooter {
         MOTOR1_MAX_TICKS_PER_SECOND = motor1.getMotorType().getAchieveableMaxTicksPerSecond();
     }
 
-    public void fire(double scalar) {
-        target = scalar * MOTOR1_MAX_TICKS_PER_SECOND;
-        motor1.setVelocity(target);
-    }
+    public void update(boolean queueEmpty, double range){
+        boolean in3Pointer = range > ShooterConfig.LIMITFOR3POINTERRANGE;
+        if(in3Pointer){
+            servo.setPosition(ShooterConfig.SERVOPOSFOR3POINTER);
+        }
+        else{
+            servo.setPosition(ShooterConfig.SERVOPOSFORLAYUP);
+        }
 
-    /**
-     * Returns true when the flywheel has reached at least 90% of full commanded velocity.
-     * Useful for delaying shots until the shooter is stable/speed-consistent.
-     */
+        if(!queueEmpty){
+            if(in3Pointer){
+                motorScalar = ShooterConfig.MOTORVELSCALARFOR3POINTER;
+            }
+            else{
+                motorScalar = ShooterConfig.MOTORVELSCALARFORLAYUP;
+            }
+            motor1.setVelocity(MOTOR1_MAX_TICKS_PER_SECOND * motorScalar);
+        }
+    }
     public boolean isWarmedUp() {
         double currentVelocity = motor1.getVelocity();  // ticks per second (actual measured)
-        double target = MOTOR1_MAX_TICKS_PER_SECOND;
+        double target = MOTOR1_MAX_TICKS_PER_SECOND * motorScalar;
 
         // True if within 90% or better, with a small epsilon to stabilize near boundary
         return currentVelocity >= (target * WARM_UP_THRESHOLD) - VELOCITY_EPSILON;
     }
 
     public void fireHalf() {
-        motor1.setVelocity(0.5 * MOTOR1_MAX_TICKS_PER_SECOND);
+        motor1.setVelocity(1 * MOTOR1_MAX_TICKS_PER_SECOND);
     }
 
     public void stop() {
