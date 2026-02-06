@@ -56,7 +56,7 @@ public class Shooter {
         motor1.setVelocity(scalar * MOTOR1_MAX_TICKS_PER_SECOND);
     }
     public void stop() {
-        motor1.setVelocity(0);
+        fire(0);
     }
     public void addToServo() {
         servo.setPosition(servo.getPosition() + 0.1);

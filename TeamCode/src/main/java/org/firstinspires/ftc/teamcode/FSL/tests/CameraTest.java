@@ -16,9 +16,10 @@ public class CameraTest extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             if(Math.abs(gamepad1.left_stick_x) < 0.2){
-                cameraSwivel.focusOnAprilTag(true);
+                cameraSwivel.update(true);
             } else {
                 cameraSwivel.jog(gamepad1.left_stick_x);
+                cameraSwivel.sendTelemetry();
             }
             telemetry.addData("GAMEPAD 1 L_X:", gamepad1.left_stick_x);
             telemetry.update();

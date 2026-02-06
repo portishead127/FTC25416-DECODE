@@ -41,8 +41,8 @@ public class PIDStorage {
 
         pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.TICKTOLERANCE);
         slots = new Color[]{null, null, null};
-        wasIntakeMode = true;
-        intakeMode = false;
+        wasIntakeMode = false;
+        intakeMode = true;
         flickStartTime = 0;
     }
     private void updateFlick() {

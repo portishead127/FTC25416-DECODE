@@ -4,25 +4,23 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.Scoring;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
-@TeleOp(name= "Test: Storage Test", group = "Test")
-public class StorageTest extends LinearOpMode {
+@TeleOp(name= "Test: Storage and Shooter Test", group = "Test")
+public class ShooterCameraTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        PIDStorage storage = new PIDStorage(hardwareMap, telemetry);
+        CameraSwivel cameraSwivel = new CameraSwivel(hardwareMap, telemetry, true);
+        Shooter shooter = new Shooter(hardwareMap, telemetry);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
 
         waitForStart();
         while (opModeIsActive()) {
-            storage.update(true);
-            if (gamepad1.squareWasPressed()) { storage.setQueue(Scoring.PPG); }
-            if (gamepad1.crossWasPressed()) { storage.setQueue(Scoring.P); }
-            if (gamepad1.circleWasPressed()) { storage.setQueue(Scoring.G); }
-            if (gamepad1.triangleWasPressed()) { storage.setQueue(Scoring.NONE); }
-
-            storage.sendTelemetry();
+            cameraSwivel.update(true);
+            shooter.update(gamepad1.right_bumper, cameraSwivel.range);
             telemetry.update();
         }
     }

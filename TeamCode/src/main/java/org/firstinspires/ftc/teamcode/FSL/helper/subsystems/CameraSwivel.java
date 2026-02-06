@@ -69,7 +69,6 @@ public class CameraSwivel {
                     telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
                     telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
                     telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
-
                     telemetry.addData("\nTICKS TO ADJUST", tickBearing);
                 }
                 if(Math.abs(swivelMotor.getCurrentPosition() + tickBearing) <= CameraDetectionConfig.MAXOFFSET){
@@ -83,12 +82,6 @@ public class CameraSwivel {
             telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
             telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
             telemetry.addLine("RBE = Range, Bearing & Elevation");
-
-
-            telemetry.addLine("\nDIAGNOSTICS");
-            telemetry.addData("Motor Pos", swivelMotor.getCurrentPosition());
-            telemetry.addData("Motor Vel", swivelMotor.getVelocity());
-            telemetry.addData("Locked", locked);
         }
 
         if (!tagFound) {
@@ -99,15 +92,16 @@ public class CameraSwivel {
     public void update(boolean sendTelemetry){
         focusOnAprilTag(sendTelemetry);
         swivelMotor.setVelocity(CameraDetectionConfig.MAXVEL * pidController.calculateScalar(swivelMotor.getCurrentPosition()));
+        if(sendTelemetry){
+            sendTelemetry();
+        }
     }
 
     public void stop() {
-        swivelMotor.setPower(0);
-        swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);  // Back to velocity if needed
+        swivelMotor.setVelocity(0);
     }
-    public void jog(double power) {
-        swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        swivelMotor.setPower(power);
+    public void jog(double scalar) {
+        swivelMotor.setVelocity(CameraDetectionConfig.MAXVEL * scalar);
     }
 
     public Motif readMotif() {
@@ -120,5 +114,12 @@ public class CameraSwivel {
             }
         }
         return Motif.PPG;
+    }
+
+    public void sendTelemetry(){
+        telemetry.addLine("\nDIAGNOSTICS");
+        telemetry.addData("Motor Pos", swivelMotor.getCurrentPosition());
+        telemetry.addData("Motor Vel", swivelMotor.getVelocity());
+        telemetry.addData("Locked", locked);
     }
 }
