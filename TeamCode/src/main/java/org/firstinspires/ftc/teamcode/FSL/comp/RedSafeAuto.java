@@ -177,7 +177,6 @@ public class RedSafeAuto extends OpMode {
             case 1:
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
-                    robot.intake.run();
                     follower.followPath(paths.IntakeOfLowRow,true);
                     setPathState(2);
                 }
@@ -186,7 +185,6 @@ public class RedSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.intake.stop();
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
                     follower.followPath(paths.TipOfTriangle,true);
                     setPathState(3);
@@ -207,7 +205,6 @@ public class RedSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup2Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.intake.run();
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
                     follower.followPath(paths.IntakeOfMiddleRow,true);
                     setPathState(5);
@@ -217,7 +214,6 @@ public class RedSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
-                    robot.intake.stop();
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
                     follower.followPath(paths.TipOfTriangle2,true);
                     setPathState(6);
@@ -237,7 +233,6 @@ public class RedSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.intake.run();
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
                     follower.followPath(paths.IntakeOfHighRow, true);
                     setPathState(8);
@@ -247,7 +242,6 @@ public class RedSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.intake.stop();
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
                     follower.followPath(paths.Escape, true);

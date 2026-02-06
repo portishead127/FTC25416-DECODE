@@ -206,7 +206,6 @@ public class BlueGreedyAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
-                    robot.intake.run();
                     follower.followPath(paths.IntakeTopRow, true);
                     setPathState(4);
                 }
@@ -215,7 +214,6 @@ public class BlueGreedyAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup2Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.intake.stop();
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
                     follower.followPath(paths.TipOfTriangle2,true);
                     setPathState(5);
@@ -227,7 +225,6 @@ public class BlueGreedyAuto extends OpMode {
                     /* Score Sample */
                     robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
                     if(robot.storage.queueIsEmpty()){
-                        robot.intake.run();
                         follower.followPath(paths.IntakeMiddleRow,true);
                         setPathState(6);
                     }
@@ -236,7 +233,6 @@ public class BlueGreedyAuto extends OpMode {
             case 6:
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
-                    robot.intake.stop();
                     follower.followPath(paths.TipOfTriangle3, true);
                     setPathState(7);
                 }
@@ -246,7 +242,6 @@ public class BlueGreedyAuto extends OpMode {
                     /* Grab Sample */
                     robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
                     if(robot.storage.queueIsEmpty()){
-                        robot.intake.run();
                         follower.followPath(paths.IntakeLowRow, true);
                         setPathState(8);
                     }
@@ -255,7 +250,6 @@ public class BlueGreedyAuto extends OpMode {
             case 8:
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
-                    robot.intake.stop();
                     follower.followPath(paths.ThreePointer, true);
                     setPathState(9);
                 }

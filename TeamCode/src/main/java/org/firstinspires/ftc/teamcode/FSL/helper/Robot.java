@@ -6,19 +6,20 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.MecanumSet;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 
 public class Robot{
     public CameraSwivel cameraSwivel;
     public Shooter shooter;
-    public Storage storage;
+    public PIDStorage storage;
     public MecanumSet mecanumSet;
     public Intake intake;
     public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue){
         cameraSwivel = new CameraSwivel(hm, telemetry, isBlue);
         shooter = new Shooter(hm, telemetry);
-        storage = new Storage(hm, telemetry);
+        storage = new PIDStorage(hm, telemetry);
         mecanumSet = new MecanumSet(hm, telemetry);
         intake = new Intake(hm, telemetry);
     };
@@ -32,12 +33,7 @@ public class Robot{
             shooter.fire(0.9);
         }
 
-        if (intake.isBusy()) {
-            storage.spin();
-        } else if (cameraSwivel.locked && !storage.queueIsEmpty() && shooter.isWarmedUp()) {
-            storage.loadIntoShooter();
-        } else {
-            storage.stop();
-        }
+        storage.update(cameraSwivel.locked && shooter.isWarmedUp());
+        intake.run(!storage.isFull());
     }
 }

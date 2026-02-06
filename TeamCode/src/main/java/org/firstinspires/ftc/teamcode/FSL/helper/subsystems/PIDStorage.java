@@ -16,9 +16,9 @@ import org.firstinspires.ftc.teamcode.FSL.helper.configs.StorageConfig;
 
 import java.util.LinkedList;
 
-public class BetterStorage {
+public class PIDStorage {
     private final LinkedList<Color> queue = new LinkedList<Color>();
-    private final Color[] slots;
+    public final Color[] slots;
     private final ColorSensor colorSensor;
     private final DcMotorEx motor;
     private final Servo servo;
@@ -29,7 +29,7 @@ public class BetterStorage {
     private boolean isFlicking;
     private boolean wasIntakeMode;
     private long flickStartTime;
-    public BetterStorage(HardwareMap hm, Telemetry telemetry) {
+    public PIDStorage(HardwareMap hm, Telemetry telemetry) {
         motor = hm.get(DcMotorEx.class, "SPM");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong
@@ -65,6 +65,9 @@ public class BetterStorage {
         isFlicking = true;
         flickStartTime = System.currentTimeMillis();
     }
+    public boolean isFull(){
+        return !intakeMode;
+    }
     public void setQueue(LinkedList<Color> colors){
         queue.clear();
         queue.addAll(colors);
@@ -93,7 +96,7 @@ public class BetterStorage {
     public void goToSlot1AlignedWithIntake(){
         pidController.setTarget(0, false); //append
     }
-    public void update() {
+    public void update(boolean shootable) {
         intakeMode = (slots[0] == null || slots[1] == null || slots[2] == null);
 
         // Detect transitions
@@ -111,10 +114,11 @@ public class BetterStorage {
             if (justBecameFull) {
                 goToSlot1AlignedWithShooter();  // only once when becoming full
             }
-            transferUpdate();
+            transferUpdate(shootable);
         }
 
         wasIntakeMode = intakeMode;
+        motor.setVelocity(motor.getMotorType().getAchieveableMaxTicksPerSecond() * pidController.calculateScalar(motor.getCurrentPosition()));
     }
     public void intakeUpdate(){
         if(motor.isBusy() || isFlicking){
@@ -127,7 +131,7 @@ public class BetterStorage {
             rotate1Slot(true);
         }
     }
-    public void transferUpdate() {
+    public void transferUpdate(boolean shootable) {
         if (motor.isBusy() || isFlicking) {
             return;
         }
@@ -138,8 +142,11 @@ public class BetterStorage {
         Color desired = queue.peekFirst();
 
         if (desired == slots[2]) {
-            startFlick();
-            queue.removeFirst();
+            if(shootable){
+                startFlick();
+                slots[2] = null;
+                queue.removeFirst();
+            }
         }
         else if (desired == slots[0]) {
             rotate1Slot(true);
@@ -149,8 +156,11 @@ public class BetterStorage {
         }
         else {
             if (slots[2] != null) {
-                startFlick();
-                queue.removeFirst();
+                if(shootable){
+                    startFlick();
+                    slots[2] = null;
+                    queue.removeFirst();
+                }
             }
             else if (slots[0] != null) {
                 rotate1Slot(true);
