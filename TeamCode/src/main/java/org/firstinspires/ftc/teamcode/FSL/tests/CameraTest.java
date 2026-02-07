@@ -10,7 +10,7 @@ public class CameraTest extends LinearOpMode {
     CameraSwivel cameraSwivel;
     @Override
     public void runOpMode() throws InterruptedException {
-        cameraSwivel = new CameraSwivel(hardwareMap, telemetry, true);
+        cameraSwivel = new CameraSwivel(hardwareMap, telemetry, true, false);
         telemetry.addData("STATUS:", "INITIALISED");
         telemetry.addData("MOTIF:", cameraSwivel.motif.name());
         telemetry.update();

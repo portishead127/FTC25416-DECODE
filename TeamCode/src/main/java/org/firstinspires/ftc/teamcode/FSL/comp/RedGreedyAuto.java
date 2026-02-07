@@ -28,7 +28,7 @@ public class RedGreedyAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, false);
+        robot = new Robot(hardwareMap, telemetry, false, true);
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);
@@ -185,7 +185,7 @@ public class RedGreedyAuto extends OpMode {
             case 1:
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
-                    motif = robot.cameraSwivel.readMotif();
+                    robot.cameraSwivel.readMotif();
                     robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
                     if(robot.storage.queueIsEmpty()) {
                         follower.followPath(paths.HitLever, true);

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 public class ShooterCameraTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        CameraSwivel cameraSwivel = new CameraSwivel(hardwareMap, telemetry, true);
+        CameraSwivel cameraSwivel = new CameraSwivel(hardwareMap, telemetry, true, false);
         Shooter shooter = new Shooter(hardwareMap, telemetry);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();

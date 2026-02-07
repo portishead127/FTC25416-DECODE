@@ -12,11 +12,9 @@ import org.firstinspires.ftc.teamcode.FSL.helper.Scoring;
 @Configurable
 public class CompetitionTeleOpRed extends LinearOpMode {
     Robot robot;
-    Motif motif;
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new Robot(hardwareMap, telemetry, false);
-        motif = robot.cameraSwivel.readMotif();
+        robot = new Robot(hardwareMap, telemetry, false, false);
 
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();

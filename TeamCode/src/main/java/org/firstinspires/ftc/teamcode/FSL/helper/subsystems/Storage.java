@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 
 import java.util.LinkedList;
 
+@Deprecated()
 public class Storage {
     private final LinkedList<Color> queue = new LinkedList<Color>();
     private Color currentColor = Color.NONE;
@@ -33,7 +34,9 @@ public class Storage {
         queue.clear();
         queue.addAll(colors);
     }
-    public boolean queueIsEmpty(){ return queue.isEmpty(); }
+    public boolean queueIsEmpty(){
+        return queue.isEmpty();
+    }
     public void loadIntoShooter() {
         spin();
         unflickBall();

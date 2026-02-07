@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.FSL.helper;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PIDController {
+    public double target;
+    public double tolerance;
     final double kp;
     final double ki;
     final double kd;
-    double target;
-    double tolerance;
     double integralSum;
     double lastError;
     ElapsedTime timer;

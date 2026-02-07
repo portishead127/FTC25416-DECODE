@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.PIDController;
@@ -28,8 +29,8 @@ public class PIDStorage {
     private boolean intakeMode;
     private boolean isFlicking;
     private boolean wasIntakeMode;
-    private long flickStartTime;
-    public PIDStorage(HardwareMap hm, Telemetry telemetry) {
+    private ElapsedTime flickTimer;
+    public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "SPM");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong
@@ -41,19 +42,17 @@ public class PIDStorage {
 
         pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.TICKTOLERANCE);
         slots = new Color[]{null, null, null};
-        wasIntakeMode = false;
-        intakeMode = true;
-        flickStartTime = 0;
+        wasIntakeMode = !emptyStorage;
+        intakeMode = emptyStorage;
+        flickTimer = new ElapsedTime();
     }
     private void updateFlick() {
         if (!isFlicking) return;
 
-        long elapsed = System.currentTimeMillis() - flickStartTime;
-
-        if (elapsed < StorageConfig.FLICKFORWARDTIME) {
+        if (flickTimer.milliseconds() < StorageConfig.FLICKFORWARDTIME) {
             servo.setPosition(1); // flick forward
         }
-        else if (elapsed < StorageConfig.FLICKRETURNTIME) {
+        else if (flickTimer.milliseconds() < StorageConfig.FLICKRETURNTIME) {
             servo.setPosition(0); // return
         }
         else {
@@ -63,7 +62,7 @@ public class PIDStorage {
     private void startFlick() {
         if (isFlicking) return; // prevent double flicks
         isFlicking = true;
-        flickStartTime = System.currentTimeMillis();
+        flickTimer.reset();
     }
     public boolean isFull(){
         return !intakeMode;
@@ -171,24 +170,21 @@ public class PIDStorage {
         }
     }
     public void sendTelemetry() {
-        float[] hsv = new float[3];
-        android.graphics.Color.RGBToHSV(
-                colorSensor.red(),
-                colorSensor.green(),
-                colorSensor.blue(),
-                hsv
-        );
-
-        telemetry.addLine("STORAGE\n");
+        telemetry.addLine("HARDWARE\n");
         telemetry.addData("SERVO POS", servo.getPosition());
+        telemetry.addData("MOTOR POS", motor.getCurrentPosition());
+        telemetry.addData("MOTOR TARGET POS", pidController.target);
+        telemetry.addData("TARGET TOLERANCE", pidController.tolerance);
         telemetry.addData("MOTOR VEL", motor.getVelocity());
         telemetry.addData("COLOR SENSOR", currentColor.name());
-        telemetry.addData("COLOR SENSOR R", colorSensor.red());
-        telemetry.addData("COLOR SENSOR G", colorSensor.green());
-        telemetry.addData("COLOR SENSOR B", colorSensor.blue());
-        telemetry.addData("COLOR SENSOR HUE\n", hsv[0]);
+
+        telemetry.addLine("STORAGE\n");
         telemetry.addData("SLOT 0", slots[0]);
         telemetry.addData("SLOT 1", slots[1]);
         telemetry.addData("SLOT 2", slots[2]);
+
+        telemetry.addLine("FLICKER\n");
+        telemetry.addData("FLICKING", isFlicking);
+        telemetry.addData("FLICK TIMER (ms)", flickTimer.milliseconds());
     }
 }

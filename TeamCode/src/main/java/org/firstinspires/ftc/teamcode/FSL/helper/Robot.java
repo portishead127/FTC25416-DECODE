@@ -17,10 +17,10 @@ public class Robot{
     public PIDStorage storage;
     public MecanumSet mecanumSet;
     public Intake intake;
-    public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue){
-        cameraSwivel = new CameraSwivel(hm, telemetry, isBlue);
+    public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean isGreedyAuto, boolean emptyStorage){
+        cameraSwivel = new CameraSwivel(hm, telemetry, isBlue, isGreedyAuto);
         shooter = new Shooter(hm, telemetry);
-        storage = new PIDStorage(hm, telemetry);
+        storage = new PIDStorage(hm, telemetry, emptyStorage);
         mecanumSet = new MecanumSet(hm, telemetry);
         intake = new Intake(hm, telemetry);
     };
@@ -36,5 +36,12 @@ public class Robot{
         if(gamepad2.triangleWasPressed()){ storage.setQueue(Scoring.G); }
         if(gamepad2.crossWasPressed()){ storage.setQueue(Scoring.P); }
         if(gamepad2.circleWasPressed()){ storage.setQueue(Scoring.NONE); }
+    }
+
+    public void update() {
+        cameraSwivel.update(true);
+        shooter.update(storage.queueIsEmpty(), cameraSwivel.range);
+        storage.update(cameraSwivel.locked && shooter.isWarmedUp());
+        intake.run(!storage.isFull());
     }
 }

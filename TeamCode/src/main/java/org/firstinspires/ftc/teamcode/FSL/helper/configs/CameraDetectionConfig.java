@@ -9,7 +9,7 @@ public class CameraDetectionConfig {
     public static double KP = 0.035;
     public static double KI = 0.0;
     public static double KD = 0.004;
-    public static double TICKSPERDEGREE = (double) 28 /360;
+    public static double TICKS_PER_DEGREE = (double) 28 /360;
     // Safety
     public static double MAXVEL = 120.0;
     public static double MAXOFFSET = 14;

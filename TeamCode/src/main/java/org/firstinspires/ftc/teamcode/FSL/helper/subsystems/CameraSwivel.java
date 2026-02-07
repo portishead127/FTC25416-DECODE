@@ -27,24 +27,29 @@ public class CameraSwivel {
     public Motif motif;
     private final int targetID;
     public double range;
+    public double tickBearing;
 
     public boolean locked = false;
-    public CameraSwivel(HardwareMap hm, Telemetry telemetry, boolean isBlue) {
+    public CameraSwivel(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean isAuto) {
         swivelMotor = hm.get(DcMotorEx.class, "CSM");
         swivelMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);  // Or RUN_TO_POSITION if preferred
+        swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         swivelMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.telemetry = telemetry;
 
         visionPortal = VisionPortal.easyCreateWithDefaults(
-                hm.get(WebcamName.class, "Webcam 1"),
+                hm.get(WebcamName.class, "CAM"),
                 aprilTagProcessor
         );
         pidController = new PIDController(CameraDetectionConfig.KP, CameraDetectionConfig.KI, CameraDetectionConfig.KD, CameraDetectionConfig.CENTRALTOLERANCE);
+
+        tickBearing = 0;
         range = 0;
         if(isBlue){ targetID = 20;}
         else{ targetID = 24; }
-        motif = readMotif();
+        if(!isAuto){
+            readMotif();
+        }
     }
 
     public void stopStreaming() { visionPortal.stopStreaming(); }
@@ -53,35 +58,18 @@ public class CameraSwivel {
     @SuppressLint("DefaultLocale")
     public void focusOnAprilTag(boolean sendTelemetry) {
         List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
-        if (sendTelemetry) {
-            telemetry.addLine("Webcam\n");
-            telemetry.addData("# AprilTags Detected", currentDetections.size());
-        }
 
         boolean tagFound = false;
         for (AprilTagDetection detection : currentDetections) {
             if (detection.id == targetID) {
                 tagFound = true;
 
-                double tickBearing = detection.ftcPose.bearing * CameraDetectionConfig.TICKSPERDEGREE;
-                if (sendTelemetry) {
-                    telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
-                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
-                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
-                    telemetry.addData("\nTICKS TO ADJUST", tickBearing);
-                }
+                tickBearing = detection.ftcPose.bearing * CameraDetectionConfig.TICKSPERDEGREE;
                 if(Math.abs(swivelMotor.getCurrentPosition() + tickBearing) <= CameraDetectionConfig.MAXOFFSET){
                     pidController.setTarget(tickBearing, true);
                 }
                 range = detection.ftcPose.range;
             }
-        }
-
-        if (sendTelemetry) {
-            telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-            telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
-            telemetry.addLine("RBE = Range, Bearing & Elevation");
         }
 
         if (!tagFound) {
@@ -117,22 +105,34 @@ public class CameraSwivel {
         swivelMotor.setVelocity(CameraDetectionConfig.MAXVEL * scalar);
     }
 
-    public Motif readMotif() {
+    public void readMotif() {
         List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
         for (AprilTagDetection a : currentDetections) {
             switch (a.id) {
-                case 21: return Motif.PPG;
-                case 22: return Motif.PGP;
-                case 23: return Motif.GPP;
+                case 21:
+                    motif = Motif.PPG;
+                    return;
+                case 22:
+                    motif = Motif.PGP;
+                    return;
+                case 23:
+                    motif = Motif.GPP;
+                    return;
             }
         }
-        return Motif.PPG;
+        motif = Motif.PPG;
     }
 
     public void sendTelemetry(){
-        telemetry.addLine("\nDIAGNOSTICS");
-        telemetry.addData("Motor Pos", swivelMotor.getCurrentPosition());
-        telemetry.addData("Motor Vel", swivelMotor.getVelocity());
-        telemetry.addData("Locked", locked);
+        telemetry.addLine("HARDWARE\n");
+        telemetry.addData("MOTOR POS", swivelMotor.getCurrentPosition());
+        telemetry.addData("MOTOR TARGET", pidController.target);
+        telemetry.addData("TARGET TOLERANCE", pidController.tolerance);
+        telemetry.addData("MOTOR VEL", swivelMotor.getVelocity());
+        telemetry.addData("CAMERA LOCKED", locked);
+
+        telemetry.addLine("VISION\n");
+        telemetry.addData("TARGET RANGE", range);
+        telemetry.addData("TARGET BEARING (ticks)", tickBearing);
     }
 }
