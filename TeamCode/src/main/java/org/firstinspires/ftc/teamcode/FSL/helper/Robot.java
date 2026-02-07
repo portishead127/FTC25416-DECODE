@@ -29,7 +29,7 @@ public class Robot{
         cameraSwivel.update(gamepad2.left_stick_x);
         shooter.update(storage.queueIsEmpty(), cameraSwivel.range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
-        intake.update(!storage.isFull());
+        intake.update(storage.isEmpty());
         driveTrain.update(gamepad1, gamepad1.right_bumper);
 
         if(gamepad2.squareWasPressed()){ storage.setQueue(Scoring.convertToScoringPattern(cameraSwivel.motif)); }
@@ -42,6 +42,6 @@ public class Robot{
         cameraSwivel.update();
         shooter.update(storage.queueIsEmpty(), cameraSwivel.range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
-        intake.update(!storage.isFull());
+        intake.update(storage.isEmpty());
     }
 }

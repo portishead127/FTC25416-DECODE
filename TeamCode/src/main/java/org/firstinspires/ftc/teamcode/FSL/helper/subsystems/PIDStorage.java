@@ -26,11 +26,11 @@ public class PIDStorage {
     private final Servo servo;
     private final Telemetry telemetry;
     private final PIDController pidController;
+    private final ElapsedTime flickTimer;
     private Color currentColor;
     private boolean intakeMode;
     private boolean isFlicking;
     private boolean wasIntakeMode;
-    private ElapsedTime flickTimer;
     public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "SPM");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -51,13 +51,13 @@ public class PIDStorage {
         if (!isFlicking) return;
 
         if (flickTimer.milliseconds() < StorageConfig.FLICK_FORWARD_TIME) {
-            servo.setPosition(1); // flick forward
+            servo.setPosition(StorageConfig.FLICK_SERVO_MAX);
         }
         else if (flickTimer.milliseconds() < StorageConfig.FLICK_RETURN_TIME) {
-            servo.setPosition(0); // return
+            servo.setPosition(StorageConfig.FLICK_SERVO_MIN);
         }
         else {
-            isFlicking = false;   // flick finished
+            isFlicking = false;
         }
     }
     private void startFlick() {
@@ -65,8 +65,8 @@ public class PIDStorage {
         isFlicking = true;
         flickTimer.reset();
     }
-    public boolean isFull(){
-        return !intakeMode;
+    public boolean isEmpty(){
+        return intakeMode;
     }
     public void setQueue(LinkedList<Color> colors){
         queue.clear();

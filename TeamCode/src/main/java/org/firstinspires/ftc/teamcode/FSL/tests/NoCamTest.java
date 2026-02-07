@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -32,7 +31,7 @@ public class NoCamTest extends OpMode {
     public void loop() {
         shooter.update(storage.queueIsEmpty(), gamepad1.left_stick_y * 2000);
         storage.update(shooter.isWarmedUp());
-        intake.update(!storage.isFull());
+        intake.update(storage.isEmpty());
 
         if (gamepad1.squareWasPressed()) { storage.setQueue(Scoring.PPG); }
         if (gamepad1.crossWasPressed()) { storage.setQueue(Scoring.P); }
