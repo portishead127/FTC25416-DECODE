@@ -187,7 +187,9 @@ public class PIDStorage {
         telemetry.addData("SLOT 2", slots[2]);
 
         telemetry.addLine("STORAGE - QUEUE\n");
-        telemetry.addData("QUEUE", queue);
+        for (Color color: queue) {
+            telemetry.addData("QUEUED", color.name());
+        }
         telemetry.addData("EMPTY", queueIsEmpty());
 
         telemetry.addLine("STORAGE - FLICKER\n");
