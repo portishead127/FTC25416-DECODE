@@ -21,19 +21,19 @@ public class CameraSwivel {
     private final Telemetry telemetry;
     private final VisionPortal visionPortal;
     private final AprilTagProcessor aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
-    private final DcMotorEx swivelMotor;
+    private final DcMotorEx motor;
     private final PIDController pidController;
     public Motif motif;
     private final int targetID;
     public double range;
-    public double tickBearing;
+    private double tickBearing;
 
     public boolean locked = false;
     public CameraSwivel(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean isGreedyAuto) {
-        swivelMotor = hm.get(DcMotorEx.class, "CSM");
-        swivelMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        swivelMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor = hm.get(DcMotorEx.class, "CSM");
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.telemetry = telemetry;
 
         visionPortal = VisionPortal.easyCreateWithDefaults(
@@ -55,7 +55,7 @@ public class CameraSwivel {
     public void resumeStreaming() { visionPortal.resumeStreaming(); }
 
     @SuppressLint("DefaultLocale")
-    public void focusOnAprilTag(boolean sendTelemetry) {
+    public void focusOnAprilTag() {
         List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
 
         boolean tagFound = false;
@@ -64,7 +64,7 @@ public class CameraSwivel {
                 tagFound = true;
 
                 tickBearing = detection.ftcPose.bearing * CameraDetectionConfig.TICKS_PER_DEGREE;
-                if(Math.abs(swivelMotor.getCurrentPosition() + tickBearing) <= CameraDetectionConfig.MAX_OFFSET){
+                if(Math.abs(motor.getCurrentPosition() + tickBearing) <= CameraDetectionConfig.MAX_OFFSET){
                     pidController.setTarget(tickBearing, true);
                 }
                 range = detection.ftcPose.range;
@@ -76,32 +76,30 @@ public class CameraSwivel {
         }
     }
 
-    public void update(boolean sendTelemetry, double lateralOverride){
+    public void update(double lateralOverride){
         if(Math.abs(lateralOverride) < 0.2){
-            focusOnAprilTag(sendTelemetry);
-            swivelMotor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(swivelMotor.getCurrentPosition()));
+            focusOnAprilTag();
+            motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         }
         else{
             jog(lateralOverride);
+            pidController.reset();
         }
-        if(sendTelemetry){
-            sendTelemetry();
-        }
+        sendTelemetry();
+
     }
 
-    public void update(boolean sendTelemetry){
-        focusOnAprilTag(sendTelemetry);
-        swivelMotor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(swivelMotor.getCurrentPosition()));
-        if(sendTelemetry){
-            sendTelemetry();
-        }
+    public void update(){
+        focusOnAprilTag();
+        motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+        sendTelemetry();
     }
 
     public void stop() {
-        swivelMotor.setVelocity(0);
+        motor.setVelocity(0);
     }
     public void jog(double scalar) {
-        swivelMotor.setVelocity(CameraDetectionConfig.MAX_VEL * scalar);
+        motor.setVelocity(CameraDetectionConfig.MAX_VEL * scalar);
     }
 
     public void readMotif() {
@@ -123,14 +121,15 @@ public class CameraSwivel {
     }
 
     public void sendTelemetry(){
-        telemetry.addLine("CAMERA SWIVEL HARDWARE\n");
-        telemetry.addData("MOTOR POS", swivelMotor.getCurrentPosition());
+        telemetry.addLine("CAMERA SWIVEL - HARDWARE\n");
+        telemetry.addData("MOTOR POS", motor.getCurrentPosition());
         telemetry.addData("MOTOR TARGET", pidController.target);
         telemetry.addData("TARGET TOLERANCE", pidController.tolerance);
-        telemetry.addData("MOTOR VEL", swivelMotor.getVelocity());
+        telemetry.addData("MOTOR VEL", motor.getVelocity());
         telemetry.addData("CAMERA LOCKED", locked);
 
-        telemetry.addLine("CAMERA VISION\n");
+        telemetry.addLine("CAMERA SWIVEL - VISION\n");
+        telemetry.addData("MOTIF", motif);
         telemetry.addData("TARGET RANGE", range);
         telemetry.addData("TARGET BEARING (ticks)", tickBearing);
     }

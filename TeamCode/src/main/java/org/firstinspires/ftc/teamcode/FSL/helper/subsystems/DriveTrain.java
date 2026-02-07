@@ -9,14 +9,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.MecanumConfig;
 
-public class MecanumSet {
+public class DriveTrain {
     private static final double MAX_MOTOR_VEL = 2800;
     private final DcMotorEx frontLeft;
     private final DcMotorEx frontRight;
     private final DcMotorEx backRight;
     private final DcMotorEx backLeft;
     private final Telemetry telemetry;
-    public MecanumSet(HardwareMap hm, Telemetry telemetry){
+    public DriveTrain(HardwareMap hm, Telemetry telemetry){
         frontLeft = hm.get(DcMotorEx.class, "FLW");
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -34,7 +34,7 @@ public class MecanumSet {
         this.telemetry = telemetry;
     }
 
-    public void drive(Gamepad gp, boolean isSlow){
+    public void update(Gamepad gp, boolean isSlow){
         double scalar;
         if(isSlow){
             scalar = MecanumConfig.MECANUM_SLOW_POWER;
@@ -57,6 +57,8 @@ public class MecanumSet {
         backLeft.setPower(backLeftPowerMod * scalar);
         frontRight.setPower(frontRightPowerMod * scalar);
         backRight.setPower(backRightPowerMod * scalar);
+
+        sendTelemetry();
     }
 
     public void sendTelemetry(){

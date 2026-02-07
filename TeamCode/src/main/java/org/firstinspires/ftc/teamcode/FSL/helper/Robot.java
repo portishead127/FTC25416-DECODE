@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.MecanumSet;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
@@ -15,22 +15,22 @@ public class Robot{
     public CameraSwivel cameraSwivel;
     public Shooter shooter;
     public PIDStorage storage;
-    public MecanumSet mecanumSet;
+    public DriveTrain driveTrain;
     public Intake intake;
     public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean isGreedyAuto, boolean emptyStorage){
         cameraSwivel = new CameraSwivel(hm, telemetry, isBlue, isGreedyAuto);
         shooter = new Shooter(hm, telemetry);
         storage = new PIDStorage(hm, telemetry, emptyStorage);
-        mecanumSet = new MecanumSet(hm, telemetry);
+        driveTrain = new DriveTrain(hm, telemetry);
         intake = new Intake(hm, telemetry);
     };
 
     public void update(Gamepad gamepad1, Gamepad gamepad2) {
-        cameraSwivel.update(true, gamepad2.left_stick_x);
+        cameraSwivel.update(gamepad2.left_stick_x);
         shooter.update(storage.queueIsEmpty(), cameraSwivel.range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
-        intake.run(!storage.isFull());
-        mecanumSet.drive(gamepad1, 0.7);
+        intake.update(!storage.isFull());
+        driveTrain.update(gamepad1, gamepad1.right_bumper);
 
         if(gamepad2.squareWasPressed()){ storage.setQueue(Scoring.convertToScoringPattern(cameraSwivel.motif)); }
         if(gamepad2.triangleWasPressed()){ storage.setQueue(Scoring.G); }
@@ -39,9 +39,9 @@ public class Robot{
     }
 
     public void update() {
-        cameraSwivel.update(true);
+        cameraSwivel.update();
         shooter.update(storage.queueIsEmpty(), cameraSwivel.range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
-        intake.run(!storage.isFull());
+        intake.update(!storage.isFull());
     }
 }

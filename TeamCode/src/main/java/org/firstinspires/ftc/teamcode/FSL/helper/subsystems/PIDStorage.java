@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.FSL.helper.constants.UltraplanetaryMotorConstants;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
@@ -74,14 +75,14 @@ public class PIDStorage {
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void rotate1Slot(boolean anticlockwise){
         if(anticlockwise){
-            pidController.setTarget(StorageConfig.ENCODER_RESOLUTION /3, true); //append
+            pidController.setTarget(UltraplanetaryMotorConstants.ENCODER_RES /3, true); //append
             Color temp = slots[0];
             slots[0] = slots[2];
             slots[2] = slots[1];
             slots[1] = temp;
         }
         else{
-            pidController.setTarget(-StorageConfig.ENCODER_RESOLUTION /3, true); //append
+            pidController.setTarget(-UltraplanetaryMotorConstants.ENCODER_RES /3, true); //append
             Color temp = slots[0];
             slots[0] = slots[1];
             slots[1] = slots[2];
@@ -90,7 +91,7 @@ public class PIDStorage {
     }
 
     public void goToSlot1AlignedWithShooter(){
-        pidController.setTarget(StorageConfig.ENCODER_RESOLUTION /2, false); //append
+        pidController.setTarget(UltraplanetaryMotorConstants.ENCODER_RES /2, false); //append
     }
     public void goToSlot1AlignedWithIntake(){
         pidController.setTarget(0, false); //append
@@ -118,6 +119,7 @@ public class PIDStorage {
 
         wasIntakeMode = intakeMode;
         motor.setVelocity(motor.getMotorType().getAchieveableMaxTicksPerSecond() * pidController.calculateScalar(motor.getCurrentPosition()));
+        sendTelemetry();
     }
     public void intakeUpdate(){
         if(motor.isBusy() || isFlicking){
@@ -179,11 +181,16 @@ public class PIDStorage {
         telemetry.addData("COLOR SENSOR", currentColor.name());
 
         telemetry.addLine("STORAGE - SLOTS\n");
+        telemetry.addData("INTAKE MODE", intakeMode);
         telemetry.addData("SLOT 0", slots[0]);
         telemetry.addData("SLOT 1", slots[1]);
         telemetry.addData("SLOT 2", slots[2]);
 
-        telemetry.addLine("FLICKER\n");
+        telemetry.addLine("STORAGE - QUEUE\n");
+        telemetry.addData("QUEUE", queue);
+        telemetry.addData("EMPTY", queueIsEmpty());
+
+        telemetry.addLine("STORAGE - FLICKER\n");
         telemetry.addData("FLICKING", isFlicking);
         telemetry.addData("FLICK TIMER (ms)", flickTimer.milliseconds());
     }

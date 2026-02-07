@@ -16,13 +16,14 @@ public class Intake{
         this.telemetry = telemetry;
         MOTOR_MAX_TICKS_PER_SECOND = motor.getMotorType().getAchieveableMaxTicksPerSecond();
     }
-    public void run(boolean forward){
+    public void update(boolean forward){
         if(forward){
             motor.setVelocity(IntakeConfig.FORWARD_SCALAR * MOTOR_MAX_TICKS_PER_SECOND);
         }
         else{
             motor.setVelocity(IntakeConfig.BACKWARD_SCALAR * -MOTOR_MAX_TICKS_PER_SECOND);
         }
+        sendTelemetry();
     }
     public void stop(){
         motor.setVelocity(0);
@@ -30,7 +31,7 @@ public class Intake{
     public boolean isBusy(){
         return motor.isBusy();
     }
-    public void sendTelemetry(){
+    private void sendTelemetry(){
         telemetry.addLine("INTAKE\n");
         telemetry.addData("INTAKE MOTOR VEL", motor.getVelocity());
     }
