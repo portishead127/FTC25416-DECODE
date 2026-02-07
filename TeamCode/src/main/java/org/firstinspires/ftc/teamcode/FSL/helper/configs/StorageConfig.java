@@ -10,7 +10,7 @@ public class StorageConfig {
    public static double KI = 0;
    public static double KD = 0;
    public static double TICK_TOLERANCE = 5;
-   public static double ENCODERRESOLUTION = 28;
-   public static final long FLICKFORWARDTIME = 200;
-   public static final long FLICKRETURNTIME = 350; //total
+   public static double ENCODER_RESOLUTION = 28;
+   public static final long FLICK_FORWARD_TIME = 200;
+   public static final long FLICK_RETURN_TIME = 350; //total
 }

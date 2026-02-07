@@ -6,5 +6,5 @@ import com.bylazar.configurables.annotations.Configurable;
 @Config
 @Configurable
 public class MecanumConfig {
-    public static double MECANUMPOWER = 0.67;
+    public static double MECANUM_POWER = 0.67;
 }

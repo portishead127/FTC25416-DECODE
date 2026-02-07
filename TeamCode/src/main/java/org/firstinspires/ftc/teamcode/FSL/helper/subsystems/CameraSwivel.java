@@ -15,7 +15,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CameraSwivel {
@@ -30,7 +29,7 @@ public class CameraSwivel {
     public double tickBearing;
 
     public boolean locked = false;
-    public CameraSwivel(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean isAuto) {
+    public CameraSwivel(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean isGreedyAuto) {
         swivelMotor = hm.get(DcMotorEx.class, "CSM");
         swivelMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         swivelMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -47,7 +46,7 @@ public class CameraSwivel {
         range = 0;
         if(isBlue){ targetID = 20;}
         else{ targetID = 24; }
-        if(!isAuto){
+        if(!isGreedyAuto){
             readMotif();
         }
     }
@@ -64,8 +63,8 @@ public class CameraSwivel {
             if (detection.id == targetID) {
                 tagFound = true;
 
-                tickBearing = detection.ftcPose.bearing * CameraDetectionConfig.TICKSPERDEGREE;
-                if(Math.abs(swivelMotor.getCurrentPosition() + tickBearing) <= CameraDetectionConfig.MAXOFFSET){
+                tickBearing = detection.ftcPose.bearing * CameraDetectionConfig.TICKS_PER_DEGREE;
+                if(Math.abs(swivelMotor.getCurrentPosition() + tickBearing) <= CameraDetectionConfig.MAX_OFFSET){
                     pidController.setTarget(tickBearing, true);
                 }
                 range = detection.ftcPose.range;
@@ -80,7 +79,7 @@ public class CameraSwivel {
     public void update(boolean sendTelemetry, double lateralOverride){
         if(Math.abs(lateralOverride) < 0.2){
             focusOnAprilTag(sendTelemetry);
-            swivelMotor.setVelocity(CameraDetectionConfig.MAXVEL * pidController.calculateScalar(swivelMotor.getCurrentPosition()));
+            swivelMotor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(swivelMotor.getCurrentPosition()));
         }
         else{
             jog(lateralOverride);
@@ -92,7 +91,7 @@ public class CameraSwivel {
 
     public void update(boolean sendTelemetry){
         focusOnAprilTag(sendTelemetry);
-        swivelMotor.setVelocity(CameraDetectionConfig.MAXVEL * pidController.calculateScalar(swivelMotor.getCurrentPosition()));
+        swivelMotor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(swivelMotor.getCurrentPosition()));
         if(sendTelemetry){
             sendTelemetry();
         }
@@ -102,7 +101,7 @@ public class CameraSwivel {
         swivelMotor.setVelocity(0);
     }
     public void jog(double scalar) {
-        swivelMotor.setVelocity(CameraDetectionConfig.MAXVEL * scalar);
+        swivelMotor.setVelocity(CameraDetectionConfig.MAX_VEL * scalar);
     }
 
     public void readMotif() {

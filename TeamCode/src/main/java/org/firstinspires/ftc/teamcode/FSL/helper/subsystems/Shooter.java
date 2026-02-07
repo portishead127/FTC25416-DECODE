@@ -23,20 +23,20 @@ public class Shooter {
     }
 
     public void update(boolean queueEmpty, double range){
-        boolean in3Pointer = range > ShooterConfig.LIMITFOR3POINTERRANGE;
+        boolean in3Pointer = range > ShooterConfig.LIMIT_FOR_3_POINTER_RANGE;
         if(in3Pointer){
-            servo.setPosition(ShooterConfig.SERVOPOSFOR3POINTER);
+            servo.setPosition(ShooterConfig.SERVO_POS_FOR_3_POINTER);
         }
         else{
-            servo.setPosition(ShooterConfig.SERVOPOSFORLAYUP);
+            servo.setPosition(ShooterConfig.SERVO_POS_FOR_LAYUP);
         }
 
         if(!queueEmpty){
             if(in3Pointer){
-                motorScalar = ShooterConfig.MOTORVELSCALARFOR3POINTER;
+                motorScalar = ShooterConfig.MOTOR_VEL_SCALAR_FOR_3_POINTER;
             }
             else{
-                motorScalar = ShooterConfig.MOTORVELSCALARFORLAYUP;
+                motorScalar = ShooterConfig.MOTOR_VEL_SCALAR_FOR_LAYUP;
             }
         }
         else{

@@ -40,7 +40,7 @@ public class PIDStorage {
         colorSensor.enableLed(true);
         this.telemetry = telemetry;
 
-        pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.TICKTOLERANCE);
+        pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.TICK_TOLERANCE);
         slots = new Color[]{null, null, null};
         wasIntakeMode = !emptyStorage;
         intakeMode = emptyStorage;
@@ -49,10 +49,10 @@ public class PIDStorage {
     private void updateFlick() {
         if (!isFlicking) return;
 
-        if (flickTimer.milliseconds() < StorageConfig.FLICKFORWARDTIME) {
+        if (flickTimer.milliseconds() < StorageConfig.FLICK_FORWARD_TIME) {
             servo.setPosition(1); // flick forward
         }
-        else if (flickTimer.milliseconds() < StorageConfig.FLICKRETURNTIME) {
+        else if (flickTimer.milliseconds() < StorageConfig.FLICK_RETURN_TIME) {
             servo.setPosition(0); // return
         }
         else {
@@ -74,14 +74,14 @@ public class PIDStorage {
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void rotate1Slot(boolean anticlockwise){
         if(anticlockwise){
-            pidController.setTarget(StorageConfig.ENCODERRESOLUTION /3, true); //append
+            pidController.setTarget(StorageConfig.ENCODER_RESOLUTION /3, true); //append
             Color temp = slots[0];
             slots[0] = slots[2];
             slots[2] = slots[1];
             slots[1] = temp;
         }
         else{
-            pidController.setTarget(-StorageConfig.ENCODERRESOLUTION /3, true); //append
+            pidController.setTarget(-StorageConfig.ENCODER_RESOLUTION /3, true); //append
             Color temp = slots[0];
             slots[0] = slots[1];
             slots[1] = slots[2];
@@ -90,7 +90,7 @@ public class PIDStorage {
     }
 
     public void goToSlot1AlignedWithShooter(){
-        pidController.setTarget(StorageConfig.ENCODERRESOLUTION /2, false); //append
+        pidController.setTarget(StorageConfig.ENCODER_RESOLUTION /2, false); //append
     }
     public void goToSlot1AlignedWithIntake(){
         pidController.setTarget(0, false); //append
