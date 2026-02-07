@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.FSL.helper;
+package org.firstinspires.ftc.teamcode.FSL.helper.control;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 

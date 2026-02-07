@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.MecanumConfig;
 
 public class MecanumSet {
     private static final double MAX_MOTOR_VEL = 2800;
@@ -33,9 +34,14 @@ public class MecanumSet {
         this.telemetry = telemetry;
     }
 
-    public void drive(Gamepad gp, double scalar){
-        scalar = Math.max(0, Math.min(1, scalar));
-        double velocity = scalar * frontLeft.getMotorType().getAchieveableMaxTicksPerSecond();
+    public void drive(Gamepad gp, boolean isSlow){
+        double scalar;
+        if(isSlow){
+            scalar = MecanumConfig.MECANUM_SLOW_POWER;
+        }
+        else{
+            scalar = MecanumConfig.MECANUM_FULL_POWER;
+        }
 
         double y = -gp.left_stick_y;
         double x = gp.left_stick_x * 1.1;
@@ -47,17 +53,17 @@ public class MecanumSet {
         double frontRightPowerMod = (y - x - rx) / denominator;
         double backRightPowerMod = (y + x - rx) / denominator;
 
-        frontLeft.setVelocity(frontLeftPowerMod * velocity);
-        backLeft.setVelocity(backLeftPowerMod * velocity);
-        frontRight.setVelocity(frontRightPowerMod * velocity);
-        backRight.setVelocity(backRightPowerMod * velocity);
+        frontLeft.setPower(frontLeftPowerMod * scalar);
+        backLeft.setPower(backLeftPowerMod * scalar);
+        frontRight.setPower(frontRightPowerMod * scalar);
+        backRight.setPower(backRightPowerMod * scalar);
     }
 
     public void sendTelemetry(){
         telemetry.addLine("DRIVETRAIN\n");
-        telemetry.addData("FRONT LEFT VEL", frontLeft.getVelocity());
-        telemetry.addData("FRONT RIGHT VEL", frontRight.getVelocity());
-        telemetry.addData("BACK LEFT VEL", backLeft.getVelocity());
-        telemetry.addData("BACK RIGHT VEL", backRight.getVelocity());
+        telemetry.addData("FRONT LEFT POWER", frontLeft.getPower());
+        telemetry.addData("FRONT RIGHT POWER", frontRight.getPower());
+        telemetry.addData("BACK LEFT POWER", backLeft.getPower());
+        telemetry.addData("BACK RIGHT POWER", backRight.getPower());
     }
 }

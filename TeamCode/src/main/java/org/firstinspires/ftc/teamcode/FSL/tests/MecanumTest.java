@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.MecanumSet;
 
-@TeleOp(name = "Test: Mecanum Test", group = "Test")
+@TeleOp(name = "TEST: Mecanum Test", group = "TEST")
 public class MecanumTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -15,7 +15,7 @@ public class MecanumTest extends LinearOpMode {
         telemetry.update();
         waitForStart();
         while(opModeIsActive()){
-            mecanumSet.drive(gamepad1, 0.7);
+            mecanumSet.drive(gamepad1, gamepad1.right_bumper);
         }
     }
 }

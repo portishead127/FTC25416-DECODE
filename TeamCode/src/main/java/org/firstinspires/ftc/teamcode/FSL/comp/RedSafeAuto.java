@@ -5,9 +5,9 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
 import com.bylazar.telemetry.PanelsTelemetry;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.Motif;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.Robot;
-import org.firstinspires.ftc.teamcode.FSL.helper.Scoring;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import com.pedropathing.geometry.BezierLine;
@@ -16,7 +16,7 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.geometry.Pose;
 
 
-@Autonomous(name = "Red - Safe", group = "RED")
+@Autonomous(name = "RED: Safe", group = "RED")
 @Configurable // Panels
 public class RedSafeAuto extends OpMode {
     private Robot robot;
@@ -28,7 +28,7 @@ public class RedSafeAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, false, false);
+        robot = new Robot(hardwareMap, telemetry, false, false, false);
 
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 

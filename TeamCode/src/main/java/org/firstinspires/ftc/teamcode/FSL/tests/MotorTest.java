@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,7 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name = "Test: Motor Test", group = "Test")
+@Disabled
+@TeleOp(name = "TEST: Motor Test", group = "TEST")
 public class MotorTest extends LinearOpMode
 {
     DcMotorEx testMotor;

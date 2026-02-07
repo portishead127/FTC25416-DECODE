@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.FSL.helper.Motif;
-import org.firstinspires.ftc.teamcode.FSL.helper.PIDController;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
+import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraDetectionConfig;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -123,14 +123,14 @@ public class CameraSwivel {
     }
 
     public void sendTelemetry(){
-        telemetry.addLine("HARDWARE\n");
+        telemetry.addLine("CAMERA SWIVEL HARDWARE\n");
         telemetry.addData("MOTOR POS", swivelMotor.getCurrentPosition());
         telemetry.addData("MOTOR TARGET", pidController.target);
         telemetry.addData("TARGET TOLERANCE", pidController.tolerance);
         telemetry.addData("MOTOR VEL", swivelMotor.getVelocity());
         telemetry.addData("CAMERA LOCKED", locked);
 
-        telemetry.addLine("VISION\n");
+        telemetry.addLine("CAMERA VISION\n");
         telemetry.addData("TARGET RANGE", range);
         telemetry.addData("TARGET BEARING (ticks)", tickBearing);
     }

@@ -6,9 +6,9 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
 import com.bylazar.telemetry.PanelsTelemetry;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.Motif;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.Robot;
-import org.firstinspires.ftc.teamcode.FSL.helper.Scoring;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
@@ -16,7 +16,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.geometry.Pose;
 
-@Autonomous(name = "Red - Greedy", group = "RED")
+@Autonomous(name = "RED:Greedy", group = "RED")
 @Configurable // Panels
 public class RedGreedyAuto extends OpMode {
     private Robot robot;
@@ -28,7 +28,7 @@ public class RedGreedyAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, false, true);
+        robot = new Robot(hardwareMap, telemetry, false, true, false);
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);

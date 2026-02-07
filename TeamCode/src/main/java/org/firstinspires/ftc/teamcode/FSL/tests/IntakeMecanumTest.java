@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.configs.MecanumConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.MecanumSet;
 
-@TeleOp(name = "Test: Intake and Mecanum Test", group = "Test")
+@TeleOp(name = "TEST: Intake and Mecanum Test", group = "TEST")
 public class IntakeMecanumTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -17,8 +17,8 @@ public class IntakeMecanumTest extends LinearOpMode {
         telemetry.update();
         waitForStart();
         while(opModeIsActive()){
-            intake.run(gamepad1.right_bumper);
-            mecanumSet.drive(gamepad1, MecanumConfig.MECANUM_POWER);
+            intake.run(gamepad1.square);
+            mecanumSet.drive(gamepad1, gamepad1.right_bumper);
         }
     }
 }

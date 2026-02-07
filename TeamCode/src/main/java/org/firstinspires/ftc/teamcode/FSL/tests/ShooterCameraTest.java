@@ -3,12 +3,10 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
-@TeleOp(name= "Test: Storage and Shooter Test", group = "Test")
+@TeleOp(name= "TEST: Storage and Shooter Test", group = "TEST")
 public class ShooterCameraTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

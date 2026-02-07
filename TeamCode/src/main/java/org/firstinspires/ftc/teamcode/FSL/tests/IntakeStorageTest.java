@@ -3,15 +3,15 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.Scoring;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
 
-@TeleOp(name = "Test: Intake and Storage Test", group = "Test")
+@TeleOp(name = "TEST: Intake and Storage Test", group = "TEST")
 public class IntakeStorageTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        PIDStorage storage = new PIDStorage(hardwareMap, telemetry);
+        PIDStorage storage = new PIDStorage(hardwareMap, telemetry, true);
         Intake intake = new Intake(hardwareMap,telemetry);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();

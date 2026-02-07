@@ -3,16 +3,16 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.Scoring;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
-@TeleOp(name = "Test: No Camera", group = "Test")
+@TeleOp(name = "TEST: No Camera", group = "TEST")
 public class NoCamTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        PIDStorage storage = new PIDStorage(hardwareMap, telemetry);
+        PIDStorage storage = new PIDStorage(hardwareMap, telemetry, true);
         Intake intake = new Intake(hardwareMap,telemetry);
         Shooter shooter = new Shooter(hardwareMap, telemetry);
 

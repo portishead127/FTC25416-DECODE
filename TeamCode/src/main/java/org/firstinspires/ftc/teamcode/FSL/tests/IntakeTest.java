@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.MecanumSet;
 
-@TeleOp(name = "Test: Intake Test", group = "Test")
+@TeleOp(name = "TEST: Intake Test", group = "TEST")
 public class IntakeTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.FSL.helper;
+package org.firstinspires.ftc.teamcode.FSL.helper.scoring;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 

@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.FSL.helper.PIDController;
+import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.StorageConfig;
@@ -170,7 +170,7 @@ public class PIDStorage {
         }
     }
     public void sendTelemetry() {
-        telemetry.addLine("HARDWARE\n");
+        telemetry.addLine("STORAGE - HARDWARE\n");
         telemetry.addData("SERVO POS", servo.getPosition());
         telemetry.addData("MOTOR POS", motor.getCurrentPosition());
         telemetry.addData("MOTOR TARGET POS", pidController.target);
@@ -178,7 +178,7 @@ public class PIDStorage {
         telemetry.addData("MOTOR VEL", motor.getVelocity());
         telemetry.addData("COLOR SENSOR", currentColor.name());
 
-        telemetry.addLine("STORAGE\n");
+        telemetry.addLine("STORAGE - SLOTS\n");
         telemetry.addData("SLOT 0", slots[0]);
         telemetry.addData("SLOT 1", slots[1]);
         telemetry.addData("SLOT 2", slots[2]);
