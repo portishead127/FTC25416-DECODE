@@ -4,6 +4,7 @@ repositories {
     maven { url = 'https://maven.pedropathing.com' }
     maven { url = "https://mymaven.bylazar.com/releases" }
     maven { url = 'https://maven.brott.dev/' }
+    maven { url = "https://repo.dairy.foundation/releases" }
 }
 
 dependencies {
@@ -19,8 +20,10 @@ dependencies {
 
     implementation 'com.pedropathing:ftc:2.0.6'
     implementation 'com.pedropathing:telemetry:1.0.0'
-    implementation 'com.bylazar:fullpanels:1.0.0'
+    implementation 'com.bylazar:fullpanels:1.0.5'
 
     implementation 'com.acmerobotics.dashboard:dashboard:0.5.1'
+    implementation("com.acmerobotics.slothboard:dashboard:0.2.4+0.5.1")
+    implementation("com.bylazar.sloth:fullpanels:0.2.4+1.0.12")
 }
 
