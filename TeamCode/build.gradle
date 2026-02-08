@@ -12,8 +12,24 @@
 // Custom definitions may go here
 
 // Include common definitions from above.
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url = "https://repo.dairy.foundation/releases"
+        }
+    }
+    dependencies {
+        classpath "dev.frozenmilk:Load:0.2.4"
+    }
+}
+
+// there should be 2 or 3 more lines that start with 'apply plugin:' here
+
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -32,4 +48,7 @@ dependencies {
     implementation project(':FtcRobotController')
     implementation "com.bylazar:fullpanels:1.0.5"
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:3.0.6'
+    implementation ("com.acmerobotics.roadrunner:actions:1.0.1"){
+        exclude group: "com.acmerobotics.dashboard"
+    }
 }
