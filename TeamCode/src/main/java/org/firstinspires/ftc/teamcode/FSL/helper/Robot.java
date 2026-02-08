@@ -20,7 +20,7 @@ public class Robot{
     public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean isGreedyAuto, boolean emptyStorage){
         cameraSwivel = new CameraSwivel(hm, telemetry, isBlue, isGreedyAuto);
         shooter = new Shooter(hm, telemetry);
-        storage = new PIDStorage(hm, telemetry, emptyStorage);
+        storage = new PIDStorage(hm, telemetry, isBlue, emptyStorage);
         driveTrain = new DriveTrain(hm, telemetry);
         intake = new Intake(hm, telemetry);
     };

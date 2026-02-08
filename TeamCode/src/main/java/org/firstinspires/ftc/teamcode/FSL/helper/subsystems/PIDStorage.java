@@ -31,7 +31,7 @@ public class PIDStorage {
     private boolean intakeMode;
     private boolean isFlicking;
     private boolean wasIntakeMode;
-    public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
+    public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "SPM");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong
@@ -42,7 +42,19 @@ public class PIDStorage {
         this.telemetry = telemetry;
 
         pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.TICK_TOLERANCE);
-        slots = new Color[]{null, null, null};
+
+        if(emptyStorage){
+            slots = new Color[]{null, null, null};
+        }else{
+            if(isBlue){
+                slots = new Color[]{Color.GREEN, Color.PURPLE, Color.PURPLE};
+            }
+            else{
+                slots = new Color[]{Color.PURPLE, Color.PURPLE, Color.GREEN};
+
+            }
+        }
+
         wasIntakeMode = !emptyStorage;
         intakeMode = emptyStorage;
         flickTimer = new ElapsedTime();
@@ -187,10 +199,8 @@ public class PIDStorage {
         telemetry.addData("SLOT 2", slots[2]);
 
         telemetry.addLine("STORAGE - QUEUE\n");
-        for (int i = 0; i < queue.size(); i++) {
-            telemetry.addData("QUEUE ["+i+"]", queue.get(i).name());
-        }
         telemetry.addData("EMPTY", queueIsEmpty());
+        telemetry.addData("QUEUE", queue);
 
         telemetry.addLine("STORAGE - FLICKER\n");
         telemetry.addData("FLICKING", isFlicking);
