@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FSL.helper.constants.UltraplanetaryMotorConstants;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
@@ -21,7 +22,7 @@ import java.util.LinkedList;
 public class PIDStorage {
     private final LinkedList<Color> queue = new LinkedList<Color>();
     public final Color[] slots;
-    private final ColorSensor colorSensor;
+    private final ColorRangeSensor colorSensor;
     private final DcMotorEx motor;
     private final Servo servo;
     private final Telemetry telemetry;
@@ -191,6 +192,7 @@ public class PIDStorage {
         telemetry.addData("TARGET TOLERANCE", pidController.tolerance);
         telemetry.addData("MOTOR VEL", motor.getVelocity());
         telemetry.addData("COLOR SENSOR", currentColor.name());
+        telemetry.addData("DETECTION DISTANCE (mm)", colorSensor.getDistance(DistanceUnit.MM));
 
         telemetry.addLine("STORAGE - SLOTS\n");
         telemetry.addData("INTAKE MODE", intakeMode);

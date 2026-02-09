@@ -16,7 +16,7 @@ import java.util.LinkedList;
 public class Storage {
     private final LinkedList<Color> queue = new LinkedList<Color>();
     private Color currentColor = Color.NONE;
-    private final ColorSensor colorSensor;
+    private final ColorRangeSensor colorSensor;
     private final DcMotorEx motor;
     private final Servo servo;
     private final Telemetry telemetry;
