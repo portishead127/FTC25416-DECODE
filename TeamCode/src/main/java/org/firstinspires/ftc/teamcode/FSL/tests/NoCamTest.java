@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
-@TeleOp(name = "TEST: No Camera Test", group = "TEST")
+@TeleOp(name = "TEST: No Camera", group = "TEST")
 public class NoCamTest extends OpMode {
     PIDStorage storage;
     Intake intake;
@@ -18,7 +18,7 @@ public class NoCamTest extends OpMode {
 
     @Override
     public void init() {
-        storage = new PIDStorage(hardwareMap, telemetry, true, true);
+        storage = new PIDStorage(hardwareMap, telemetry, true);
         intake = new Intake(hardwareMap,telemetry);
         shooter = new Shooter(hardwareMap, telemetry);
         driveTrain = new DriveTrain(hardwareMap, telemetry);
