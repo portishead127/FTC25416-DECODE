@@ -32,13 +32,14 @@ public class PIDController {
     public void setTarget(double target, boolean append){
         if(target != this.target){
            reset();
+            if(append){
+                this.target += target;
+            }
+            else{
+                this.target = target;
+            }
         }
-        if(append){
-            this.target += target;
-        }
-        else{
-            this.target = target;
-        }
+        
     }
     public void reset(){
         integralSum = 0;
