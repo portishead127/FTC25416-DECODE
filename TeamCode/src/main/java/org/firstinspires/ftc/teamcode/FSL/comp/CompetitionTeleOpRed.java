@@ -11,7 +11,7 @@ public class CompetitionTeleOpRed extends OpMode {
     Robot robot;
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, false, false, false, new Pose(82.000, 60.000));
+        robot = new Robot(hardwareMap, telemetry, false, false, new Pose(82.000, 60.000));
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
     }

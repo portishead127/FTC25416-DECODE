@@ -186,7 +186,7 @@ public class RedGreedyAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     robot.cameraSwivel.readMotif();
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                     if(robot.storage.queueIsEmpty()) {
                         follower.followPath(paths.HitLever, true);
                         setPathState(2);
@@ -222,7 +222,7 @@ public class RedGreedyAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.IntakeMiddleRow,true);
                         setPathState(6);
@@ -239,7 +239,7 @@ public class RedGreedyAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.IntakeLowRow, true);
                         setPathState(8);
@@ -257,7 +257,7 @@ public class RedGreedyAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.Escape, true);
                         setPathState(10);

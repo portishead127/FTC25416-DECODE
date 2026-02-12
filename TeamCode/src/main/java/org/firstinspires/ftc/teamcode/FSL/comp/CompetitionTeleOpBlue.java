@@ -13,7 +13,7 @@ public class CompetitionTeleOpBlue extends OpMode {
     Robot robot;
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, true, false, false, new Pose(62.000, 60.000));
+        robot = new Robot(hardwareMap, telemetry, true, false, new Pose(62.000, 60.000));
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
     }

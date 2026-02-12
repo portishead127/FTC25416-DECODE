@@ -165,7 +165,7 @@ public class BlueSafeAuto extends OpMode {
     public void autonomousPathUpdate(){
         switch (pathState) {
             case 0:
-                robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                 if(robot.storage.queueIsEmpty()){
                     follower.followPath(paths.InfrontOfLowRow);
                     setPathState(1);
@@ -191,7 +191,7 @@ public class BlueSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.InfrontOfMiddleRow, true);
                         setPathState(4);
@@ -221,7 +221,7 @@ public class BlueSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.InfrontOfHighRow, true);
                         setPathState(7);

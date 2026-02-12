@@ -33,8 +33,8 @@ public class Robot{
         intake = new Intake(hm, telemetry);
         pedroFollowerDriveTrain = new PedroFollowerDriveTrain(hm, telemetry, autoFollower);
     }
-    public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean isGreedyAuto, boolean emptyStorage, Pose startingPose){
-        cameraSwivel = new CameraSwivel(hm, telemetry, isBlue, isGreedyAuto);
+    public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage, Pose startingPose){
+        cameraSwivel = new CameraSwivel(hm, telemetry, isBlue, false);
         shooter = new Shooter(hm, telemetry);
         storage = new PIDStorage(hm, telemetry, isBlue, emptyStorage);
         driveTrain = new DriveTrain(hm, telemetry);
