@@ -21,7 +21,7 @@ public class Shooter {
         this.telemetry = telemetry;
     }
 
-    public void update(boolean queueEmpty, double range){
+    public void simpleUpdate(boolean queueEmpty, double range){
         boolean in3Pointer = range > ShooterConfig.LIMIT_FOR_3_POINTER_RANGE;
         if(in3Pointer){
             servo.setPosition(ShooterConfig.SERVO_POS_FOR_3_POINTER);
@@ -44,6 +44,19 @@ public class Shooter {
         motor.setVelocity(UltraplanetaryMotorConstants.MAX_VELOCITY * targetScalar);
         sendTelemetry();
     }
+
+    public void update(boolean queueEmpty, double range){
+        double servoPos = calculateServoPos(range);
+        setServo(servoPos);
+        if(!queueEmpty){
+            targetScalar = calculateVelocity(range);
+        }
+        else{
+            targetScalar = 0;
+        }
+        motor.setVelocity(UltraplanetaryMotorConstants.MAX_VELOCITY * targetScalar);
+        sendTelemetry();
+    }
     public boolean isWarmedUp() {
         double currentVelocity = motor.getVelocity();  // ticks per second (actual measured)
         double target = UltraplanetaryMotorConstants.MAX_VELOCITY * targetScalar;
@@ -58,11 +71,19 @@ public class Shooter {
     public void stop() {
         fire(0);
     }
-    public void addToServo() {
-        servo.setPosition(servo.getPosition() + 0.1);
+    public void setServo(double pos){
+        servo.setPosition(pos);
     }
-    public void subtractFromServo() {
-        servo.setPosition(servo.getPosition() - 0.05);
+
+    public double calculateServoPos(double range){
+        //GET FORMULA FOR THIS... SEE SHOOTERTEST
+        //E.G Angle = 64 - 0.4 * range
+        return 0;
+    }
+    public double calculateVelocity(double range){
+        //GET FORMULA FOR THIS... SEE SHOOTERTEST
+        //E.G Velocity = 2692 - 10 * range + 0.32 * range^2
+        return 0;
     }
     public void sendTelemetry() {
         telemetry.addLine("SHOOTER\n");

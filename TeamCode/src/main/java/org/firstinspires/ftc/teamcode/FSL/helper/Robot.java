@@ -27,7 +27,7 @@ public class Robot{
 
     public void update(Gamepad gamepad1, Gamepad gamepad2) {
         cameraSwivel.update(gamepad2.left_stick_x);
-        shooter.update(storage.queueIsEmpty(), cameraSwivel.range);
+        shooter.simpleUpdate(storage.queueIsEmpty(), cameraSwivel.range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
         intake.update(storage.isEmpty());
         driveTrain.update(gamepad1, gamepad1.right_bumper);
@@ -40,7 +40,7 @@ public class Robot{
 
     public void update() {
         cameraSwivel.update();
-        shooter.update(storage.queueIsEmpty(), cameraSwivel.range);
+        shooter.simpleUpdate(storage.queueIsEmpty(), cameraSwivel.range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
         intake.update(storage.isEmpty());
     }

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -23,7 +22,7 @@ public class StorageShooterTest extends OpMode {
     @Override
     public void loop(){
         storage.update(shooter.isWarmedUp());
-        shooter.update(storage.queueIsEmpty(), 0);
+        shooter.simpleUpdate(storage.queueIsEmpty(), 0);
 
         if (gamepad1.squareWasPressed()) { storage.setQueue(Scoring.PPG); }
         if (gamepad1.crossWasPressed()) { storage.setQueue(Scoring.P); }

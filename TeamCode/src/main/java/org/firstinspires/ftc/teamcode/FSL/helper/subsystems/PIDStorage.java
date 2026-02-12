@@ -47,13 +47,7 @@ public class PIDStorage {
         if(emptyStorage){
             slots = new Color[]{null, null, null};
         }else{
-            if(isBlue){
-                slots = new Color[]{Color.GREEN, Color.PURPLE, Color.PURPLE};
-            }
-            else{
-                slots = new Color[]{Color.PURPLE, Color.PURPLE, Color.GREEN};
-
-            }
+            slots = new Color[]{Color.PURPLE, Color.PURPLE, Color.GREEN};
         }
 
         wasIntakeMode = !emptyStorage;

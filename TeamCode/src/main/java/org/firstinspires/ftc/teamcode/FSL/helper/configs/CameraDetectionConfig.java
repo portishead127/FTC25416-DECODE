@@ -11,7 +11,7 @@ public class CameraDetectionConfig {
     public static double KP = 0.035;
     public static double KI = 0.0;
     public static double KD = 0.004;
-    public static double TICKS_PER_DEGREE = UltraplanetaryMotorConstants.ENCODER_RES /360;
+    public static double TICKS_PER_DEGREE = UltraplanetaryMotorConstants.ENCODER_RES / 360;
     public static double MAX_VEL = 120.0;
     public static double MAX_OFFSET = 14;
     public static int CENTRALTOLERANCE = 3;

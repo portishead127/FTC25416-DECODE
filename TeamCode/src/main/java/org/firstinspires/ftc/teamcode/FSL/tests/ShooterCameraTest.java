@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -23,7 +22,7 @@ public class ShooterCameraTest extends OpMode {
     @Override
     public void loop(){
         cameraSwivel.update(gamepad1.left_stick_x);
-        shooter.update(gamepad1.right_bumper, cameraSwivel.range);
+        shooter.simpleUpdate(gamepad1.right_bumper, cameraSwivel.range);
         telemetry.update();
     }
 }

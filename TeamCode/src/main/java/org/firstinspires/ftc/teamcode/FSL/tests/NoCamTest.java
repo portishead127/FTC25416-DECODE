@@ -29,7 +29,7 @@ public class NoCamTest extends OpMode {
 
     @Override
     public void loop() {
-        shooter.update(storage.queueIsEmpty(), gamepad1.left_stick_y * 2000);
+        shooter.simpleUpdate(storage.queueIsEmpty(), gamepad1.left_stick_y * 2000);
         storage.update(shooter.isWarmedUp());
         intake.update(storage.isEmpty());
 
