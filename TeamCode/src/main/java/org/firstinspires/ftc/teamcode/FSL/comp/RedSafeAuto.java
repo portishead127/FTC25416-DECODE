@@ -28,7 +28,7 @@ public class RedSafeAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, false, false, false, follower);
+        robot = new Robot(hardwareMap, telemetry, false, false, false);
 
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 

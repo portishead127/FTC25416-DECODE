@@ -26,7 +26,7 @@ public class BlueGreedyAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, true, true, false, follower);
+        robot = new Robot(hardwareMap, telemetry, true, true, false);
 
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 

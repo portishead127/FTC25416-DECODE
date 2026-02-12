@@ -28,7 +28,7 @@ public class BlueSafeAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, true, false, false, follower);
+        robot = new Robot(hardwareMap, telemetry, true, false, false);
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);
