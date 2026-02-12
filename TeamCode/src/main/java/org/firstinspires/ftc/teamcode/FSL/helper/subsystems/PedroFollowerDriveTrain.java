@@ -21,10 +21,6 @@ public class PedroFollowerDriveTrain {
         follower.setStartingPose(startingPose == null ? new Pose(0,0, Math.toRadians(90)) : startingPose);
         follower.update();
     }
-    public PedroFollowerDriveTrain(HardwareMap hm, Telemetry telemetry, Follower follower) {
-        this.telemetry = telemetry;
-        this.follower = follower;
-    }
 
     public void update(Gamepad gp){
         follower.update();

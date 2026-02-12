@@ -25,8 +25,8 @@ public class Robot {
     public Intake intake;
     public PedroFollowerDriveTrain pedroFollowerDriveTrain;
 
-    public static double goalFieldX = 5;
-    public static double goalFieldY = 140;
+    public static double goalFieldX;
+    public static double goalFieldY;
 
     public void determineGoalPos(boolean isBlue){
         if(isBlue){
@@ -99,9 +99,11 @@ public class Robot {
         info.robotVelAlongShot = odomVel.getXComponent() * info.shotDirX + odomVel.getYComponent() * info.shotDirY;
 
         // update camera swivel PID target
-        cameraSwivel.setPIDTarget(CameraDetectionConfig.TICKS_PER_DEGREE * Math.atan2(info.shotDirY, info.shotDirX));
-
+        updateCameraPID(info);
         return info;
+    }
+    private void updateCameraPID(ShotInfo info){
+        cameraSwivel.setPIDTarget(CameraDetectionConfig.TICKS_PER_DEGREE * Math.atan2(info.shotDirY, info.shotDirX));
     }
 
     private void updateSubsystems(boolean queueEmpty, double range, double robotVelAlongShot) {
