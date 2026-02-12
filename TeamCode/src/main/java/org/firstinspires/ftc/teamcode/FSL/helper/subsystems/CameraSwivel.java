@@ -25,7 +25,8 @@ public class CameraSwivel {
     private final PIDController pidController;
     public Motif motif;
     private final int targetID;
-    public double range;
+    public double x;
+    public double y;
     private double tickBearing;
 
     public boolean locked = false;
@@ -43,7 +44,8 @@ public class CameraSwivel {
         pidController = new PIDController(CameraDetectionConfig.KP, CameraDetectionConfig.KI, CameraDetectionConfig.KD, CameraDetectionConfig.CENTRALTOLERANCE);
 
         tickBearing = 0;
-        range = 0;
+        x = 0;
+        y = 0;
         if(isBlue){ targetID = 20;}
         else{ targetID = 24; }
         if(!isGreedyAuto){
@@ -58,21 +60,26 @@ public class CameraSwivel {
     public void focusOnAprilTag() {
         List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
 
-        boolean tagFound = false;
         for (AprilTagDetection detection : currentDetections) {
             if (detection.id == targetID) {
-                tagFound = true;
-
+                locked = true;
                 tickBearing = detection.ftcPose.bearing * CameraDetectionConfig.TICKS_PER_DEGREE;
-                if(Math.abs(motor.getCurrentPosition() + tickBearing) <= CameraDetectionConfig.MAX_OFFSET){
-                    pidController.setTarget(tickBearing, true);
-                }
-                range = detection.ftcPose.range;
+                setPIDTarget(tickBearing);
+                x = detection.ftcPose.x;
+                y = detection.ftcPose.y;
+            }
+            else{
+                locked = false;
+                tickBearing = 0;
+                x = 0;
+                y = 0;
             }
         }
+    }
 
-        if (!tagFound) {
-            pidController.reset();
+    public void setPIDTarget(double bearingToAdd){
+        if(Math.abs(motor.getCurrentPosition() + bearingToAdd) <= CameraDetectionConfig.MAX_OFFSET){
+            pidController.setTarget(bearingToAdd, true);
         }
     }
 
@@ -130,7 +137,8 @@ public class CameraSwivel {
 
         telemetry.addLine("CAMERA SWIVEL - VISION\n");
         telemetry.addData("MOTIF", motif);
-        telemetry.addData("TARGET RANGE", range);
+        telemetry.addData("TARGET X", x);
+        telemetry.addData("TARGET Y", y);
         telemetry.addData("TARGET BEARING (ticks)", tickBearing);
     }
 }

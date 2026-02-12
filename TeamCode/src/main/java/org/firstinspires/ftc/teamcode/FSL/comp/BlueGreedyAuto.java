@@ -26,7 +26,7 @@ public class BlueGreedyAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, true, true, false);
+        robot = new Robot(hardwareMap, telemetry, true, true, false, follower);
 
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
@@ -45,7 +45,7 @@ public class BlueGreedyAuto extends OpMode {
         follower.update(); // Update Pedro Pathing
         autonomousPathUpdate(); // Update autonomous state machine
         if(robot.cameraSwivel.motif != null){
-            robot.update();
+            robot.autoUpdate(follower);
         };
 
         // Log values to Panels and Driver Station

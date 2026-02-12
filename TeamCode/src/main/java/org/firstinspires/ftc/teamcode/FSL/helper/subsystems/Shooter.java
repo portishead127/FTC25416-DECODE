@@ -13,6 +13,8 @@ public class Shooter {
     private final Servo servo;
     private final Telemetry telemetry;
     private double targetScalar;
+    private double range;
+    private double dynamicRange;
 
     public Shooter(HardwareMap hm, Telemetry telemetry) {
         motor = hm.get(DcMotorEx.class, "SHM");
@@ -45,11 +47,26 @@ public class Shooter {
         sendTelemetry();
     }
 
-    public void update(boolean queueEmpty, double range){
+    public void staticUpdate(boolean queueEmpty, double range){
         double servoPos = calculateServoPos(range);
         setServo(servoPos);
         if(!queueEmpty){
             targetScalar = calculateVelocity(range);
+        }
+        else{
+            targetScalar = 0;
+        }
+        motor.setVelocity(UltraplanetaryMotorConstants.MAX_VELOCITY * targetScalar);
+        sendTelemetry();
+    }
+    public void dynamicUpdate(boolean queueEmpty, double range, double robotVelAlongShot){
+        this.range = range;
+        dynamicRange = this.range + robotVelAlongShot * calculateFlightTime(this.range);
+        double servoPos = calculateServoPos(dynamicRange);
+
+        setServo(servoPos);
+        if(!queueEmpty){
+            targetScalar = calculateVelocity(dynamicRange);
         }
         else{
             targetScalar = 0;
@@ -74,7 +91,10 @@ public class Shooter {
     public void setServo(double pos){
         servo.setPosition(pos);
     }
-
+    public double calculateFlightTime(double range){
+        //GET FORMULA
+        return 0;
+    }
     public double calculateServoPos(double range){
         //GET FORMULA FOR THIS... SEE SHOOTERTEST
         //E.G Angle = 64 - 0.4 * range

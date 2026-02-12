@@ -16,8 +16,9 @@ public class ShooterTest extends OpMode {
         servoPos = 0.5;
         telemetry.addLine("OPTIMISE ANGLE FOR LOWEST RPM NEEDED.");
         telemetry.addLine("USE CALCULATOR AND PEN AND PAPER TO GET COEFFICIENTS FOR REGRESSIONS SEEN BELOW:");
-        telemetry.addLine("ANGLE = f(RANGE), = a*RANGE + b");
+        telemetry.addLine("SERVOPOS = f(RANGE), = a*RANGE + b");
         telemetry.addLine("MOTOR VEL = g(RANGE), = a*RANGE^2 + b*RANGE + c");
+        telemetry.addLine("ALSO COLLECT FLIGHT TIMES.\n");
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
     }

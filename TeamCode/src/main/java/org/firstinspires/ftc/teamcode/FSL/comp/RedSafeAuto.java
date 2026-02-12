@@ -28,7 +28,7 @@ public class RedSafeAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, false, false, false);
+        robot = new Robot(hardwareMap, telemetry, false, false, false, follower);
 
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
@@ -46,7 +46,7 @@ public class RedSafeAuto extends OpMode {
     public void loop() {
         follower.update(); // Update Pedro Pathing
         autonomousPathUpdate(); // Update autonomous state machine
-        robot.update();
+        robot.autoUpdate(follower);
 
         // Log values to Panels and Driver Station
         panelsTelemetry.debug("Path State", pathState);

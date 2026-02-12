@@ -22,7 +22,7 @@ public class ShooterCameraTest extends OpMode {
     @Override
     public void loop(){
         cameraSwivel.update(gamepad1.left_stick_x);
-        shooter.simpleUpdate(gamepad1.right_bumper, cameraSwivel.range);
+        shooter.simpleUpdate(gamepad1.right_bumper, Math.sqrt(cameraSwivel.x * cameraSwivel.x + cameraSwivel.y * cameraSwivel.y));
         telemetry.update();
     }
 }
