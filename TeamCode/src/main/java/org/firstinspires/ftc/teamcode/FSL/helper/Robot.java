@@ -103,7 +103,10 @@ public class Robot {
         return info;
     }
     private void updateCameraPID(ShotInfo info, Pose odomPose){
-        cameraSwivel.setPIDTarget(CameraDetectionConfig.TICKS_PER_DEGREE * (Math.atan2(info.shotDirY, info.shotDirX) - odomPose.heading));
+        cameraSwivel.setPIDTarget(
+                CameraDetectionConfig.TICKS_PER_DEGREE *
+                        (Math.toDegrees(Math.atan2(info.shotDirY, info.shotDirX)) - Math.toDegrees(odomPose.getHeading())),
+                false, false);
     }
 
     private void updateSubsystems(boolean queueEmpty, double range, double robotVelAlongShot) {
@@ -144,7 +147,7 @@ public class Robot {
     // Simple TeleOp update
     // ===========================
     public void simpleUpdate(Gamepad gamepad1, Gamepad gamepad2) {
-        double range = Math.sqrt(cameraSwivel.x * cameraSwivel.x + cameraSwivel.y * cameraSwivel.y);
+        double range = Math.sqrt(cameraSwivel.x * cameraSwivel.x + cameraSwivel.y * cameraSwivel.y); // this doesn't work
 
         cameraSwivel.update(gamepad2.left_stick_x);
         shooter.simpleUpdate(storage.queueIsEmpty(), range);

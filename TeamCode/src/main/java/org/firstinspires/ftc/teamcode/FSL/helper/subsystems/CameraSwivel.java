@@ -27,6 +27,7 @@ public class CameraSwivel {
     private final int targetID;
     public double x;
     public double y;
+    public double range;
     private double tickBearing;
 
     public boolean locked = false;
@@ -46,6 +47,7 @@ public class CameraSwivel {
         tickBearing = 0;
         x = 0;
         y = 0;
+        range = 0;
         if(isBlue){ targetID = 20;}
         else{ targetID = 24; }
         if(!isGreedyAuto){
@@ -63,22 +65,41 @@ public class CameraSwivel {
         for (AprilTagDetection detection : currentDetections) {
             if (detection.id == targetID) {
                 locked = true;
+
                 x = detection.ftcPose.x;
                 y = detection.ftcPose.y;
             }
             else{
                 locked = false;
-                tickBearing = 0;
                 x = 0;
                 y = 0;
             }
         }
     }
+    public void honeOnAprilTag() {
+        List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
 
-    public void setPIDTarget(double bearingToAdd){
-        if(Math.abs(bearingToAdd) <= CameraDetectionConfig.MAX_OFFSET){
-            pidController.setTarget(bearingToAdd, false);
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.id == targetID) {
+                locked = true;
+                tickBearing = detection.ftcPose.bearing;
+                range = detection.ftcPose.range;
+            }
+            else{
+                locked = false;
+                tickBearing = 0;
+                range = 0;
+            }
         }
+        setPIDTarget(tickBearing, true);
+    }
+
+    public void setPIDTarget(double bearingToAdd, boolean append, boolean simple){
+        if(!simple){
+            bearingToAdd = -bearingToAdd;
+        }
+        double valToAssign = Math.max(-CameraDetectionConfig.MAX_OFFSET,Math.min(bearingToAdd , CameraDetectionConfig.MAX_OFFSET));
+        pidController.setTarget(valToAssign, append);
     }
 
     public void update(double lateralOverride){
@@ -91,11 +112,27 @@ public class CameraSwivel {
             pidController.reset();
         }
         sendTelemetry();
-
     }
 
     public void update(){
         focusOnAprilTag();
+        motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+        sendTelemetry();
+    }
+
+    public void simpleUpdate(double lateralOverride){
+        if(Math.abs(lateralOverride) < 0.2){
+            honeOnAprilTag();
+            motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+        }
+        else{
+            jog(lateralOverride);
+            pidController.reset();
+        }
+        sendTelemetry();
+    }
+    public void simpleUpdate(){
+        honeOnAprilTag();
         motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         sendTelemetry();
     }
