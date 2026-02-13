@@ -137,8 +137,8 @@ public class CameraSwivel {
 
         telemetry.addLine("CAMERA SWIVEL - VISION\n");
         telemetry.addData("MOTIF", motif);
-        telemetry.addData("TARGET X", x);
-        telemetry.addData("TARGET Y", y);
+        telemetry.addData("ROBOT X", x);
+        telemetry.addData("ROBOT Y", y);
         telemetry.addData("TARGET BEARING (ticks)", tickBearing);
     }
 }
