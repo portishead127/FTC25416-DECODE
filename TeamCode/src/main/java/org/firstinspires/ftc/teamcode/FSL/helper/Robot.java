@@ -146,7 +146,7 @@ public class Robot {
     // Simple TeleOp update
     // ===========================
     public void simpleUpdate(Gamepad gamepad1, Gamepad gamepad2) {
-        double range = Math.sqrt(cameraSwivel.x * cameraSwivel.x + cameraSwivel.y * cameraSwivel.y); // this doesn't work
+        double range = cameraSwivel.range;
 
         cameraSwivel.simpleUpdate(gamepad2.left_stick_x);
         shooter.simpleUpdate(storage.queueIsEmpty(), range);
@@ -169,7 +169,7 @@ public class Robot {
     }
 
     public void autoSimpleUpdate() {
-        double range = Math.sqrt(cameraSwivel.x * cameraSwivel.x + cameraSwivel.y * cameraSwivel.y);
+        double range = cameraSwivel.range;
         shooter.simpleUpdate(storage.queueIsEmpty(), range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
         intake.update(storage.isEmpty());
