@@ -35,7 +35,7 @@ public class PIDStorage {
     public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "SPM");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong needs to be acw
 
         servo = hm.get(Servo.class, "FLS");
         colorSensor = hm.get(ColorRangeSensor.class, "CS");
@@ -125,7 +125,7 @@ public class PIDStorage {
         }
 
         wasIntakeMode = intakeMode;
-        motor.setVelocity(motor.getMotorType().getAchieveableMaxTicksPerSecond() * pidController.calculateScalar(motor.getCurrentPosition()));
+        motor.setVelocity(UltraplanetaryMotorConstants.MAX_VELOCITY * pidController.calculateScalar(motor.getCurrentPosition()));
         sendTelemetry();
     }
     public void intakeUpdate(){
@@ -143,9 +143,6 @@ public class PIDStorage {
         if (motor.isBusy() || isFlicking) {
             return;
         }
-        if (queue.isEmpty()) {
-            return;
-        }
 
         Color desired = queue.peekFirst();
 
@@ -157,10 +154,10 @@ public class PIDStorage {
             }
         }
         else if (desired == slots[0]) {
-            rotate1Slot(true);
+            rotate1Slot(false);
         }
         else if (desired == slots[1]) {
-            rotate1Slot(false);
+            rotate1Slot(true);
         }
         else {
             if (slots[2] != null) {
@@ -171,10 +168,10 @@ public class PIDStorage {
                 }
             }
             else if (slots[0] != null) {
-                rotate1Slot(true);
+                rotate1Slot(false);
             }
             else if (slots[1] != null) {
-                rotate1Slot(false);
+                rotate1Slot(true);
             }
         }
     }
