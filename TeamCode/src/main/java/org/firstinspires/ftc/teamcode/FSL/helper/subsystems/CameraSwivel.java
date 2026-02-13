@@ -77,7 +77,7 @@ public class CameraSwivel {
 
     public void setPIDTarget(double bearingToAdd){
         if(Math.abs(motor.getCurrentPosition() + bearingToAdd) <= CameraDetectionConfig.MAX_OFFSET){
-            pidController.setTarget(bearingToAdd, true);
+            pidController.setTarget(bearingToAdd, false);
         }
     }
 
