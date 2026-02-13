@@ -83,8 +83,8 @@ public class Robot {
 
         if (cameraSwivel.locked) {
             // Use camera-provided robot-relative coordinates
-            correctedX = goalFieldX - cameraSwivel.x;
-            correctedY = goalFieldY - cameraSwivel.y;
+            correctedX = cameraSwivel.x;
+            correctedY = cameraSwivel.y;
         } else {
             // Fallback to pure odometry
             correctedX = goalFieldX - odomPose.getX();
