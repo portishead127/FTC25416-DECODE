@@ -106,7 +106,7 @@ public class Robot {
         cameraSwivel.setPIDTarget(
                 CameraDetectionConfig.TICKS_PER_DEGREE *
                         (Math.toDegrees(Math.atan2(info.shotDirY, info.shotDirX)) - Math.toDegrees(odomPose.getHeading())),
-                false, false);
+                false);
     }
 
     private void updateSubsystems(boolean queueEmpty, double range, double robotVelAlongShot) {

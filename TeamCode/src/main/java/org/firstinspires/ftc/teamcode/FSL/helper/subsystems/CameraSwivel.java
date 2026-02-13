@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -35,6 +36,7 @@ public class CameraSwivel {
         motor = hm.get(DcMotorEx.class, "CSM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE); //SPINNING ACW NEEDS TO INCREASE TICKS
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.telemetry = telemetry;
 
@@ -91,14 +93,11 @@ public class CameraSwivel {
                 range = 0;
             }
         }
-        setPIDTarget(tickBearing, true, true);
+        setPIDTarget(tickBearing, true);
     }
 
-    public void setPIDTarget(double bearingToAdd, boolean append, boolean simple){
-        if(!simple){
-            bearingToAdd = -bearingToAdd;
-        }
-        double valToAssign = Math.max(-CameraDetectionConfig.MAX_OFFSET,Math.min(bearingToAdd , CameraDetectionConfig.MAX_OFFSET));
+    public void setPIDTarget(double bearingToAdd, boolean append){
+        double valToAssign = Math.max(-CameraDetectionConfig.MAX_OFFSET,Math.min(bearingToAdd, CameraDetectionConfig.MAX_OFFSET));
         pidController.setTarget(valToAssign, append);
     }
 
