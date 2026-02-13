@@ -99,11 +99,11 @@ public class Robot {
         info.robotVelAlongShot = odomVel.getXComponent() * info.shotDirX + odomVel.getYComponent() * info.shotDirY;
 
         // update camera swivel PID target
-        updateCameraPID(info);
+        updateCameraPID(info, odomPose);
         return info;
     }
-    private void updateCameraPID(ShotInfo info){
-        cameraSwivel.setPIDTarget(CameraDetectionConfig.TICKS_PER_DEGREE * Math.atan2(info.shotDirY, info.shotDirX));
+    private void updateCameraPID(ShotInfo info, Pose odomPose){
+        cameraSwivel.setPIDTarget(CameraDetectionConfig.TICKS_PER_DEGREE * (Math.atan2(info.shotDirY, info.shotDirX) - odomPose.heading));
     }
 
     private void updateSubsystems(boolean queueEmpty, double range, double robotVelAlongShot) {
