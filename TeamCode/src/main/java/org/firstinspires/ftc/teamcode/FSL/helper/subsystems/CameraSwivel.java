@@ -63,8 +63,6 @@ public class CameraSwivel {
         for (AprilTagDetection detection : currentDetections) {
             if (detection.id == targetID) {
                 locked = true;
-                tickBearing = detection.ftcPose.bearing * CameraDetectionConfig.TICKS_PER_DEGREE;
-                setPIDTarget(tickBearing);
                 x = detection.ftcPose.x;
                 y = detection.ftcPose.y;
             }
