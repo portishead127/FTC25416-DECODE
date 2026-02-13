@@ -103,7 +103,7 @@ public class Robot {
         return info;
     }
     private void updateCameraPID(ShotInfo info){
-        cameraSwivel.setPIDTarget(CameraDetectionConfig.TICKS_PER_DEGREE * Math.atan2(info.shotDirY, info.shotDirX));
+        cameraSwivel.setPIDTarget(CameraDetectionConfig.TICKS_PER_DEGREE * Math.atan2(info.shotDirX, info.shotDirY));
     }
 
     private void updateSubsystems(boolean queueEmpty, double range, double robotVelAlongShot) {
