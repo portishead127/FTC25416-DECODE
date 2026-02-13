@@ -83,8 +83,8 @@ public class Robot {
 
         if (cameraSwivel.locked) {
             // Use camera-provided robot-relative coordinates
-            correctedX = cameraSwivel.x + odomPose.getX();
-            correctedY = cameraSwivel.y + odomPose.getY();
+            correctedX = goalFieldX - cameraSwivel.x;
+            correctedY = goalFieldY - cameraSwivel.y;
         } else {
             // Fallback to pure odometry
             correctedX = goalFieldX - odomPose.getX();
@@ -113,7 +113,6 @@ public class Robot {
         shooter.dynamicUpdate(queueEmpty, range, robotVelAlongShot);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
         intake.update(storage.isEmpty());
-        cameraSwivel.update();
     }
 
     private void handleQueueButtons(Gamepad gamepad) {
@@ -149,7 +148,7 @@ public class Robot {
     public void simpleUpdate(Gamepad gamepad1, Gamepad gamepad2) {
         double range = Math.sqrt(cameraSwivel.x * cameraSwivel.x + cameraSwivel.y * cameraSwivel.y); // this doesn't work
 
-        cameraSwivel.update(gamepad2.left_stick_x);
+        cameraSwivel.simpleUpdate(gamepad2.left_stick_x);
         shooter.simpleUpdate(storage.queueIsEmpty(), range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
         intake.update(storage.isEmpty());
@@ -171,7 +170,6 @@ public class Robot {
 
     public void autoSimpleUpdate() {
         double range = Math.sqrt(cameraSwivel.x * cameraSwivel.x + cameraSwivel.y * cameraSwivel.y);
-        cameraSwivel.update();
         shooter.simpleUpdate(storage.queueIsEmpty(), range);
         storage.update(cameraSwivel.locked && shooter.isWarmedUp());
         intake.update(storage.isEmpty());

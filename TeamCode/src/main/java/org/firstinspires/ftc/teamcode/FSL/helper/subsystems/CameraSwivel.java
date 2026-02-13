@@ -91,7 +91,7 @@ public class CameraSwivel {
                 range = 0;
             }
         }
-        setPIDTarget(tickBearing, true);
+        setPIDTarget(tickBearing, true, true);
     }
 
     public void setPIDTarget(double bearingToAdd, boolean append, boolean simple){
