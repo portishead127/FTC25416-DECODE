@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.constants.UltraplanetaryMotorCo
 
 @Config
 @Configurable
-public class CameraDetectionConfig {
+public class CameraSwivelConfig {
     public static double KP = 0.035;
     public static double KI = 0.0;
     public static double KD = 0.004;

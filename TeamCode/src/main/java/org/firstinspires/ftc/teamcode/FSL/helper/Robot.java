@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraDetectionConfig;
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraSwivelConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
@@ -104,7 +104,7 @@ public class Robot {
     }
     private void updateCameraPID(ShotInfo info, Pose odomPose){
         cameraSwivel.setPIDTarget(
-                CameraDetectionConfig.TICKS_PER_DEGREE *
+                CameraSwivelConfig.TICKS_PER_DEGREE *
                         (Math.toDegrees(Math.atan2(info.shotDirY, info.shotDirX)) - Math.toDegrees(odomPose.getHeading())),
                 false);
     }

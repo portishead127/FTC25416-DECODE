@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
-import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraDetectionConfig;
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraSwivelConfig;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -53,7 +53,7 @@ public class CameraSwivel {
                 aprilTagProcessor
         );
 
-        pidController = new PIDController(CameraDetectionConfig.KP, CameraDetectionConfig.KI, CameraDetectionConfig.KD, CameraDetectionConfig.CENTRALTOLERANCE);
+        pidController = new PIDController(CameraSwivelConfig.KP, CameraSwivelConfig.KI, CameraSwivelConfig.KD, CameraSwivelConfig.CENTRALTOLERANCE);
 
         tickBearing = 0;
         x = 0;
@@ -102,14 +102,14 @@ public class CameraSwivel {
     }
 
     public void setPIDTarget(double bearingToAdd, boolean append){
-        double valToAssign = Math.max(-CameraDetectionConfig.MAX_OFFSET,Math.min(bearingToAdd, CameraDetectionConfig.MAX_OFFSET));
+        double valToAssign = Math.max(-CameraSwivelConfig.MAX_OFFSET,Math.min(bearingToAdd, CameraSwivelConfig.MAX_OFFSET));
         pidController.setTarget(valToAssign, append);
     }
 
     public void update(double lateralOverride){
         if(Math.abs(lateralOverride) < 0.2){
             focusOnAprilTag();
-            motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+            motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         }
         else{
             jog(lateralOverride);
@@ -120,14 +120,14 @@ public class CameraSwivel {
 
     public void update(){
         focusOnAprilTag();
-        motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+        motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         sendTelemetry();
     }
 
     public void simpleUpdate(double lateralOverride){
         if(Math.abs(lateralOverride) < 0.2){
             honeOnAprilTag();
-            motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+            motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         }
         else{
             jog(lateralOverride);
@@ -137,7 +137,7 @@ public class CameraSwivel {
     }
     public void simpleUpdate(){
         honeOnAprilTag();
-        motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+        motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         sendTelemetry();
     }
 
@@ -145,7 +145,7 @@ public class CameraSwivel {
         motor.setVelocity(0);
     }
     public void jog(double scalar) {
-        motor.setVelocity(CameraDetectionConfig.MAX_VEL * scalar);
+        motor.setVelocity(CameraSwivelConfig.MAX_VEL * scalar);
     }
 
     public void readMotif() {
