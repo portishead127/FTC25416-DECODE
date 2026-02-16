@@ -35,6 +35,7 @@ public class PIDStorage {
     private boolean wasIntakeMode;
     public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "SPM");
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong needs to be acw
 

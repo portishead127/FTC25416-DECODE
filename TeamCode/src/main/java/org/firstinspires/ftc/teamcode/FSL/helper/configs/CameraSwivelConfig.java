@@ -14,5 +14,5 @@ public class CameraSwivelConfig {
     public static double TICKS_PER_DEGREE = ((double) 128/24) * (UltraplanetaryMotorConstants.ENCODER_RES / 360);
     public static double MAX_VEL = 120.0;
     public static double MAX_OFFSET = TICKS_PER_DEGREE * 90;
-    public static int CENTRALTOLERANCE = 3;
+    public static int CENTRALTOLERANCE = 0;
 }

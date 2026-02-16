@@ -112,7 +112,7 @@ public class CameraSwivel {
             motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         }
         else{
-            jog(lateralOverride);
+            jog(-lateralOverride);
             pidController.reset();
         }
         sendTelemetry();
@@ -130,7 +130,7 @@ public class CameraSwivel {
             motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         }
         else{
-            jog(lateralOverride);
+            jog(-lateralOverride);
             pidController.reset();
         }
         sendTelemetry();
