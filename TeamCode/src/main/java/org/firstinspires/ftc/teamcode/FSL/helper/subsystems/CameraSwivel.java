@@ -4,13 +4,16 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
-import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraDetectionConfig;
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraSwivelConfig;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -20,11 +23,13 @@ import java.util.List;
 public class CameraSwivel {
     private final Telemetry telemetry;
     private final VisionPortal visionPortal;
-    private final AprilTagProcessor aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
+    private final AprilTagProcessor aprilTagProcessor;
     private final DcMotorEx motor;
     private final PIDController pidController;
     public Motif motif;
     private final int targetID;
+    public double x;
+    public double y;
     public double range;
     private double tickBearing;
 
@@ -33,16 +38,26 @@ public class CameraSwivel {
         motor = hm.get(DcMotorEx.class, "CSM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE); //SPINNING ACW NEEDS TO INCREASE TICKS
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.telemetry = telemetry;
+
+        aprilTagProcessor = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+                .setLensIntrinsics(236.887, 236.887, 298.024, 138.613)
+                .build();
 
         visionPortal = VisionPortal.easyCreateWithDefaults(
                 hm.get(WebcamName.class, "CAM"),
                 aprilTagProcessor
         );
-        pidController = new PIDController(CameraDetectionConfig.KP, CameraDetectionConfig.KI, CameraDetectionConfig.KD, CameraDetectionConfig.CENTRALTOLERANCE);
+
+        pidController = new PIDController(CameraSwivelConfig.KP, CameraSwivelConfig.KI, CameraSwivelConfig.KD, CameraSwivelConfig.CENTRALTOLERANCE);
 
         tickBearing = 0;
+        x = 0;
+        y = 0;
         range = 0;
         if(isBlue){ targetID = 20;}
         else{ targetID = 24; }
@@ -58,40 +73,71 @@ public class CameraSwivel {
     public void focusOnAprilTag() {
         List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
 
-        boolean tagFound = false;
         for (AprilTagDetection detection : currentDetections) {
             if (detection.id == targetID) {
-                tagFound = true;
+                locked = true;
 
-                tickBearing = detection.ftcPose.bearing * CameraDetectionConfig.TICKS_PER_DEGREE;
-                if(Math.abs(motor.getCurrentPosition() + tickBearing) <= CameraDetectionConfig.MAX_OFFSET){
-                    pidController.setTarget(tickBearing, true);
-                }
-                range = detection.ftcPose.range;
+                x = detection.ftcPose.x;
+                y = detection.ftcPose.y;
+            }
+            else{
+                locked = false;
             }
         }
+    }
+    public void honeOnAprilTag() {
+        List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
 
-        if (!tagFound) {
-            pidController.reset();
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.id == targetID) {
+                locked = true;
+                tickBearing = detection.ftcPose.bearing;
+                range = detection.ftcPose.range;
+            }
+            else{
+                locked = false;
+            }
         }
+        setPIDTarget(tickBearing, true);
+    }
+
+    public void setPIDTarget(double bearingToAdd, boolean append){
+        double valToAssign = Math.max(-CameraSwivelConfig.MAX_OFFSET,Math.min(bearingToAdd, CameraSwivelConfig.MAX_OFFSET));
+        pidController.setTarget(valToAssign, append);
     }
 
     public void update(double lateralOverride){
         if(Math.abs(lateralOverride) < 0.2){
             focusOnAprilTag();
-            motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+            motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         }
         else{
-            jog(lateralOverride);
+            jog(-lateralOverride);
             pidController.reset();
         }
         sendTelemetry();
-
     }
 
     public void update(){
         focusOnAprilTag();
-        motor.setVelocity(CameraDetectionConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+        motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+        sendTelemetry();
+    }
+
+    public void simpleUpdate(double lateralOverride){
+        if(Math.abs(lateralOverride) < 0.2){
+            honeOnAprilTag();
+            motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
+        }
+        else{
+            jog(-lateralOverride);
+            pidController.reset();
+        }
+        sendTelemetry();
+    }
+    public void simpleUpdate(){
+        honeOnAprilTag();
+        motor.setVelocity(CameraSwivelConfig.MAX_VEL * pidController.calculateScalar(motor.getCurrentPosition()));
         sendTelemetry();
     }
 
@@ -99,7 +145,7 @@ public class CameraSwivel {
         motor.setVelocity(0);
     }
     public void jog(double scalar) {
-        motor.setVelocity(CameraDetectionConfig.MAX_VEL * scalar);
+        motor.setVelocity(CameraSwivelConfig.MAX_VEL * scalar);
     }
 
     public void readMotif() {
@@ -130,7 +176,8 @@ public class CameraSwivel {
 
         telemetry.addLine("CAMERA SWIVEL - VISION\n");
         telemetry.addData("MOTIF", motif);
-        telemetry.addData("TARGET RANGE", range);
+        telemetry.addData("ROBOT X", x);
+        telemetry.addData("ROBOT Y", y);
         telemetry.addData("TARGET BEARING (ticks)", tickBearing);
     }
 }

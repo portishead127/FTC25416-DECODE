@@ -46,7 +46,7 @@ public class RedSafeAuto extends OpMode {
     public void loop() {
         follower.update(); // Update Pedro Pathing
         autonomousPathUpdate(); // Update autonomous state machine
-        robot.update();
+        robot.autoUpdate(follower);
 
         // Log values to Panels and Driver Station
         panelsTelemetry.debug("Path State", pathState);
@@ -166,7 +166,7 @@ public class RedSafeAuto extends OpMode {
     public void autonomousPathUpdate(){
         switch (pathState) {
             case 0:
-                robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                 if(robot.storage.queueIsEmpty()){
                     follower.followPath(paths.InfrontOfLowRow);
                     setPathState(1);
@@ -192,7 +192,7 @@ public class RedSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.InfrontOfMiddleRow, true);
                         setPathState(4);
@@ -221,7 +221,7 @@ public class RedSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.InfrontOfHighRow, true);
                         setPathState(7);

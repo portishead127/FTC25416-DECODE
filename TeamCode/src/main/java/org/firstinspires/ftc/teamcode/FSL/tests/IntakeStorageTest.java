@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
 
 @TeleOp(name = "TEST: Intake and Storage Test", group = "TEST")
 public class IntakeStorageTest extends OpMode {
-
     PIDStorage storage;
     Intake intake;
 

@@ -10,18 +10,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FSL.helper.constants.UltraplanetaryMotorConstants;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.StorageConfig;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 
 import java.util.LinkedList;
 
 public class PIDStorage {
     private final LinkedList<Color> queue = new LinkedList<Color>();
     public final Color[] slots;
-    private final ColorSensor colorSensor;
+    private final ColorRangeSensor colorSensor;
     private final DcMotorEx motor;
     private final Servo servo;
     private final Telemetry telemetry;
@@ -31,10 +33,11 @@ public class PIDStorage {
     private boolean intakeMode;
     private boolean isFlicking;
     private boolean wasIntakeMode;
-    public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
+    public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "SPM");
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong needs to be acw
 
         servo = hm.get(Servo.class, "FLS");
         colorSensor = hm.get(ColorRangeSensor.class, "CS");
@@ -42,7 +45,13 @@ public class PIDStorage {
         this.telemetry = telemetry;
 
         pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.TICK_TOLERANCE);
-        slots = new Color[]{null, null, null};
+
+        if(emptyStorage){
+            slots = new Color[]{null, null, null};
+        }else{
+            slots = new Color[]{Color.PURPLE, Color.PURPLE, Color.GREEN};
+        }
+
         wasIntakeMode = !emptyStorage;
         intakeMode = emptyStorage;
         flickTimer = new ElapsedTime();
@@ -97,7 +106,7 @@ public class PIDStorage {
         pidController.setTarget(0, false); //append
     }
     public void update(boolean shootable) {
-        intakeMode = (slots[0] == null || slots[1] == null || slots[2] == null);
+        intakeMode = ((slots[0] == null && slots[1] == null && slots[2] == null) || queueIsEmpty());
 
         // Detect transitions
         boolean justBecameFull  = wasIntakeMode && !intakeMode;
@@ -106,6 +115,7 @@ public class PIDStorage {
         updateFlick();
 
         if (intakeMode) {
+            setQueue(Scoring.NONE);
             if(justBecameEmpty){
                 goToSlot1AlignedWithIntake();
             }
@@ -118,7 +128,7 @@ public class PIDStorage {
         }
 
         wasIntakeMode = intakeMode;
-        motor.setVelocity(motor.getMotorType().getAchieveableMaxTicksPerSecond() * pidController.calculateScalar(motor.getCurrentPosition()));
+        motor.setVelocity(UltraplanetaryMotorConstants.MAX_VELOCITY * pidController.calculateScalar(motor.getCurrentPosition()));
         sendTelemetry();
     }
     public void intakeUpdate(){
@@ -136,9 +146,6 @@ public class PIDStorage {
         if (motor.isBusy() || isFlicking) {
             return;
         }
-        if (queue.isEmpty()) {
-            return;
-        }
 
         Color desired = queue.peekFirst();
 
@@ -150,10 +157,10 @@ public class PIDStorage {
             }
         }
         else if (desired == slots[0]) {
-            rotate1Slot(true);
+            rotate1Slot(false);
         }
         else if (desired == slots[1]) {
-            rotate1Slot(false);
+            rotate1Slot(true);
         }
         else {
             if (slots[2] != null) {
@@ -164,10 +171,10 @@ public class PIDStorage {
                 }
             }
             else if (slots[0] != null) {
-                rotate1Slot(true);
+                rotate1Slot(false);
             }
             else if (slots[1] != null) {
-                rotate1Slot(false);
+                rotate1Slot(true);
             }
         }
     }
@@ -179,6 +186,7 @@ public class PIDStorage {
         telemetry.addData("TARGET TOLERANCE", pidController.tolerance);
         telemetry.addData("MOTOR VEL", motor.getVelocity());
         telemetry.addData("COLOR SENSOR", currentColor.name());
+        telemetry.addData("DETECTION DISTANCE (mm)", colorSensor.getDistance(DistanceUnit.MM));
 
         telemetry.addLine("STORAGE - SLOTS\n");
         telemetry.addData("INTAKE MODE", intakeMode);
@@ -187,10 +195,8 @@ public class PIDStorage {
         telemetry.addData("SLOT 2", slots[2]);
 
         telemetry.addLine("STORAGE - QUEUE\n");
-        for (int i = 0; i < queue.size(); i++) {
-            telemetry.addData("QUEUE ["+i+"]", queue.get(i).name());
-        }
         telemetry.addData("EMPTY", queueIsEmpty());
+        telemetry.addData("QUEUE", queue);
 
         telemetry.addLine("STORAGE - FLICKER\n");
         telemetry.addData("FLICKING", isFlicking);
