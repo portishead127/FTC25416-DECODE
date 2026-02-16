@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraDetectionConfig;
@@ -21,7 +23,7 @@ import java.util.List;
 public class CameraSwivel {
     private final Telemetry telemetry;
     private final VisionPortal visionPortal;
-    private final AprilTagProcessor aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
+    private final AprilTagProcessor aprilTagProcessor;
     private final DcMotorEx motor;
     private final PIDController pidController;
     public Motif motif;
@@ -40,10 +42,17 @@ public class CameraSwivel {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.telemetry = telemetry;
 
+        aprilTagProcessor = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+                .setLensIntrinsics(236.887, 236.887, 298.024, 138.613)
+                .build();
+
         visionPortal = VisionPortal.easyCreateWithDefaults(
                 hm.get(WebcamName.class, "CAM"),
                 aprilTagProcessor
         );
+
         pidController = new PIDController(CameraDetectionConfig.KP, CameraDetectionConfig.KI, CameraDetectionConfig.KD, CameraDetectionConfig.CENTRALTOLERANCE);
 
         tickBearing = 0;
@@ -87,7 +96,6 @@ public class CameraSwivel {
             }
             else{
                 locked = false;
-
             }
         }
         setPIDTarget(tickBearing, true);

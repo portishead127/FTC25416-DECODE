@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.CameraDetectionConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 
 @TeleOp(name = "TEST - Camera Test", group = "TEST")
@@ -20,6 +21,11 @@ public class CameraTest extends OpMode {
     @Override
     public void loop() {
         cameraSwivel.update(gamepad1.left_stick_x);
+
+        if(gamepad1.squareWasPressed()){cameraSwivel.setPIDTarget(CameraDetectionConfig.MAX_OFFSET, false);}
+        if(gamepad1.crossWasPressed()){cameraSwivel.setPIDTarget(-CameraDetectionConfig.MAX_OFFSET, false);}
+        if(gamepad1.circleWasPressed()){cameraSwivel.setPIDTarget(0, false);}
+
         telemetry.addData("GAMEPAD 1 LX:", gamepad1.left_stick_x);
         telemetry.update();
     }
