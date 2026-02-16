@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 @TeleOp(name = "TEST: Pedro Mecanum Test", group = "TEST")
 public class PedroMecanumTest extends OpMode {
     private Follower follower;
-    public static Pose startingPose; //See ExampleAuto to understand how to use this
+    public static Pose startingPose = new Pose(62,60, Math.toRadians(90)); //See ExampleAuto to understand how to use this
     private boolean slowMode = false;
 
     @Override
