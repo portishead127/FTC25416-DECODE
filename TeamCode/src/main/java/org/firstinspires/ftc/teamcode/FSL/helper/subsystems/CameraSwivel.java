@@ -73,8 +73,6 @@ public class CameraSwivel {
             }
             else{
                 locked = false;
-                x = 0;
-                y = 0;
             }
         }
     }
@@ -89,8 +87,7 @@ public class CameraSwivel {
             }
             else{
                 locked = false;
-                tickBearing = 0;
-                range = 0;
+
             }
         }
         setPIDTarget(tickBearing, true);

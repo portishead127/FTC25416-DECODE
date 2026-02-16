@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.StorageConfig;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 
 import java.util.LinkedList;
 
@@ -104,7 +105,7 @@ public class PIDStorage {
         pidController.setTarget(0, false); //append
     }
     public void update(boolean shootable) {
-        intakeMode = (slots[0] == null || slots[1] == null || slots[2] == null);
+        intakeMode = ((slots[0] == null && slots[1] == null && slots[2] == null) || queueIsEmpty());
 
         // Detect transitions
         boolean justBecameFull  = wasIntakeMode && !intakeMode;
@@ -113,6 +114,7 @@ public class PIDStorage {
         updateFlick();
 
         if (intakeMode) {
+            setQueue(Scoring.NONE);
             if(justBecameEmpty){
                 goToSlot1AlignedWithIntake();
             }
