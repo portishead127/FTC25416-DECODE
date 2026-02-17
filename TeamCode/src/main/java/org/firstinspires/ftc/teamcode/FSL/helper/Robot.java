@@ -79,33 +79,56 @@ public class Robot {
 
     private ShotInfo computeHybridTarget(Pose odomPose, Vector odomVel) {
         ShotInfo info = new ShotInfo();
-        double correctedX, correctedY;
+
+        double correctedX;
+        double correctedY;
 
         if (cameraSwivel.locked) {
-            // Use camera-provided robot-relative coordinates
-            correctedX = cameraSwivel.x;
-            correctedY = cameraSwivel.y;
+            double robotHeading = odomPose.getHeading();
+            double swivelAngle = cameraSwivel.camBearing; // must be radians
+
+            double cameraHeading = robotHeading + swivelAngle;
+
+            double relX = cameraSwivel.x; // right
+            double relY = cameraSwivel.y; // forward
+
+            double forward = relY;
+            double left = -relX;
+
+            correctedX = forward * Math.cos(cameraHeading) - left * Math.sin(cameraHeading);
+            correctedY = forward * Math.sin(cameraHeading) + left * Math.cos(cameraHeading);
+
         } else {
-            // Fallback to pure odometry
+            // Pure odometry fallback
             correctedX = goalFieldX - odomPose.getX();
             correctedY = goalFieldY - odomPose.getY();
         }
-
         info.range = Math.sqrt(correctedX * correctedX + correctedY * correctedY);
-        info.shotDirX = correctedX / info.range;
-        info.shotDirY = correctedY / info.range;
 
-        // velocity along shot vector
-        info.robotVelAlongShot = odomVel.getXComponent() * info.shotDirX + odomVel.getYComponent() * info.shotDirY;
+        // Normalize safely
+        if (info.range > 1e-6) {
+            info.shotDirX = correctedX / info.range;
+            info.shotDirY = correctedY / info.range;
+        } else {
+            info.shotDirX = 0;
+            info.shotDirY = 0;
+        }
 
-        // update camera swivel PID target
+        // Project robot velocity onto shot vector
+        info.robotVelAlongShot =
+                odomVel.getXComponent() * info.shotDirX +
+                        odomVel.getYComponent() * info.shotDirY;
+
+        // Update swivel PID target
         updateCameraPID(info, odomPose);
+
         return info;
     }
+
     private void updateCameraPID(ShotInfo info, Pose odomPose){
+        double bearingInRad = Math.atan2(info.shotDirY, info.shotDirX) - odomPose.getHeading();
         cameraSwivel.setPIDTarget(
-                CameraSwivelConfig.TICKS_PER_DEGREE *
-                        (Math.toDegrees(Math.atan2(info.shotDirY, info.shotDirX)) - Math.toDegrees(odomPose.getHeading())),
+                CameraSwivelConfig.TICKS_PER_RADIAN * bearingInRad,
                 false);
     }
 

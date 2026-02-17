@@ -16,6 +16,11 @@ public class Shooter {
     private double range;
     private double dynamicRange;
 
+    //servo - 0 - steep
+    //1 - shallow
+
+
+
     public Shooter(HardwareMap hm, Telemetry telemetry) {
         motor = hm.get(DcMotorEx.class, "SHM");
         servo = hm.get(Servo.class, "SHS");

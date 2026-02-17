@@ -14,17 +14,18 @@ public class CameraTest extends OpMode {
         cameraSwivel = new CameraSwivel(hardwareMap, telemetry, true, false);
         telemetry.addData("STATUS:", "INITIALISED");
         telemetry.addData("MOTIF:", cameraSwivel.motif.name());
+        cameraSwivel.resumeStreaming();
         telemetry.update();
     }
 
     @Override
     public void loop() {
-        cameraSwivel.update(gamepad1.left_stick_x);
-
-        if(gamepad1.squareWasPressed()){cameraSwivel.setPIDTarget(CameraSwivelConfig.MAX_OFFSET, false);}
-        if(gamepad1.crossWasPressed()){cameraSwivel.setPIDTarget(-CameraSwivelConfig.MAX_OFFSET, false);}
-        if(gamepad1.circleWasPressed()){cameraSwivel.setPIDTarget(0, false);}
-
+//        cameraSwivel.update(gamepad1.left_stick_x);
+        cameraSwivel.focusOnAprilTag();
+//        if(gamepad1.squareWasPressed()){cameraSwivel.setPIDTarget(CameraSwivelConfig.MAX_OFFSET, false);}
+//        if(gamepad1.crossWasPressed()){cameraSwivel.setPIDTarget(-CameraSwivelConfig.MAX_OFFSET, false);}
+//        if(gamepad1.circleWasPressed()){cameraSwivel.setPIDTarget(0, false);}
+        cameraSwivel.sendTelemetry();
         telemetry.addData("GAMEPAD 1 LX:", gamepad1.left_stick_x);
         telemetry.update();
     }

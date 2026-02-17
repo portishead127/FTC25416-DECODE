@@ -13,7 +13,7 @@ public class StorageTest extends OpMode {
     PIDStorage storage;
     @Override
     public void init() {
-        storage = new PIDStorage(hardwareMap, telemetry, true);
+        storage = new PIDStorage(hardwareMap, telemetry, true, true);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
     }

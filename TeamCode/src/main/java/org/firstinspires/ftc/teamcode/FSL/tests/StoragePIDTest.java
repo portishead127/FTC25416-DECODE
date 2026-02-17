@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
 
-@TeleOp(name= "TEST: Storage Test", group = "TEST")
+@TeleOp(name= "TEST: Storage PID Test", group = "TEST")
 public class StoragePIDTest extends OpMode {
 
     PIDStorage storage;

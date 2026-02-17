@@ -18,7 +18,7 @@ public class NoCamTest extends OpMode {
 
     @Override
     public void init() {
-        storage = new PIDStorage(hardwareMap, telemetry, true);
+        storage = new PIDStorage(hardwareMap, telemetry, true, true);
         intake = new Intake(hardwareMap,telemetry);
         shooter = new Shooter(hardwareMap, telemetry);
         driveTrain = new DriveTrain(hardwareMap, telemetry);

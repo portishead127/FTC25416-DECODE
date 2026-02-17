@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.CameraSwivel;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
-@TeleOp(name= "TEST: Storage and Shooter Test", group = "TEST")
+@TeleOp(name= "TEST: Shooter and Camera Test", group = "TEST")
 public class ShooterCameraTest extends OpMode {
 
     CameraSwivel cameraSwivel;

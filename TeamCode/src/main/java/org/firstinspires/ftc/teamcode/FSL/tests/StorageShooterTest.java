@@ -13,7 +13,7 @@ public class StorageShooterTest extends OpMode {
     Shooter shooter;
     @Override
     public void init() {
-        storage = new PIDStorage(hardwareMap, telemetry, true);
+        storage = new PIDStorage(hardwareMap, telemetry, true, true);
         shooter = new Shooter(hardwareMap, telemetry);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
