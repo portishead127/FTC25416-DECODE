@@ -33,7 +33,7 @@ public class PIDStorage {
     private boolean intakeMode;
     private boolean isFlicking;
     private boolean wasIntakeMode;
-    public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage) {
+    public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "SPM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

@@ -16,7 +16,7 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.geometry.Pose;
 
 
-@Autonomous(name = "RED: Safe", group = "RED")
+@Autonomous(name = "RED: Safe", group = "GROUP")
 @Configurable // Panels
 public class RedSafeAuto extends OpMode {
     private Robot robot;
@@ -28,7 +28,7 @@ public class RedSafeAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, false, false, false);
+        robot = new Robot(hardwareMap, telemetry, false, false);
 
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
@@ -166,7 +166,8 @@ public class RedSafeAuto extends OpMode {
     public void autonomousPathUpdate(){
         switch (pathState) {
             case 0:
-                robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
+                robot.camera.readMotif();
+                robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
                 if(robot.storage.queueIsEmpty()){
                     follower.followPath(paths.InfrontOfLowRow);
                     setPathState(1);
@@ -192,7 +193,7 @@ public class RedSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.InfrontOfMiddleRow, true);
                         setPathState(4);
@@ -221,7 +222,7 @@ public class RedSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.InfrontOfHighRow, true);
                         setPathState(7);

@@ -15,7 +15,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.geometry.Pose;
 
-@Autonomous(name = "BLUE: Greedy", group = "BLUE")
+@Autonomous(name = "BLUE: Greedy", group = "COMP")
 @Configurable // Panels
 public class BlueGreedyAuto extends OpMode {
     private Robot robot;
@@ -26,7 +26,7 @@ public class BlueGreedyAuto extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, true, true, false);
+        robot = new Robot(hardwareMap, telemetry, true, false);
 
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
@@ -44,7 +44,7 @@ public class BlueGreedyAuto extends OpMode {
     public void loop() {
         follower.update(); // Update Pedro Pathing
         autonomousPathUpdate(); // Update autonomous state machine
-        if(robot.cameraSwivel.motif != null){
+        if(robot.camera.motif != null){
             robot.autoUpdate(follower);
         };
 
@@ -182,9 +182,9 @@ public class BlueGreedyAuto extends OpMode {
                 break;
             case 1:
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+                robot.camera.readMotif();
                 if(!follower.isBusy()) {
-                    robot.cameraSwivel.readMotif();
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
                     if(robot.storage.queueIsEmpty()) {
                         follower.followPath(paths.HitLever, true);
                         setPathState(2);
@@ -221,7 +221,7 @@ public class BlueGreedyAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.IntakeMiddleRow,true);
                         setPathState(6);
@@ -238,7 +238,7 @@ public class BlueGreedyAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.IntakeLowRow, true);
                         setPathState(8);
@@ -256,7 +256,7 @@ public class BlueGreedyAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.cameraSwivel.motif));
+                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
                     if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.Escape, true);
                         setPathState(10);

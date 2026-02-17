@@ -8,12 +8,13 @@ import org.firstinspires.ftc.teamcode.FSL.helper.Robot;
 
 //FTC DASH - 192.168.49.1:8080/dash
 //PANELS - 192.168.49.1:8001/
-@TeleOp(name = "BLUE: Competition", group = "BLUE")
+@TeleOp(name = "BLUE: Competition", group = "COMP")
 public class CompetitionTeleOpBlue extends OpMode {
+    public static Pose startingPose;
     Robot robot;
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, true, false, new Pose(62.000, 60.000, Math.toRadians(90)));
+        robot = new Robot(hardwareMap, telemetry, true, false, startingPose);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
     }
