@@ -9,11 +9,13 @@ public class ShooterTest extends OpMode {
     double powerScalar;
     double servoPos;
     Shooter shooter;
+    double step;
     @Override
     public void init() {
         shooter = new Shooter(hardwareMap, telemetry);
         powerScalar = 0;
         servoPos = 0.5;
+        step = 0.1;
         telemetry.addLine("OPTIMISE ANGLE FOR LOWEST RPM NEEDED.");
         telemetry.addLine("USE CALCULATOR AND PEN AND PAPER TO GET COEFFICIENTS FOR REGRESSIONS SEEN BELOW:");
         telemetry.addLine("SERVOPOS = f(RANGE), = a*RANGE + b");
@@ -28,17 +30,21 @@ public class ShooterTest extends OpMode {
         if(gamepad1.squareWasPressed()){ shooter.fire(powerScalar); }
         if(gamepad1.crossWasPressed()){ shooter.stop(); }
 
-        if(gamepad1.rightBumperWasPressed()){ powerScalar += 0.02; }
-        if(gamepad1.leftBumperWasPressed()){ powerScalar -= 0.02; }
+        if(gamepad1.rightBumperWasPressed()){ powerScalar += step; }
+        if(gamepad1.leftBumperWasPressed()){ powerScalar -= step; }
 
         if(gamepad1.triangleWasPressed()){ shooter.setServo(servoPos); };
 
-        if(gamepad1.dpadUpWasPressed()){ servoPos += 0.02; }
-        if(gamepad1.dpadDownWasPressed()){ servoPos -= 0.02; }
+        if(gamepad1.dpadUpWasPressed()){ servoPos += step; }
+        if(gamepad1.dpadDownWasPressed()){ servoPos -= step; }
+
+        if(gamepad1.dpadRightWasPressed()){ step += 0.05; }
+        if(gamepad1.dpadLeftWasPressed()){ step -= 0.05; }
 
         telemetry.addLine("TEST VARIABLES\n");
         telemetry.addData("VARIABLE POWER SCALAR", powerScalar);
         telemetry.addData("VARIABLE SERVO POS", servoPos);
+        telemetry.addData("STEP", step);
 
         telemetry.update();
     }

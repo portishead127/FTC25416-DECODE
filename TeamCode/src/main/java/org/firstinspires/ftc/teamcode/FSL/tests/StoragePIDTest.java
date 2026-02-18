@@ -3,16 +3,15 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 
 @TeleOp(name= "TEST: Storage PID Test", group = "TEST")
 public class StoragePIDTest extends OpMode {
 
-    PIDStorage storage;
+    Storage storage;
     @Override
     public void init() {
-        storage = new PIDStorage(hardwareMap, telemetry, true, true);
+        storage = new Storage(hardwareMap, telemetry, true);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
     }

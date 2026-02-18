@@ -10,7 +10,7 @@ public class CameraTest extends OpMode {
     Camera camera;
     @Override
     public void init() {
-        camera = new Camera(hardwareMap, telemetry, true, false);
+        camera = new Camera(hardwareMap, telemetry, true);
         telemetry.addData("STATUS:", "INITIALISED");
         telemetry.addData("MOTIF:", camera.motif.name());
         camera.resumeStreaming();
@@ -19,13 +19,8 @@ public class CameraTest extends OpMode {
 
     @Override
     public void loop() {
-//        cameraSwivel.update(gamepad1.left_stick_x);
         camera.focusOnAprilTag();
-//        if(gamepad1.squareWasPressed()){cameraSwivel.setPIDTarget(CameraSwivelConfig.MAX_OFFSET, false);}
-//        if(gamepad1.crossWasPressed()){cameraSwivel.setPIDTarget(-CameraSwivelConfig.MAX_OFFSET, false);}
-//        if(gamepad1.circleWasPressed()){cameraSwivel.setPIDTarget(0, false);}
         camera.sendTelemetry();
-        telemetry.addData("GAMEPAD 1 LX:", gamepad1.left_stick_x);
         telemetry.update();
     }
 }

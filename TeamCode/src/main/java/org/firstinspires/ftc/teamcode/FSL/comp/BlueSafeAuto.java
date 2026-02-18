@@ -56,7 +56,10 @@ public class BlueSafeAuto extends OpMode {
         panelsTelemetry.update(telemetry);
     }
 
-
+    @Override
+    public void stop() {
+        CompetitionTeleOpBlue.startingPose = follower.getPose();
+    }
 
     public static class Paths {
         public PathChain InfrontOfLowRow;

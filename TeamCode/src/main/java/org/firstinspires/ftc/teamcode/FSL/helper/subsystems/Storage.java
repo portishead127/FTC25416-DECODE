@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -20,7 +19,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 
 import java.util.LinkedList;
 
-public class PIDStorage {
+public class Storage {
     private final LinkedList<Color> queue = new LinkedList<Color>();
     public final Color[] slots;
     private final ColorRangeSensor colorSensor;
@@ -33,7 +32,7 @@ public class PIDStorage {
     private boolean intakeMode;
     private boolean isFlicking;
     private boolean wasIntakeMode;
-    public PIDStorage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
+    public Storage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "SPM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

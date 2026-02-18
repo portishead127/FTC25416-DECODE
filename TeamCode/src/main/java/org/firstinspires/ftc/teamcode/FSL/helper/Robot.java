@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Camera;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PedroFollowerDriveTrain;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Turret;
@@ -22,7 +22,7 @@ public class Robot {
     public Camera camera;
     public Turret turret;
     public Shooter shooter;
-    public PIDStorage storage;
+    public Storage storage;
     public DriveTrain driveTrain;
     public Intake intake;
     public PedroFollowerDriveTrain pedroFollowerDriveTrain;
@@ -46,7 +46,7 @@ public class Robot {
     public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage) {
         camera = new Camera(hm, telemetry, isBlue);
         shooter = new Shooter(hm, telemetry);
-        storage = new PIDStorage(hm, telemetry, emptyStorage);
+        storage = new Storage(hm, telemetry, emptyStorage);
         intake = new Intake(hm, telemetry);
         turret = new Turret(hm, telemetry);
         determineGoalPos(isBlue);
@@ -55,7 +55,7 @@ public class Robot {
     public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage, Pose startingPose) {
         camera = new Camera(hm, telemetry, isBlue);
         shooter = new Shooter(hm, telemetry);
-        storage = new PIDStorage(hm, telemetry, emptyStorage);
+        storage = new Storage(hm, telemetry, emptyStorage);
         intake = new Intake(hm, telemetry);
         pedroFollowerDriveTrain = new PedroFollowerDriveTrain(hm, telemetry, startingPose);
         determineGoalPos(isBlue);
@@ -64,11 +64,11 @@ public class Robot {
     // ===========================
     // Helper classes / methods
     // ===========================
-    private static class ShotInfo {
-        double range;
-        double shotDirX;
-        double shotDirY;
-        double robotVelAlongShot;
+    public static class ShotInfo {
+        public double range;
+        public double shotDirX;
+        public double shotDirY;
+        public double robotVelAlongShot;
     }
     private ShotInfo computeHybridTarget(Pose odomPose, Vector odomVel) {
         ShotInfo info = new ShotInfo();
@@ -121,14 +121,14 @@ public class Robot {
         info.robotVelAlongShot =
                 odomVel.getXComponent() * info.shotDirX +
                         odomVel.getYComponent() * info.shotDirY;
-
-        updateTurretPID(info, odomPose);
-
         return info;
     }
-    private void updateTurretPID(ShotInfo info, Pose odomPose) {
+    private void calculateAndSetTurretPIDTarget(ShotInfo info, Pose odomPose) {
         double fieldAngle = Math.atan2(info.shotDirY, info.shotDirX);
         double robotAngle = fieldAngle - odomPose.getHeading();
+
+        while(robotAngle > Math.PI){robotAngle -= 2 * Math.PI;}
+        while(robotAngle < -Math.PI){robotAngle += 2 * Math.PI;}
 
         turret.setPIDTarget(
                 TurretConfig.TICKS_PER_RADIAN * robotAngle,
@@ -152,6 +152,7 @@ public class Robot {
         Vector odomVel = pedroFollowerDriveTrain.follower.getVelocity();
 
         ShotInfo shot = computeHybridTarget(odomPose, odomVel);
+        calculateAndSetTurretPIDTarget(shot, odomPose);
         updateSubsystems(storage.queueIsEmpty(), shot.range, shot.robotVelAlongShot);
         pedroFollowerDriveTrain.update(gamepad1);
         handleQueueButtons(gamepad2);
@@ -161,6 +162,8 @@ public class Robot {
         Vector odomVel = follower.getVelocity();
 
         ShotInfo shot = computeHybridTarget(odomPose, odomVel);
+        calculateAndSetTurretPIDTarget(shot, odomPose);
+
         updateSubsystems(storage.queueIsEmpty(), shot.range, shot.robotVelAlongShot);
     }
 }

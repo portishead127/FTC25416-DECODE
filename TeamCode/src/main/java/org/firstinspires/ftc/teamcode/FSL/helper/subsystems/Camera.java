@@ -66,18 +66,14 @@ public class Camera {
 
                 locked = true;
 
-                // AprilTag pose is robot-centric:
-                // x = right
-                // y = forward
                 x = detection.ftcPose.x;
                 y = detection.ftcPose.y;
 
                 range = detection.ftcPose.range;
 
-                // Bearing is robot-relative (radians already)
                 camBearing = detection.ftcPose.bearing;
 
-                return; // IMPORTANT
+                return;
             }
         }
 
@@ -112,7 +108,7 @@ public class Camera {
         return false;
     }
     public void sendTelemetry(){
-        telemetry.addLine("CAMERA SWIVEL - VISION\n");
+        telemetry.addLine("CAMERA - VISION\n");
         telemetry.addData("LOCKED", locked);
         telemetry.addData("MOTIF", motif);
         telemetry.addData("ROBOT X", x);

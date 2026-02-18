@@ -56,6 +56,11 @@ public class BlueGreedyAuto extends OpMode {
         panelsTelemetry.update(telemetry);
     }
 
+    @Override
+    public void stop() {
+        CompetitionTeleOpBlue.startingPose = follower.getPose();
+        CompetitionTeleOpBlue.motif = robot.camera.motif;
+    }
 
     public static class Paths {
         public PathChain TipOfTriangle;

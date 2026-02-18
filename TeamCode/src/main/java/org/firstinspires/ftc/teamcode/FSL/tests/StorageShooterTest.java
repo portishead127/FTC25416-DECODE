@@ -4,16 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PIDStorage;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
 @TeleOp(name= "TEST: Storage and Shooter Test", group = "TEST")
 public class StorageShooterTest extends OpMode {
-    PIDStorage storage;
+    Storage storage;
     Shooter shooter;
     @Override
     public void init() {
-        storage = new PIDStorage(hardwareMap, telemetry, true, true);
+        storage = new Storage(hardwareMap, telemetry, true);
         shooter = new Shooter(hardwareMap, telemetry);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
@@ -22,7 +22,7 @@ public class StorageShooterTest extends OpMode {
     @Override
     public void loop(){
         storage.update(shooter.isWarmedUp());
-        shooter.simpleUpdate(storage.queueIsEmpty(), 0);
+        shooter.dynamicUpdate(storage.queueIsEmpty(), 50, 0);
 
         if (gamepad1.squareWasPressed()) { storage.setQueue(Scoring.PPG); }
         if (gamepad1.crossWasPressed()) { storage.setQueue(Scoring.P); }

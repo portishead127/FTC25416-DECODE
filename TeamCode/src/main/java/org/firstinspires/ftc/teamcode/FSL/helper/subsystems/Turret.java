@@ -20,7 +20,7 @@ public class Turret {
         motor.setDirection(DcMotorSimple.Direction.REVERSE); //SPINNING ACW NEEDS TO INCREASE TICKS
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        pidController = new PIDController(TurretConfig.KP, TurretConfig.KI, TurretConfig.KD, TurretConfig.CENTRALTOLERANCE);
+        pidController = new PIDController(TurretConfig.KP, TurretConfig.KI, TurretConfig.KD);
         this.telemetry = telemetry;
     }
     public void update(){
@@ -32,7 +32,7 @@ public class Turret {
         pidController.setTarget(valToAssign, append);
     }
     public void sendTelemetry(){
-        telemetry.addLine("CAMERA SWIVEL - HARDWARE\n");
+        telemetry.addLine("TURRET - HARDWARE\n");
         telemetry.addData("MOTOR POS", motor.getCurrentPosition());
         telemetry.addData("MOTOR TARGET", pidController.target);
         telemetry.addData("TARGET TOLERANCE", pidController.tolerance);

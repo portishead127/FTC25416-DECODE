@@ -56,8 +56,10 @@ public class RedSafeAuto extends OpMode {
         panelsTelemetry.update(telemetry);
     }
 
-
-
+    @Override
+    public void stop() {
+        CompetitionTeleOpRed.startingPose = follower.getPose();
+    }
 
     public static class Paths {
         public PathChain InfrontOfLowRow;
