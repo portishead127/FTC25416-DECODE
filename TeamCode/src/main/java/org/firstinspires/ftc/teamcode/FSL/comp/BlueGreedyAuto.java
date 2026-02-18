@@ -44,9 +44,8 @@ public class BlueGreedyAuto extends OpMode {
     public void loop() {
         follower.update(); // Update Pedro Pathing
         autonomousPathUpdate(); // Update autonomous state machine
-        if(robot.camera.motif != null){
-            robot.autoUpdate(follower);
-        };
+        robot.autoUpdate(follower);
+
 
         // Log values to Panels and Driver Station
         panelsTelemetry.debug("Path State", pathState);
@@ -183,7 +182,6 @@ public class BlueGreedyAuto extends OpMode {
             case 0:
                 follower.followPath(paths.TipOfTriangle);
                 setPathState(1);
-
                 break;
             case 1:
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */

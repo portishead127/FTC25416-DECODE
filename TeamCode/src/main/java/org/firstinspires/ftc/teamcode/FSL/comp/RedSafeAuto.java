@@ -59,6 +59,7 @@ public class RedSafeAuto extends OpMode {
     @Override
     public void stop() {
         CompetitionTeleOpRed.startingPose = follower.getPose();
+        CompetitionTeleOpRed.motif = robot.camera.motif;
     }
 
     public static class Paths {

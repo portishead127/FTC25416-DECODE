@@ -19,6 +19,7 @@ public class CompetitionTeleOpBlue extends OpMode {
         robot = new Robot(hardwareMap, telemetry, true, false, startingPose);
         robot.camera.motif = motif;
         telemetry.addData("STATUS", "INITIALISED");
+        telemetry.addData("MOTIF", motif.name());
         telemetry.update();
     }
     @Override

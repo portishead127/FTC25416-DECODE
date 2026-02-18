@@ -59,6 +59,7 @@ public class BlueSafeAuto extends OpMode {
     @Override
     public void stop() {
         CompetitionTeleOpBlue.startingPose = follower.getPose();
+        CompetitionTeleOpBlue.motif = robot.camera.motif;
     }
 
     public static class Paths {

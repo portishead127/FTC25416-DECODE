@@ -20,7 +20,6 @@ import com.pedropathing.geometry.Pose;
 @Configurable // Panels
 public class RedGreedyAuto extends OpMode {
     private Robot robot;
-    private Motif motif;
     private TelemetryManager panelsTelemetry; // Panels Telemetry instance
     public Follower follower; // Pedro Pathing follower instance
     private int pathState; // Current autonomous path state (state machine)
@@ -58,6 +57,7 @@ public class RedGreedyAuto extends OpMode {
     @Override
     public void stop() {
         CompetitionTeleOpRed.startingPose = follower.getPose();
+        CompetitionTeleOpRed.motif = robot.camera.motif;
     }
 
 
