@@ -127,8 +127,8 @@ public class Robot {
         double fieldAngle = Math.atan2(info.shotDirY, info.shotDirX);
         double robotAngle = fieldAngle - odomPose.getHeading();
 
-        while(robotAngle > Math.PI){robotAngle -= 2 * Math.PI;}
-        while(robotAngle < -Math.PI){robotAngle += 2 * Math.PI;}
+        while(robotAngle > Math.PI){robotAngle -= (2 * Math.PI);}
+        while(robotAngle < -Math.PI){robotAngle += (2 * Math.PI);}
 
         turret.setPIDTarget(
                 TurretConfig.TICKS_PER_RADIAN * robotAngle,
@@ -154,6 +154,8 @@ public class Robot {
         ShotInfo shot = computeHybridTarget(odomPose, odomVel);
         calculateAndSetTurretPIDTarget(shot, odomPose);
         updateSubsystems(storage.queueIsEmpty(), shot.range, shot.robotVelAlongShot);
+
+        //specific for tele
         pedroFollowerDriveTrain.update(gamepad1);
         handleQueueButtons(gamepad2);
     }
