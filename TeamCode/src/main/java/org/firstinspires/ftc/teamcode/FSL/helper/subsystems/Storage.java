@@ -33,7 +33,7 @@ public class Storage {
     private boolean isFlicking;
     private boolean wasIntakeMode;
     public Storage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
-        motor = hm.get(DcMotorEx.class, "SPM");
+        motor = hm.get(DcMotorEx.class, "STM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong needs to be acw

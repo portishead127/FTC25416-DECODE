@@ -14,7 +14,7 @@ public class Turret {
     private DcMotorEx motor;
     private final PIDController pidController;
     public Turret(HardwareMap hm, Telemetry telemetry){
-        motor = hm.get(DcMotorEx.class, "CSM");
+        motor = hm.get(DcMotorEx.class, "TM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.REVERSE); //SPINNING ACW NEEDS TO INCREASE TICKS
