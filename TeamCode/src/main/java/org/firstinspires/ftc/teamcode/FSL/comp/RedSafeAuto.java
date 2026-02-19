@@ -16,7 +16,7 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.geometry.Pose;
 
 
-@Autonomous(name = "RED: Safe", group = "GROUP")
+@Autonomous(name = "RED: Safe", group = "COMP")
 @Configurable // Panels
 public class RedSafeAuto extends OpMode {
     private Robot robot;

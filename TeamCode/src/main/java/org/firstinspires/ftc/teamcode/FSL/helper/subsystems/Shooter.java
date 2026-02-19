@@ -13,8 +13,6 @@ public class Shooter {
     private final Servo servo;
     private final Telemetry telemetry;
     private double targetScalar;
-    private double range;
-    private double dynamicRange;
 
     //servo - 0 - steep
     //1 - shallow
@@ -65,8 +63,7 @@ public class Shooter {
         sendTelemetry();
     }
     public void dynamicUpdate(boolean queueEmpty, double range, double robotVelAlongShot){
-        this.range = range;
-        dynamicRange = this.range + robotVelAlongShot * calculateFlightTime(this.range);
+        double dynamicRange = range + robotVelAlongShot * calculateFlightTime(range);
         double servoPos = calculateServoPos(dynamicRange);
 
         setServo(servoPos);

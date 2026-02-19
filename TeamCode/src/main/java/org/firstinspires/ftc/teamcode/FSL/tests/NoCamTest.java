@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
+@Disabled
 @TeleOp(name = "TEST: No Camera", group = "TEST")
 public class NoCamTest extends OpMode {
     Storage storage;
@@ -29,7 +31,7 @@ public class NoCamTest extends OpMode {
 
     @Override
     public void loop() {
-        shooter.simpleUpdate(storage.queueIsEmpty(), gamepad1.left_stick_y * 2000);
+        shooter.dynamicUpdate(storage.queueIsEmpty(), 50, 0);
         storage.update(shooter.isWarmedUp());
         intake.update(storage.isEmpty());
 

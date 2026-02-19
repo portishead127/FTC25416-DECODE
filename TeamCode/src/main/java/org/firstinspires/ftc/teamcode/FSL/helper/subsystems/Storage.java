@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.FSL.helper.constants.UltraplanetaryMotorConstants;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
@@ -23,15 +22,20 @@ public class Storage {
     private final LinkedList<Color> queue = new LinkedList<Color>();
     public final Color[] slots;
     private final ColorRangeSensor colorSensor;
-    private final DcMotorEx motor;
+    public final DcMotorEx motor;
     private final Servo servo;
     private final Telemetry telemetry;
-    private final PIDController pidController;
+    public final PIDController pidController;
     private final ElapsedTime flickTimer;
     private Color currentColor;
     private boolean intakeMode;
     private boolean isFlicking;
     private boolean wasIntakeMode;
+    private int focusedIndex;
+    private final double basePosition;
+    private final double ticksPerThird;
+    private final double ticksPerHalf;
+
     public Storage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "STM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -43,7 +47,7 @@ public class Storage {
         colorSensor.enableLed(true);
         this.telemetry = telemetry;
 
-        pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.TICK_TOLERANCE);
+        pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.KF);
 
         if(emptyStorage){
             slots = new Color[]{null, null, null};
@@ -54,6 +58,16 @@ public class Storage {
         wasIntakeMode = !emptyStorage;
         intakeMode = emptyStorage;
         flickTimer = new ElapsedTime();
+
+        focusedIndex = 0;
+
+        basePosition = motor.getCurrentPosition();
+
+        ticksPerThird = StorageConfig.ENCODER_RES / 3.0;
+        ticksPerHalf  = StorageConfig.ENCODER_RES / 2.0;
+
+        pidController.setOutputLimits(-1, 1);
+        pidController.setTolerance(StorageConfig.TICK_TOLERANCE);
     }
     private void updateFlick() {
         if (!isFlicking) return;
@@ -82,27 +96,33 @@ public class Storage {
     }
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void rotate1Slot(boolean anticlockwise){
+        if(!pidController.atTarget()) return;
+
         if(anticlockwise){
-            pidController.setTarget(UltraplanetaryMotorConstants.ENCODER_RES /3, true); //append
-            Color temp = slots[0];
-            slots[0] = slots[2];
-            slots[2] = slots[1];
-            slots[1] = temp;
+            focusedIndex = (focusedIndex + 1) % 3;
+        } else {
+            focusedIndex = (focusedIndex - 1 + 3) % 3;
+        }
+
+        double target;
+        // Absolute target instead of cumulative
+        if(intakeMode){
+            target = basePosition + focusedIndex * ticksPerThird;
         }
         else{
-            pidController.setTarget(-UltraplanetaryMotorConstants.ENCODER_RES /3, true); //append
-            Color temp = slots[0];
-            slots[0] = slots[1];
-            slots[1] = slots[2];
-            slots[2] = temp;
+            target = basePosition + ticksPerHalf + focusedIndex * ticksPerThird;
         }
+        pidController.setTarget(target);
     }
 
-    public void goToSlot1AlignedWithShooter(){
-        pidController.setTarget(UltraplanetaryMotorConstants.ENCODER_RES /2, false); //append
+
+    public void goToSlot0AlignedWithShooter(){
+        focusedIndex = 0;
+        pidController.setTarget(basePosition + ticksPerHalf);
     }
-    public void goToSlot1AlignedWithIntake(){
-        pidController.setTarget(0, false); //append
+    public void goToSlot0AlignedWithIntake(){
+        focusedIndex = 0;
+        pidController.setTarget(basePosition);
     }
     public void update(boolean shootable) {
         intakeMode = ((slots[0] == null && slots[1] == null && slots[2] == null) || queueIsEmpty());
@@ -116,63 +136,63 @@ public class Storage {
         if (intakeMode) {
             setQueue(Scoring.NONE);
             if(justBecameEmpty){
-                goToSlot1AlignedWithIntake();
+                goToSlot0AlignedWithIntake();
             }
             intakeUpdate();
         } else {
             if (justBecameFull) {
-                goToSlot1AlignedWithShooter();  // only once when becoming full
+                goToSlot0AlignedWithShooter();  // only once when becoming full
             }
             transferUpdate(shootable);
         }
 
         wasIntakeMode = intakeMode;
-        motor.setVelocity(UltraplanetaryMotorConstants.MAX_VELOCITY * pidController.calculateScalar(motor.getCurrentPosition()));
+        motor.setPower(pidController.calculate(motor.getCurrentPosition()));
         sendTelemetry();
     }
     public void intakeUpdate(){
-        if(motor.isBusy() || isFlicking){
+        if(!pidController.atTarget() || isFlicking){
             return;
         }
 
         currentColor = ColorMethods.fromSensor(colorSensor);
         if(currentColor != Color.NONE){
-            slots[0] = currentColor;
+            slots[focusedIndex] = currentColor;
             rotate1Slot(true);
         }
     }
     public void transferUpdate(boolean shootable) {
-        if (motor.isBusy() || isFlicking) {
+        if (!pidController.atTarget() || isFlicking) {
             return;
         }
 
         Color desired = queue.peekFirst();
 
-        if (desired == slots[2]) {
+        if (desired == slots[focusedIndex]) {
             if(shootable){
                 startFlick();
-                slots[2] = null;
+                slots[focusedIndex] = null;
                 queue.removeFirst();
             }
         }
-        else if (desired == slots[0]) {
+        else if (desired == slots[(focusedIndex + 1) % 3]) {
             rotate1Slot(false);
         }
-        else if (desired == slots[1]) {
+        else if (desired == slots[(focusedIndex -1 + 3) % 3]) {
             rotate1Slot(true);
         }
         else {
-            if (slots[2] != null) {
+            if (slots[focusedIndex] != null) {
                 if(shootable){
                     startFlick();
-                    slots[2] = null;
+                    slots[focusedIndex] = null;
                     queue.removeFirst();
                 }
             }
-            else if (slots[0] != null) {
+            else if (slots[(focusedIndex + 1) % 3] != null) {
                 rotate1Slot(false);
             }
-            else if (slots[1] != null) {
+            else if (slots[(focusedIndex -1 + 3) % 3] != null) {
                 rotate1Slot(true);
             }
         }
@@ -181,14 +201,14 @@ public class Storage {
         telemetry.addLine("STORAGE - HARDWARE\n");
         telemetry.addData("SERVO POS", servo.getPosition());
         telemetry.addData("MOTOR POS", motor.getCurrentPosition());
-        telemetry.addData("MOTOR TARGET POS", pidController.target);
-        telemetry.addData("TARGET TOLERANCE", pidController.tolerance);
+        telemetry.addData("MOTOR TARGET POS", pidController.getTarget());
         telemetry.addData("MOTOR VEL", motor.getVelocity());
         telemetry.addData("COLOR SENSOR", currentColor.name());
         telemetry.addData("DETECTION DISTANCE (mm)", colorSensor.getDistance(DistanceUnit.MM));
 
         telemetry.addLine("STORAGE - SLOTS\n");
         telemetry.addData("INTAKE MODE", intakeMode);
+        telemetry.addData("FOCUSED INDEX", focusedIndex);
         telemetry.addData("SLOT 0", slots[0]);
         telemetry.addData("SLOT 1", slots[1]);
         telemetry.addData("SLOT 2", slots[2]);

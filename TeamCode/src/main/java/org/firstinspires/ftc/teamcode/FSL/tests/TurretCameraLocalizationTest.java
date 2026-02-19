@@ -45,7 +45,6 @@ public class TurretCameraLocalizationTest extends OpMode {
     public void loop(){
         pedroFollowerDriveTrain.update(gamepad1);
         calculateAndSetTurretPIDTarget(computeHybridTarget(pedroFollowerDriveTrain.follower.getPose(), pedroFollowerDriveTrain.follower.getVelocity()), pedroFollowerDriveTrain.follower.getPose());
-        turret.update();
         camera.update();
         telemetry.update();
     }
@@ -107,9 +106,7 @@ public class TurretCameraLocalizationTest extends OpMode {
         double fieldAngle = Math.atan2(info.shotDirY, info.shotDirX);
         double robotAngle = fieldAngle - odomPose.getHeading();
 
-        turret.setPIDTarget(
-                TurretConfig.TICKS_PER_RADIAN * robotAngle,
-                false
-        );
+        turret.pidController.setTarget(TurretConfig.TICKS_PER_RADIAN * robotAngle);
+        turret.update();
     }
 }

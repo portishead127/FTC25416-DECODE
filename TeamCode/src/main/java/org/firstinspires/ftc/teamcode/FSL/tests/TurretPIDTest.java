@@ -27,11 +27,11 @@ public class TurretPIDTest extends OpMode {
 
     @Override
     public void loop(){
-        if(gamepad1.squareWasPressed()){turret.setPIDTarget(TurretConfig.TICKS_PER_DEGREE * 90, false);} //should go acw
-        if(gamepad1.circleWasPressed()){turret.setPIDTarget(TurretConfig.TICKS_PER_DEGREE * -90, false);} //should go cw
-        if(gamepad1.crossWasPressed()){turret.setPIDTarget(0, false);} //should go forward
-        if(gamepad1.crossWasPressed()){turret.setPIDTarget(TurretConfig.TICKS_PER_DEGREE * 178, false);} //should go almost fully pointing back acw
-        if(gamepad1.crossWasPressed()){turret.setPIDTarget(TurretConfig.TICKS_PER_DEGREE * -178, false);} //should go almost fully point back cw
+        if(gamepad1.squareWasPressed()){turret.pidController.setTarget(TurretConfig.TICKS_PER_DEGREE * 90);} //should go acw
+        if(gamepad1.circleWasPressed()){turret.pidController.setTarget(TurretConfig.TICKS_PER_DEGREE * -90);} //should go cw
+        if(gamepad1.crossWasPressed()){turret.pidController.setTarget(0);} //should go forward
+        if(gamepad1.crossWasPressed()){turret.pidController.setTarget(TurretConfig.TICKS_PER_DEGREE * 178);} //should go almost fully pointing back acw
+        if(gamepad1.crossWasPressed()){turret.pidController.setTarget(TurretConfig.TICKS_PER_DEGREE * -178);} //should go almost fully point back cw
         turret.update();
         telemetry.update();
     }

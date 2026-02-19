@@ -3,61 +3,137 @@ package org.firstinspires.ftc.teamcode.FSL.helper.control;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PIDController {
-    public double target;
-    public double tolerance;
-    final double kp;
-    final double ki;
-    final double kd;
-    double integralSum;
-    double lastError;
-    ElapsedTime timer;
-    public PIDController(double kp, double ki, double kd){
+
+    // Gains
+    private final double kp;
+    private final double ki;
+    private final double kd;
+    private final double kf;
+
+    // State
+    private double target = 0;
+    private double tolerance = 0;
+
+    private double integralSum = 0;
+    private double lastError = 0;
+
+    private double minOutput = -Double.MAX_VALUE;
+    private double maxOutput = Double.MAX_VALUE;
+
+    private double minIntegral = -Double.MAX_VALUE;
+
+    private boolean continuous = false;
+    private double minInput, maxInput; // for angle wrapping
+
+    private final ElapsedTime timer = new ElapsedTime();
+
+    // Constructors
+    public PIDController(double kp, double ki, double kd) {
+        this(kp, ki, kd, 0);
+    }
+
+    public PIDController(double kp, double ki, double kd, double kf) {
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
-        tolerance = 0;
-
-        timer = new ElapsedTime();
+        this.kf = kf;
         reset();
     }
-    public PIDController(double kp, double ki, double kd, double tolerance){
-        this.kp = kp;
-        this.ki = ki;
-        this.kd = kd;
+
+    // ============================
+    // Configuration Methods
+    // ============================
+
+    public void setTarget(double target) {
+        if (this.target != target) {
+            this.target = target;
+            reset();
+        }
+    }
+
+    public void setTolerance(double tolerance) {
         this.tolerance = tolerance;
-
-        timer = new ElapsedTime();
-        reset();
     }
-    public void setTarget(double target, boolean append){
-        if(target != this.target){
-           reset();
-            if(append){
-                this.target += target;
-            }
-            else{
-                this.target = target;
+
+    public void setOutputLimits(double min, double max) {
+        this.minOutput = min;
+        this.maxOutput = max;
+    }
+
+    // For turret/angle wrap (e.g. -π to π)
+    public void enableContinuous(double minInput, double maxInput) {
+        continuous = true;
+        this.minInput = minInput;
+        this.maxInput = maxInput;
+    }
+    // ============================
+    // Core Logic
+    // ============================
+
+    public double calculate(double state) {
+
+        double dt = timer.seconds();
+        timer.reset();
+
+        if (dt <= 0) dt = 1e-6;
+
+        double error = getError(state);
+
+        // Integral
+        integralSum += error * dt;
+        double maxIntegral = Double.MAX_VALUE;
+        integralSum = clamp(integralSum, minIntegral, maxIntegral);
+
+        // Derivative
+        double derivative = (error - lastError) / dt;
+
+        // PID Output
+        double output = kf
+                + (kp * error)
+                + (ki * integralSum)
+                + (kd * derivative);
+
+        output = clamp(output, minOutput, maxOutput);
+
+        lastError = error;
+
+        // Tolerance check (based on error, not output)
+        if (Math.abs(error) <= tolerance) {
+            return 0;
+        }
+
+        return output;
+    }
+
+    private double getError(double state) {
+        double error = target - state;
+
+        if (continuous) {
+            double range = maxInput - minInput;
+            error = (error % range + range) % range;
+            if (error > range / 2) {
+                error -= range;
             }
         }
-        
+
+        return error;
     }
-    public void reset(){
+
+    public boolean atTarget() {
+        return Math.abs(lastError) <= tolerance;
+    }
+
+    public void reset() {
         integralSum = 0;
         lastError = 0;
         timer.reset();
     }
-    public double calculateScalar(double state){
-        double error = target - state;
-        double derivative = (error - lastError) / timer.seconds();
 
-        integralSum = integralSum + (error * timer.seconds());
+    private double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
+    }
 
-        double out = (kp * error) + (ki * integralSum) + (kd * derivative);
-
-        lastError = error;
-        if(Math.abs(out) <= tolerance){
-            return 0;
-        }
-        return out;
-   }
+    public double getTarget() {
+        return target;
+    }
 }

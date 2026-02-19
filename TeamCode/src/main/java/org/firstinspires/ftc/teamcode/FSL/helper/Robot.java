@@ -123,23 +123,17 @@ public class Robot {
                         odomVel.getYComponent() * info.shotDirY;
         return info;
     }
-    private void calculateAndSetTurretPIDTarget(ShotInfo info, Pose odomPose) {
+    private void calculateTurretAngle(ShotInfo info, Pose odomPose) {
         double fieldAngle = Math.atan2(info.shotDirY, info.shotDirX);
         double robotAngle = fieldAngle - odomPose.getHeading();
 
-        while(robotAngle > Math.PI){robotAngle -= (2 * Math.PI);}
-        while(robotAngle < -Math.PI){robotAngle += (2 * Math.PI);}
-
-        turret.setPIDTarget(
-                TurretConfig.TICKS_PER_RADIAN * robotAngle,
-                false
-        );
+        turret.pidController.setTarget(robotAngle * TurretConfig.TICKS_PER_RADIAN);
+        turret.update();
     }
     private void updateSubsystems(boolean queueEmpty, double range, double robotVelAlongShot) {
         shooter.dynamicUpdate(queueEmpty, range, robotVelAlongShot);
         storage.update(shooter.isWarmedUp());
         intake.update(storage.isEmpty());
-        turret.update();
     }
     private void handleQueueButtons(Gamepad gamepad) {
         if (gamepad.squareWasPressed()) storage.setQueue(Scoring.convertToScoringPattern(camera.motif));
@@ -152,7 +146,7 @@ public class Robot {
         Vector odomVel = pedroFollowerDriveTrain.follower.getVelocity();
 
         ShotInfo shot = computeHybridTarget(odomPose, odomVel);
-        calculateAndSetTurretPIDTarget(shot, odomPose);
+        calculateTurretAngle(shot, odomPose);
         updateSubsystems(storage.queueIsEmpty(), shot.range, shot.robotVelAlongShot);
 
         //specific for tele
@@ -164,7 +158,7 @@ public class Robot {
         Vector odomVel = follower.getVelocity();
 
         ShotInfo shot = computeHybridTarget(odomPose, odomVel);
-        calculateAndSetTurretPIDTarget(shot, odomPose);
+        calculateTurretAngle(shot, odomPose);
 
         updateSubsystems(storage.queueIsEmpty(), shot.range, shot.robotVelAlongShot);
     }
