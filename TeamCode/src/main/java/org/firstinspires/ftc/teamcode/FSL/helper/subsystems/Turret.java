@@ -16,7 +16,7 @@ public class Turret {
     public Turret(HardwareMap hm, Telemetry telemetry){
         motor = hm.get(DcMotorEx.class, "TM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.REVERSE); //SPINNING ACW NEEDS TO INCREASE TICKS
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 

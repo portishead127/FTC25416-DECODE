@@ -20,8 +20,6 @@ public class PIDController {
     private double minOutput = -Double.MAX_VALUE;
     private double maxOutput = Double.MAX_VALUE;
 
-    private double minIntegral = -Double.MAX_VALUE;
-
     private boolean continuous = false;
     private double minInput, maxInput; // for angle wrapping
 
@@ -82,6 +80,7 @@ public class PIDController {
         // Integral
         integralSum += error * dt;
         double maxIntegral = Double.MAX_VALUE;
+        double minIntegral = -Double.MAX_VALUE;
         integralSum = clamp(integralSum, minIntegral, maxIntegral);
 
         // Derivative
@@ -96,11 +95,6 @@ public class PIDController {
         output = clamp(output, minOutput, maxOutput);
 
         lastError = error;
-
-        // Tolerance check (based on error, not output)
-        if (Math.abs(error) <= tolerance) {
-            return 0;
-        }
 
         return output;
     }

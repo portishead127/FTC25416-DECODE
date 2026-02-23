@@ -55,36 +55,36 @@ public class TurretCameraLocalizationTest extends OpMode {
         double dx;
         double dy;
 
-        if (camera.locked) {
-
-            // Camera gives robot-relative coordinates:
-            // +x = right
-            // +y = forward
-
-            double relRight = camera.x;
-            double relForward = camera.y;
-
-            // Convert robot-relative to field-relative
-            double heading = odomPose.getHeading();
-
-            double forwardFieldX = Math.cos(heading);
-            double forwardFieldY = Math.sin(heading);
-
-            double leftFieldX = -Math.sin(heading);
-            double leftFieldY = Math.cos(heading);
-
-            // Convert right to left
-            double relLeft = -relRight;
-
-            dx = relForward * forwardFieldX + relLeft * leftFieldX;
-            dy = relForward * forwardFieldY + relLeft * leftFieldY;
-
-        } else {
+//        if (camera.locked) {
+//
+//            // Camera gives robot-relative coordinates:
+//            // +x = right
+//            // +y = forward
+//
+//            double relRight = camera.x;
+//            double relForward = camera.y;
+//
+//            // Convert robot-relative to field-relative
+//            double heading = odomPose.getHeading();
+//
+//            double forwardFieldX = Math.cos(heading);
+//            double forwardFieldY = Math.sin(heading);
+//
+//            double leftFieldX = -Math.sin(heading);
+//            double leftFieldY = Math.cos(heading);
+//
+//            // Convert right to left
+//            double relLeft = -relRight;
+//
+//            dx = relForward * forwardFieldX + relLeft * leftFieldX;
+//            dy = relForward * forwardFieldY + relLeft * leftFieldY;
+//
+//        } else {
 
             // Pure odometry fallback
-            dx = goalFieldX - odomPose.getX();
-            dy = goalFieldY - odomPose.getY();
-        }
+        dx = goalFieldX - odomPose.getX();
+        dy = goalFieldY - odomPose.getY();
+//        }
 
         info.range = Math.hypot(dx, dy);
 

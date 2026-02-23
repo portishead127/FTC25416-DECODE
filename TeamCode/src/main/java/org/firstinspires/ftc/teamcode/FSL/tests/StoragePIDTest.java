@@ -31,7 +31,6 @@ public class StoragePIDTest extends OpMode {
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("POS", storage.motor.getCurrentPosition());
         packet.put("TARGET", storage.pidController.getTarget());
-
         f.sendTelemetryPacket(packet);
     }
 }

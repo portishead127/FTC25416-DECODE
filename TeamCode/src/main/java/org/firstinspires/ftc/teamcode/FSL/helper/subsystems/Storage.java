@@ -39,7 +39,7 @@ public class Storage {
     public Storage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "STM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong needs to be acw
 
         servo = hm.get(Servo.class, "FLS");
@@ -96,7 +96,7 @@ public class Storage {
     }
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void rotate1Slot(boolean anticlockwise){
-        if(!pidController.atTarget()) return;
+        if(pidController.atTarget()) return;
 
         if(anticlockwise){
             focusedIndex = (focusedIndex + 1) % 3;
