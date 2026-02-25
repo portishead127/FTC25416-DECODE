@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 
 public class Turret {
     Telemetry telemetry;
-    private DcMotorEx motor;
+    private final DcMotorEx motor;
     public final PIDController pidController;
     public Turret(HardwareMap hm, Telemetry telemetry){
         motor = hm.get(DcMotorEx.class, "TM");

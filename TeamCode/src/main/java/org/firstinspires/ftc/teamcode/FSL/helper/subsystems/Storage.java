@@ -40,14 +40,17 @@ public class Storage {
         motor = hm.get(DcMotorEx.class, "STM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setDirection(DcMotorSimple.Direction.REVERSE);//prob wrong needs to be acw
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         servo = hm.get(Servo.class, "FLS");
+        servo.setPosition(StorageConfig.FLICK_SERVO_MIN);
+
         colorSensor = hm.get(ColorRangeSensor.class, "CS");
         colorSensor.enableLed(true);
+
         this.telemetry = telemetry;
 
-        pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.KF);
+        pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.KS);
 
         if(emptyStorage){
             slots = new Color[]{null, null, null};
@@ -96,7 +99,7 @@ public class Storage {
     }
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void rotate1Slot(boolean anticlockwise){
-        if(pidController.atTarget()) return;
+        if(!pidController.atTarget()) return;
 
         if(anticlockwise){
             focusedIndex = (focusedIndex + 1) % 3;
@@ -141,13 +144,19 @@ public class Storage {
             intakeUpdate();
         } else {
             if (justBecameFull) {
-                goToSlot0AlignedWithShooter();  // only once when becoming full
+                goToSlot0AlignedWithShooter();
             }
             transferUpdate(shootable);
         }
 
         wasIntakeMode = intakeMode;
-        motor.setPower(pidController.calculate(motor.getCurrentPosition()));
+        double power = pidController.calculate(motor.getCurrentPosition());
+
+        if (pidController.atTarget()) {
+            power = 0;
+        }
+
+        motor.setPower(power);
         sendTelemetry();
     }
     public void intakeUpdate(){
@@ -162,7 +171,7 @@ public class Storage {
         }
     }
     public void transferUpdate(boolean shootable) {
-        if (!pidController.atTarget() || isFlicking) {
+        if (!pidController.atTarget() || isFlicking || queueIsEmpty()) {
             return;
         }
 
@@ -202,6 +211,8 @@ public class Storage {
         telemetry.addData("SERVO POS", servo.getPosition());
         telemetry.addData("MOTOR POS", motor.getCurrentPosition());
         telemetry.addData("MOTOR TARGET POS", pidController.getTarget());
+        telemetry.addData("AT TARGET", pidController.atTarget());
+        telemetry.addData("LAST MOTOR OUTPUT", pidController.getLastOutput());
         telemetry.addData("MOTOR VEL", motor.getVelocity());
         telemetry.addData("COLOR SENSOR", currentColor.name());
         telemetry.addData("DETECTION DISTANCE (mm)", colorSensor.getDistance(DistanceUnit.MM));

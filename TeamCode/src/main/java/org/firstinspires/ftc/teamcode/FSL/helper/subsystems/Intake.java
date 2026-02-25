@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -15,6 +16,7 @@ public class Intake{
     public Intake(HardwareMap hm, Telemetry telemetry){
         motor = hm.get(DcMotorEx.class, "INM");
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.telemetry = telemetry;
     }
     public void update(boolean forward){

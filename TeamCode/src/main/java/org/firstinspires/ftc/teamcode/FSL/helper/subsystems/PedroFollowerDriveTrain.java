@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.ftc.drivetrains.Mecanum;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -24,16 +25,15 @@ public class PedroFollowerDriveTrain {
 
     public void update(Gamepad gp){
         follower.update();
-        if (gp.right_bumper) follower.setTeleOpDrive(
+
+        if (!gp.right_bumper)follower.setMaxPowerScaling(MecanumConfig.MECANUM_FULL_POWER);
+        else follower.setMaxPowerScaling(MecanumConfig.MECANUM_SLOW_POWER);
+
+
+        follower.setTeleOpDrive(
                 -gp.left_stick_y* MecanumConfig.MECANUM_FULL_POWER,
                 -gp.left_stick_x* MecanumConfig.MECANUM_FULL_POWER,
                 -gp.right_stick_x* MecanumConfig.MECANUM_FULL_POWER,
-                true // Robot Centric
-        );
-        else follower.setTeleOpDrive(
-                -gp.left_stick_y * MecanumConfig.MECANUM_SLOW_POWER,
-                -gp.left_stick_x * MecanumConfig.MECANUM_SLOW_POWER,
-                -gp.right_stick_x * MecanumConfig.MECANUM_SLOW_POWER,
                 true // Robot Centric
         );
         sendTelemetry();

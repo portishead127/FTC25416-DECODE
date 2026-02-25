@@ -8,7 +8,7 @@ public class PIDController {
     private final double kp;
     private final double ki;
     private final double kd;
-    private final double kf;
+    private final double ks;
 
     // State
     private double target = 0;
@@ -16,6 +16,7 @@ public class PIDController {
 
     private double integralSum = 0;
     private double lastError = 0;
+    private double lastOutput = 0;
 
     private double minOutput = -Double.MAX_VALUE;
     private double maxOutput = Double.MAX_VALUE;
@@ -30,11 +31,11 @@ public class PIDController {
         this(kp, ki, kd, 0);
     }
 
-    public PIDController(double kp, double ki, double kd, double kf) {
+    public PIDController(double kp, double ki, double kd, double ks) {
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
-        this.kf = kf;
+        this.ks = ks;
         reset();
     }
 
@@ -64,9 +65,6 @@ public class PIDController {
         this.minInput = minInput;
         this.maxInput = maxInput;
     }
-    // ============================
-    // Core Logic
-    // ============================
 
     public double calculate(double state) {
 
@@ -87,14 +85,19 @@ public class PIDController {
         double derivative = (error - lastError) / dt;
 
         // PID Output
-        double output = kf
-                + (kp * error)
+        double output =
+                (kp * error)
                 + (ki * integralSum)
                 + (kd * derivative);
+
+        if (Math.abs(error) > tolerance) {
+            output += Math.signum(error) * ks;
+        }
 
         output = clamp(output, minOutput, maxOutput);
 
         lastError = error;
+        lastOutput = output;
 
         return output;
     }
@@ -112,11 +115,9 @@ public class PIDController {
 
         return error;
     }
-
     public boolean atTarget() {
-        return Math.abs(lastError) <= tolerance;
+        return Math.abs(lastError) < tolerance;
     }
-
     public void reset() {
         integralSum = 0;
         lastError = 0;
@@ -129,5 +130,8 @@ public class PIDController {
 
     public double getTarget() {
         return target;
+    }
+    public double getLastOutput() {
+        return lastOutput;
     }
 }

@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class ColorMethods {
     public static Color fromSensor(ColorRangeSensor sensor) {
-        if(sensor.getDistance(DistanceUnit.MM) > 50){
+        if(sensor.getDistance(DistanceUnit.MM) > 10){
             return Color.NONE;
         }
         else{
@@ -29,7 +29,6 @@ public class ColorMethods {
 
     public static Color fromHsv(float[] hsv) {
         float hue = hsv[0];
-
         if ((hue >= 150 && hue < 170)) {
             return Color.GREEN;
         } else if (hue >= 220 && hue <= 240) {
