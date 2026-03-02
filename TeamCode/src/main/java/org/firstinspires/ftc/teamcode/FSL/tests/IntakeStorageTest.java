@@ -22,7 +22,7 @@ public class IntakeStorageTest extends OpMode {
 
     @Override
     public void loop(){
-        storage.update(gamepad1.right_bumper);
+        storage.update(gamepad1.dpad_up);
         intake.update(storage.isEmpty());
 
         if (gamepad1.squareWasPressed()) { storage.setQueue(Scoring.PPG); }

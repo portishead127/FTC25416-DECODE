@@ -23,7 +23,7 @@ public class Storage {
     public final Color[] slots;
     private final ColorRangeSensor colorSensor;
     public final DcMotorEx motor;
-    private final Servo servo;
+    public final Servo servo;
     private final Telemetry telemetry;
     public final PIDController pidController;
     private final ElapsedTime flickTimer;
@@ -61,6 +61,8 @@ public class Storage {
         wasIntakeMode = !emptyStorage;
         intakeMode = emptyStorage;
         flickTimer = new ElapsedTime();
+        isFlicking = false;
+        currentColor = Color.NONE;
 
         focusedIndex = 0;
 
@@ -72,7 +74,7 @@ public class Storage {
         pidController.setOutputLimits(-1, 1);
         pidController.setTolerance(StorageConfig.TICK_TOLERANCE);
     }
-    private void updateFlick() {
+    public void updateFlick() {
         if (!isFlicking) return;
 
         if (flickTimer.milliseconds() < StorageConfig.FLICK_FORWARD_TIME) {
@@ -85,7 +87,7 @@ public class Storage {
             isFlicking = false;
         }
     }
-    private void startFlick() {
+    public void startFlick() {
         if (isFlicking) return; // prevent double flicks
         isFlicking = true;
         flickTimer.reset();
@@ -99,7 +101,7 @@ public class Storage {
     }
     public boolean queueIsEmpty(){ return queue.isEmpty(); }
     public void rotate1Slot(boolean anticlockwise){
-        if(!pidController.atTarget()) return;
+        if(!pidController.atTarget() || isFlicking) return;
 
         if(anticlockwise){
             focusedIndex = (focusedIndex + 1) % 3;
@@ -128,7 +130,7 @@ public class Storage {
         pidController.setTarget(basePosition);
     }
     public void update(boolean shootable) {
-        intakeMode = ((slots[0] == null && slots[1] == null && slots[2] == null) || queueIsEmpty());
+        intakeMode = ((slots[0] == null || slots[1] == null || slots[2] == null) && queueIsEmpty());
 
         // Detect transitions
         boolean justBecameFull  = wasIntakeMode && !intakeMode;
@@ -137,8 +139,8 @@ public class Storage {
         updateFlick();
 
         if (intakeMode) {
-            setQueue(Scoring.NONE);
             if(justBecameEmpty){
+                setQueue(Scoring.NONE);
                 goToSlot0AlignedWithIntake();
             }
             intakeUpdate();
@@ -150,13 +152,14 @@ public class Storage {
         }
 
         wasIntakeMode = intakeMode;
-        double power = pidController.calculate(motor.getCurrentPosition());
 
-        if (pidController.atTarget()) {
-            power = 0;
+        if(!isFlicking){
+            double power = pidController.calculate(motor.getCurrentPosition());
+            motor.setPower(power);
         }
-
-        motor.setPower(power);
+        else{
+            motor.setPower(0);
+        }
         sendTelemetry();
     }
     public void intakeUpdate(){
@@ -185,10 +188,10 @@ public class Storage {
             }
         }
         else if (desired == slots[(focusedIndex + 1) % 3]) {
-            rotate1Slot(false);
+            rotate1Slot(true);
         }
         else if (desired == slots[(focusedIndex -1 + 3) % 3]) {
-            rotate1Slot(true);
+            rotate1Slot(false);
         }
         else {
             if (slots[focusedIndex] != null) {

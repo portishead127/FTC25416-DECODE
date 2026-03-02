@@ -32,8 +32,8 @@ public class PedroFollowerDriveTrain {
 
         follower.setTeleOpDrive(
                 -gp.left_stick_y* MecanumConfig.MECANUM_FULL_POWER,
-                -gp.left_stick_x* MecanumConfig.MECANUM_FULL_POWER,
-                -gp.right_stick_x* MecanumConfig.MECANUM_FULL_POWER,
+                gp.left_stick_x* MecanumConfig.MECANUM_FULL_POWER,
+                gp.right_stick_x* MecanumConfig.MECANUM_FULL_POWER,
                 true // Robot Centric
         );
         sendTelemetry();
@@ -43,6 +43,5 @@ public class PedroFollowerDriveTrain {
         telemetry.addLine("PEDRO\n");
         telemetry.addData("X VELOCITY", follower.getVelocity().getXComponent());
         telemetry.addData("Y VELOCITY", follower.getVelocity().getYComponent());
-        telemetry.addData("POSE", follower.getPose());
     }
 }

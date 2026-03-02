@@ -34,18 +34,17 @@ public class PedroMecanumTest extends OpMode {
     public void loop() {
         //Call this once per loop
         follower.update();
-        sendTelemetry();
 
         if (!slowMode) follower.setTeleOpDrive(
                 -gamepad1.left_stick_y* MecanumConfig.MECANUM_FULL_POWER,
-                -gamepad1.left_stick_x* MecanumConfig.MECANUM_FULL_POWER,
-                -gamepad1.right_stick_x* MecanumConfig.MECANUM_FULL_POWER,
+                gamepad1.left_stick_x* MecanumConfig.MECANUM_FULL_POWER,
+                gamepad1.right_stick_x* MecanumConfig.MECANUM_FULL_POWER,
                 true // Robot Centric
         );
         else follower.setTeleOpDrive(
                 -gamepad1.left_stick_y * MecanumConfig.MECANUM_SLOW_POWER,
-                -gamepad1.left_stick_x * MecanumConfig.MECANUM_SLOW_POWER,
-                -gamepad1.right_stick_x * MecanumConfig.MECANUM_SLOW_POWER,
+                gamepad1.left_stick_x * MecanumConfig.MECANUM_SLOW_POWER,
+                gamepad1.right_stick_x * MecanumConfig.MECANUM_SLOW_POWER,
                 true // Robot Centric
         );
         //Slow Mode
