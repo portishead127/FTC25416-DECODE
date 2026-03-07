@@ -29,7 +29,7 @@ public class Shooter {
         servo.setPosition(0.5);
 
         pidController = new PIDController(ShooterConfig.KP, ShooterConfig.KI, ShooterConfig.KD, ShooterConfig.KF);
-        pidController.setOutputLimits(-2800, 2800);
+        pidController.setOutputLimits(-1,1);
         this.telemetry = telemetry;
     }
 
@@ -54,7 +54,7 @@ public class Shooter {
             target = 0;
         }
         pidController.setTarget(target);
-        motor.setVelocity(pidController.calculate(motor.getVelocity()));
+        motor.setPower(pidController.calculate(motor.getVelocity()));
         sendTelemetry();
     }
 
@@ -68,7 +68,7 @@ public class Shooter {
             target = 0;
         }
         pidController.setTarget(target);
-        motor.setVelocity(pidController.calculate(motor.getVelocity()));
+        motor.setPower(pidController.calculate(motor.getVelocity()));
         sendTelemetry();
     }
     public void dynamicUpdate(boolean queueEmpty, double range, double robotVelAlongShot){
@@ -83,7 +83,7 @@ public class Shooter {
             target = 0;
         }
         pidController.setTarget(target);
-        motor.setVelocity(pidController.calculate(motor.getVelocity()));
+        motor.setPower(pidController.calculate(motor.getVelocity()));
         sendTelemetry();
     }
     public boolean isWarmedUp() {
@@ -94,7 +94,7 @@ public class Shooter {
     }
 
     public void fire() {
-        motor.setVelocity(pidController.calculate(motor.getVelocity()));
+        motor.setPower(pidController.calculate(motor.getVelocity()));
     }
     public void setServo(double pos){
         servo.setPosition(pos);
