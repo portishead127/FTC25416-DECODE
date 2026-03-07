@@ -15,10 +15,12 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 public class NoCamTest extends OpMode {
     Storage storage;
     Intake intake;
+    Shooter shooter;
     PedroFollowerDriveTrain driveTrain;
 
     @Override
     public void init() {
+        shooter = new Shooter(hardwareMap, telemetry);
         storage = new Storage(hardwareMap, telemetry, true);
         intake = new Intake(hardwareMap,telemetry);
         driveTrain = new PedroFollowerDriveTrain(hardwareMap, telemetry, null);
@@ -29,18 +31,20 @@ public class NoCamTest extends OpMode {
 
     @Override
     public void start() {
-        //The parameter controls whether the Follower should use break mode on the motors (using it is recommended).
-        //In order to use float mode, add .useBrakeModeInTeleOp(true); to your Drivetrain Constants in Constant.java (for Mecanum)
-        //If you don't pass anything in, it uses the default (false)
         driveTrain.follower.startTeleopDrive();
     }
 
     @Override
     public void loop() {
-        storage.update(true);
+        shooter.dynamicUpdate(storage.queueIsEmpty(), 50, 0);
+        storage.update(shooter.isWarmedUp() || gamepad1.dpadUpWasPressed());
         intake.update(storage.isEmpty());
         driveTrain.update(gamepad1);
+
         if (gamepad1.squareWasPressed()) { storage.setQueue(Scoring.PPG); }
+        if (gamepad1.crossWasPressed()) { storage.setQueue(Scoring.P); }
+        if (gamepad1.circleWasPressed()) { storage.setQueue(Scoring.G); }
+        if (gamepad1.triangleWasPressed()) { storage.setQueue(Scoring.NONE); }
 
         telemetry.update();
     }

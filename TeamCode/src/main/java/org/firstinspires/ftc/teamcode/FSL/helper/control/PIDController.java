@@ -8,7 +8,7 @@ public class PIDController {
     private final double kp;
     private final double ki;
     private final double kd;
-    private final double ks;
+    private final double kf;
 
     // State
     private double target = 0;
@@ -31,11 +31,11 @@ public class PIDController {
         this(kp, ki, kd, 0);
     }
 
-    public PIDController(double kp, double ki, double kd, double ks) {
+    public PIDController(double kp, double ki, double kd, double kf) {
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
-        this.ks = ks;
+        this.kf = kf;
         reset();
     }
 
@@ -88,16 +88,14 @@ public class PIDController {
         double output =
                 (kp * error)
                 + (ki * integralSum)
-                + (kd * derivative);
-
-        if (Math.abs(error) > tolerance) {
-            output += Math.signum(error) * ks;
-        }
+                + (kd * derivative)
+                + kf;
 
         output = clamp(output, minOutput, maxOutput);
 
         lastError = error;
         lastOutput = output;
+
 
         return output;
     }

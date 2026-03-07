@@ -50,7 +50,7 @@ public class Storage {
 
         this.telemetry = telemetry;
 
-        pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.KS);
+        pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.KF);
 
         if(emptyStorage){
             slots = new Color[]{null, null, null};

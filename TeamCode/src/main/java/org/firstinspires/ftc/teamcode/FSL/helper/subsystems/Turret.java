@@ -21,7 +21,6 @@ public class Turret {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         pidController = new PIDController(TurretConfig.KP, TurretConfig.KI, TurretConfig.KD);
-        pidController.enableContinuous(-TurretConfig.MAX_OFFSET, TurretConfig.MAX_OFFSET);
         pidController.setTolerance(TurretConfig.TICK_TOLERANCE);
         pidController.setOutputLimits(-1,1);
         this.telemetry = telemetry;

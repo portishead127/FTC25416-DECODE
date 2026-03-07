@@ -24,7 +24,7 @@ public class Intake{
             motor.setPower(IntakeConfig.FORWARD_SCALAR);
         }
         else{
-            motor.setPower(-IntakeConfig.BACKWARD_SCALAR);
+            motor.setPower(IntakeConfig.BACKWARD_SCALAR);
         }
         sendTelemetry();
     }

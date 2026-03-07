@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -7,13 +8,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.ShooterConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.constants.UltraplanetaryMotorConstants;
+import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 
 public class Shooter {
-    private final DcMotorEx motor;
+    public final DcMotorEx motor;
     private final Servo servo;
     private final Telemetry telemetry;
-    private double targetScalar;
-
+    private double target;
+    public final PIDController pidController;
     //servo - 0 - steep
     //1 - shallow
 
@@ -21,8 +23,13 @@ public class Shooter {
 
     public Shooter(HardwareMap hm, Telemetry telemetry) {
         motor = hm.get(DcMotorEx.class, "SHM");
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         servo = hm.get(Servo.class, "SHS");
         servo.setPosition(0.5);
+
+        pidController = new PIDController(ShooterConfig.KP, ShooterConfig.KI, ShooterConfig.KD, ShooterConfig.KF);
+        pidController.setOutputLimits(-2800, 2800);
         this.telemetry = telemetry;
     }
 
@@ -37,16 +44,17 @@ public class Shooter {
 
         if(!queueEmpty){
             if(in3Pointer){
-                targetScalar = ShooterConfig.MOTOR_VEL_SCALAR_FOR_3_POINTER;
+                target = ShooterConfig.MOTOR_VEL_SCALAR_FOR_3_POINTER;
             }
             else{
-                targetScalar = ShooterConfig.MOTOR_VEL_SCALAR_FOR_LAYUP;
+                target = ShooterConfig.MOTOR_VEL_SCALAR_FOR_LAYUP;
             }
         }
         else{
-            targetScalar = 0;
+            target = 0;
         }
-        motor.setVelocity(UltraplanetaryMotorConstants.MAX_VELOCITY * targetScalar);
+        pidController.setTarget(target);
+        motor.setVelocity(pidController.calculate(motor.getVelocity()));
         sendTelemetry();
     }
 
@@ -54,12 +62,13 @@ public class Shooter {
         double servoPos = calculateServoPos(range);
         setServo(servoPos);
         if(!queueEmpty){
-            targetScalar = calculateVelocity(range);
+            target = calculateVelocity(range);
         }
         else{
-            targetScalar = 0;
+            target = 0;
         }
-        motor.setVelocity(UltraplanetaryMotorConstants.MAX_VELOCITY * targetScalar);
+        pidController.setTarget(target);
+        motor.setVelocity(pidController.calculate(motor.getVelocity()));
         sendTelemetry();
     }
     public void dynamicUpdate(boolean queueEmpty, double range, double robotVelAlongShot){
@@ -68,27 +77,24 @@ public class Shooter {
 
         setServo(servoPos);
         if(!queueEmpty){
-            targetScalar = calculateVelocity(dynamicRange);
+            target = calculateVelocity(dynamicRange);
         }
         else{
-            targetScalar = 0;
+            target = 0;
         }
-        motor.setVelocity(UltraplanetaryMotorConstants.MAX_VELOCITY * targetScalar);
+        pidController.setTarget(target);
+        motor.setVelocity(pidController.calculate(motor.getVelocity()));
         sendTelemetry();
     }
     public boolean isWarmedUp() {
         double currentVelocity = motor.getVelocity();  // ticks per second (actual measured)
-        double target = UltraplanetaryMotorConstants.MAX_VELOCITY * targetScalar;
 
         // True if within 90% or better, with a small epsilon to stabilize near boundary
         return currentVelocity >= (target * ShooterConfig.WARM_UP_THRESHOLD) - ShooterConfig.VELOCITY_EPSILON;
     }
 
-    public void fire(double scalar) {
-        motor.setVelocity(scalar * UltraplanetaryMotorConstants.MAX_VELOCITY);
-    }
-    public void stop() {
-        fire(0);
+    public void fire() {
+        motor.setVelocity(pidController.calculate(motor.getVelocity()));
     }
     public void setServo(double pos){
         servo.setPosition(pos);
@@ -111,9 +117,8 @@ public class Shooter {
         telemetry.addLine("SHOOTER\n");
         telemetry.addData("SERVO POS", servo.getPosition());
         telemetry.addData("MOTOR VEL", motor.getVelocity());
-        telemetry.addData("TARGET SCALAR", targetScalar);
-        telemetry.addData("TARGET VEL", targetScalar * UltraplanetaryMotorConstants.MAX_VELOCITY);
+        telemetry.addData("TARGET VEL", target);
         telemetry.addData("WARMED UP", isWarmedUp());
-        telemetry.addData("% OF TARGET", (100 * motor.getVelocity())/(targetScalar * UltraplanetaryMotorConstants.MAX_VELOCITY));
+        telemetry.addData("% OF TARGET", (100 * motor.getVelocity())/(target));
     }
 }

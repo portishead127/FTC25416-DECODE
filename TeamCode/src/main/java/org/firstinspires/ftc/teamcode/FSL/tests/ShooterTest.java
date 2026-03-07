@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 @TeleOp(name = "TEST: Shooter Test", group = "TEST")
 public class ShooterTest extends OpMode {
-    double powerScalar;
+    double target;
     double servoPos;
     Shooter shooter;
     double step;
     @Override
     public void init() {
         shooter = new Shooter(hardwareMap, telemetry);
-        powerScalar = 0;
+        target = 0;
         servoPos = 0.5;
         step = 0.1;
         telemetry.addLine("OPTIMISE ANGLE FOR LOWEST RPM NEEDED.");
@@ -27,11 +27,11 @@ public class ShooterTest extends OpMode {
 
     @Override
     public void loop(){
-        if(gamepad1.squareWasPressed()){ shooter.fire(powerScalar); }
-        if(gamepad1.crossWasPressed()){ shooter.stop(); }
+        if(gamepad1.squareWasPressed()){ shooter.pidController.setTarget(target); }
+        if(gamepad1.crossWasPressed()){ shooter.pidController.setTarget(0); }
 
-        if(gamepad1.rightBumperWasPressed()){ powerScalar += step; }
-        if(gamepad1.leftBumperWasPressed()){ powerScalar -= step; }
+        if(gamepad1.rightBumperWasPressed()){ target += step; }
+        if(gamepad1.leftBumperWasPressed()){ target -= step; }
 
         if(gamepad1.triangleWasPressed()){ shooter.setServo(servoPos); };
 
@@ -42,7 +42,7 @@ public class ShooterTest extends OpMode {
         if(gamepad1.dpadLeftWasPressed()){ step -= 0.05; }
 
         telemetry.addLine("TEST VARIABLES\n");
-        telemetry.addData("VARIABLE POWER SCALAR", powerScalar);
+        telemetry.addData("VARIABLE POWER SCALAR", target);
         telemetry.addData("VARIABLE SERVO POS", servoPos);
         telemetry.addData("STEP", step);
 
