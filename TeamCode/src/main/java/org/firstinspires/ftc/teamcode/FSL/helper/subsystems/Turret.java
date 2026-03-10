@@ -27,7 +27,6 @@ public class Turret {
     }
     public void update(){
         motor.setPower(pidController.calculate(motor.getCurrentPosition()));
-        sendTelemetry();
     }
     public void sendTelemetry(){
         telemetry.addLine("TURRET - HARDWARE\n");

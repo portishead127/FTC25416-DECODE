@@ -26,7 +26,6 @@ public class Intake{
         else{
             motor.setPower(IntakeConfig.BACKWARD_SCALAR);
         }
-        sendTelemetry();
     }
     public void stop(){
         motor.setVelocity(0);

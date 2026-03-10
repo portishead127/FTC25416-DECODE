@@ -20,10 +20,6 @@ public class PIDController {
 
     private double minOutput = -Double.MAX_VALUE;
     private double maxOutput = Double.MAX_VALUE;
-
-    private boolean continuous = false;
-    private double minInput, maxInput; // for angle wrapping
-
     private final ElapsedTime timer = new ElapsedTime();
 
     // Constructors
@@ -57,13 +53,6 @@ public class PIDController {
     public void setOutputLimits(double min, double max) {
         this.minOutput = min;
         this.maxOutput = max;
-    }
-
-    // For turret/angle wrap (e.g. -π to π)
-    public void enableContinuous(double minInput, double maxInput) {
-        continuous = true;
-        this.minInput = minInput;
-        this.maxInput = maxInput;
     }
 
     public double calculate(double state) {
@@ -101,17 +90,7 @@ public class PIDController {
     }
 
     private double getError(double state) {
-        double error = target - state;
-
-        if (continuous) {
-            double range = maxInput - minInput;
-            error = (error % range + range) % range;
-            if (error > range / 2) {
-                error -= range;
-            }
-        }
-
-        return error;
+        return target - state;
     }
     public boolean atTarget() {
         return Math.abs(lastError) < tolerance;

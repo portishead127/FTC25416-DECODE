@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
@@ -13,8 +14,11 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 public class ShooterPIDTest extends OpMode {
     FtcDashboard f;
     Shooter shooter;
+    ElapsedTime timer;
+    double target = 0;
     @Override
     public void init() {
+        timer = new ElapsedTime();
         f = FtcDashboard.getInstance();
         shooter = new Shooter(hardwareMap, telemetry);
         telemetry.addData("STATUS", "INITIALISED");
@@ -23,17 +27,20 @@ public class ShooterPIDTest extends OpMode {
 
     @Override
     public void loop(){
-        if(gamepad1.squareWasPressed()) shooter.pidController.setTarget(1000);
-        if(gamepad1.crossWasPressed()) shooter.pidController.setTarget(2000);
-        if(gamepad1.triangleWasPressed()) shooter.pidController.setTarget(500);
-        if(gamepad1.circleWasPressed()) shooter.pidController.setTarget(0);
-        shooter.fire();
+        if(gamepad1.squareWasPressed()) target = 1000;
+        if(gamepad1.crossWasPressed()) target = 2000;
+        if(gamepad1.triangleWasPressed()) target = 500;
+        if(gamepad1.circleWasPressed()) target =0;
+        shooter.fire(target);
+
+
+        telemetry.addData("LOOP TIME", timer.milliseconds());
         telemetry.update();
+        timer.reset();
 
-
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("POS", shooter.motor.getCurrentPosition());
-        packet.put("TARGET", shooter.pidController.getTarget());
-        f.sendTelemetryPacket(packet);
+//        TelemetryPacket packet = new TelemetryPacket();
+//        packet.put("VEL", shooter.motor.getVelocity());
+//        packet.put("TARGET", shooter.pidController.getTarget());
+//        f.sendTelemetryPacket(packet);
     }
 }

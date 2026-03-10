@@ -16,10 +16,11 @@ import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.StorageConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 
 public class Storage {
-    private final LinkedList<Color> queue = new LinkedList<Color>();
+    private final ArrayDeque<Color> queue = new ArrayDeque<>();
     public final Color[] slots;
     private final ColorRangeSensor colorSensor;
     public final DcMotorEx motor;
@@ -35,6 +36,7 @@ public class Storage {
     private final double basePosition;
     private final double ticksPerThird;
     private final double ticksPerHalf;
+    private final ElapsedTime elapsedTime;
 
     public Storage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "STM");
@@ -73,6 +75,7 @@ public class Storage {
 
         pidController.setOutputLimits(-1, 1);
         pidController.setTolerance(StorageConfig.TICK_TOLERANCE);
+        elapsedTime = new ElapsedTime();
     }
     public void updateFlick() {
         if (!isFlicking) return;
@@ -160,7 +163,6 @@ public class Storage {
         else{
             motor.setPower(0);
         }
-        sendTelemetry();
     }
     public void intakeUpdate(){
         if(!pidController.atTarget() || isFlicking){
@@ -168,6 +170,7 @@ public class Storage {
         }
 
         currentColor = ColorMethods.fromSensor(colorSensor);
+
         if(currentColor != Color.NONE){
             slots[focusedIndex] = currentColor;
             rotate1Slot(true);

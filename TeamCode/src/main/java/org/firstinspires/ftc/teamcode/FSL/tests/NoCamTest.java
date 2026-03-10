@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.MecanumConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
@@ -11,19 +14,30 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PedroFollowerDriveTr
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 
+import java.util.List;
+
 @TeleOp(name = "TEST: No Camera", group = "TEST")
 public class NoCamTest extends OpMode {
     Storage storage;
     Intake intake;
     Shooter shooter;
     PedroFollowerDriveTrain driveTrain;
+    ElapsedTime timer;
 
     @Override
     public void init() {
+        timer = new ElapsedTime();
         shooter = new Shooter(hardwareMap, telemetry);
         storage = new Storage(hardwareMap, telemetry, true);
         intake = new Intake(hardwareMap,telemetry);
         driveTrain = new PedroFollowerDriveTrain(hardwareMap, telemetry, null);
+
+        List<LynxModule> hubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : hubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+
 
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
@@ -36,7 +50,7 @@ public class NoCamTest extends OpMode {
 
     @Override
     public void loop() {
-        shooter.dynamicUpdate(storage.queueIsEmpty(), 50, 0);
+        shooter.staticUpdate(storage.queueIsEmpty(), 50);
         storage.update(shooter.isWarmedUp() || gamepad1.dpadUpWasPressed());
         intake.update(storage.isEmpty());
         driveTrain.update(gamepad1);
@@ -46,6 +60,9 @@ public class NoCamTest extends OpMode {
         if (gamepad1.circleWasPressed()) { storage.setQueue(Scoring.G); }
         if (gamepad1.triangleWasPressed()) { storage.setQueue(Scoring.NONE); }
 
+        telemetry.addData("LOOP TIME", timer.milliseconds());
         telemetry.update();
+
+        timer.reset();
     }
 }

@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Turret;
 @TeleOp(name = "TEST: Turret and Camera Localization Test", group = "TEST")
 public class TurretCameraLocalizationTest extends OpMode {
     Turret turret;
-    Camera camera;
     PedroFollowerDriveTrain pedroFollowerDriveTrain;
     double goalFieldX;
     double goalFieldY;
@@ -34,7 +33,6 @@ public class TurretCameraLocalizationTest extends OpMode {
     @Override
     public void init() {
         turret = new Turret(hardwareMap, telemetry);
-        camera = new Camera(hardwareMap,telemetry, true);
         pedroFollowerDriveTrain = new PedroFollowerDriveTrain(hardwareMap,telemetry, new Pose(56, 8, Math.toRadians(90)));
         determineGoalPos(true);
         telemetry.addData("STATUS", "INITIALISED");
@@ -42,49 +40,28 @@ public class TurretCameraLocalizationTest extends OpMode {
     }
 
     @Override
+    public void start() {
+        pedroFollowerDriveTrain.follower.startTeleOpDrive();
+    }
+
+    @Override
     public void loop(){
         pedroFollowerDriveTrain.update(gamepad1);
-        calculateAndSetTurretPIDTarget(computeHybridTarget(pedroFollowerDriveTrain.follower.getPose(), pedroFollowerDriveTrain.follower.getVelocity()), pedroFollowerDriveTrain.follower.getPose());
-        camera.update();
+        Pose odomPose = pedroFollowerDriveTrain.follower.getPose();
+        calculateAndSetTurretPIDTarget(computeHybridTarget(odomPose),odomPose);
+        telemetry.addData("X",odomPose.getPose().getX());
+        telemetry.addData("Y",odomPose.getPose().getY());
         telemetry.update();
     }
 
-    private Robot.ShotInfo computeHybridTarget(Pose odomPose, Vector odomVel) {
+    private Robot.ShotInfo computeHybridTarget(Pose odomPose) {
         Robot.ShotInfo info = new Robot.ShotInfo();
 
         double dx;
         double dy;
 
-//        if (camera.locked) {
-//
-//            // Camera gives robot-relative coordinates:
-//            // +x = right
-//            // +y = forward
-//
-//            double relRight = camera.x;
-//            double relForward = camera.y;
-//
-//            // Convert robot-relative to field-relative
-//            double heading = odomPose.getHeading();
-//
-//            double forwardFieldX = Math.cos(heading);
-//            double forwardFieldY = Math.sin(heading);
-//
-//            double leftFieldX = -Math.sin(heading);
-//            double leftFieldY = Math.cos(heading);
-//
-//            // Convert right to left
-//            double relLeft = -relRight;
-//
-//            dx = relForward * forwardFieldX + relLeft * leftFieldX;
-//            dy = relForward * forwardFieldY + relLeft * leftFieldY;
-//
-//        } else {
-
-            // Pure odometry fallback
         dx = goalFieldX - odomPose.getX();
         dy = goalFieldY - odomPose.getY();
-//        }
 
         info.range = Math.hypot(dx, dy);
 
@@ -95,11 +72,6 @@ public class TurretCameraLocalizationTest extends OpMode {
             info.shotDirX = 0;
             info.shotDirY = 0;
         }
-
-        // Project velocity along shot
-        info.robotVelAlongShot =
-                odomVel.getXComponent() * info.shotDirX +
-                        odomVel.getYComponent() * info.shotDirY;
         return info;
     }
     private void calculateAndSetTurretPIDTarget(Robot.ShotInfo info, Pose odomPose) {

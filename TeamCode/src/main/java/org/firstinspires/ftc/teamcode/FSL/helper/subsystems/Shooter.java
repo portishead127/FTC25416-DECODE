@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -23,7 +25,10 @@ public class Shooter {
 
     public Shooter(HardwareMap hm, Telemetry telemetry) {
         motor = hm.get(DcMotorEx.class, "SHM");
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,new PIDFCoefficients(ShooterConfig.KP, 0 , 0, ShooterConfig.KF));
 
         servo = hm.get(Servo.class, "SHS");
         servo.setPosition(0.5);
@@ -54,8 +59,7 @@ public class Shooter {
             target = 0;
         }
         pidController.setTarget(target);
-        motor.setPower(pidController.calculate(motor.getVelocity()));
-        sendTelemetry();
+        motor.setVelocity(pidController.calculate(motor.getVelocity()));
     }
 
     public void staticUpdate(boolean queueEmpty, double range){
@@ -68,22 +72,23 @@ public class Shooter {
             target = 0;
         }
         pidController.setTarget(target);
-        motor.setPower(pidController.calculate(motor.getVelocity()));
-        sendTelemetry();
+        motor.setVelocity(pidController.calculate(motor.getVelocity()));
+//        sendTelemetry();
     }
     public void dynamicUpdate(boolean queueEmpty, double range, double robotVelAlongShot){
         double dynamicRange = range + robotVelAlongShot * calculateFlightTime(range);
         double servoPos = calculateServoPos(dynamicRange);
 
-        setServo(servoPos);
+
+//        setServo(servoPos);
         if(!queueEmpty){
             target = calculateVelocity(dynamicRange);
         }
         else{
             target = 0;
         }
-        pidController.setTarget(target);
-        motor.setPower(pidController.calculate(motor.getVelocity()));
+//        pidController.setTarget(target);
+//        motor.setVelocity(pidController.calculate(motor.getVelocity()));
         sendTelemetry();
     }
     public boolean isWarmedUp() {
@@ -93,8 +98,8 @@ public class Shooter {
         return currentVelocity >= (target * ShooterConfig.WARM_UP_THRESHOLD) - ShooterConfig.VELOCITY_EPSILON;
     }
 
-    public void fire() {
-        motor.setPower(pidController.calculate(motor.getVelocity()));
+    public void fire(double target) {
+        motor.setVelocity(target);
     }
     public void setServo(double pos){
         servo.setPosition(pos);

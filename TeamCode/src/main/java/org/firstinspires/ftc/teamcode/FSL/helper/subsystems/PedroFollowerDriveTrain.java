@@ -20,27 +20,21 @@ public class PedroFollowerDriveTrain {
         this.telemetry = telemetry;
         follower = Constants.createFollower(hm);
         follower.setStartingPose(startingPose == null ? new Pose(0,0, Math.toRadians(90)) : startingPose);
-        follower.update();
     }
 
     public void update(Gamepad gp){
-        follower.update();
-
-        if (!gp.right_bumper)follower.setMaxPowerScaling(MecanumConfig.MECANUM_FULL_POWER);
-        else follower.setMaxPowerScaling(MecanumConfig.MECANUM_SLOW_POWER);
-
-
         follower.setTeleOpDrive(
-                -gp.left_stick_y* MecanumConfig.MECANUM_FULL_POWER,
-                gp.left_stick_x* MecanumConfig.MECANUM_FULL_POWER,
-                gp.right_stick_x* MecanumConfig.MECANUM_FULL_POWER,
+                -gp.left_stick_y,
+                gp.left_stick_x,
+                gp.right_stick_x,
                 true // Robot Centric
         );
-        sendTelemetry();
+        follower.update();
     }
 
     public void sendTelemetry(){
         telemetry.addLine("PEDRO\n");
+        telemetry.addData("POSE", follower.getPose());
         telemetry.addData("X VELOCITY", follower.getVelocity().getXComponent());
         telemetry.addData("Y VELOCITY", follower.getVelocity().getYComponent());
     }
