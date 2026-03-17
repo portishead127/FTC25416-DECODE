@@ -38,6 +38,9 @@ public class Storage {
     private final double ticksPerHalf;
     private final ElapsedTime elapsedTime;
 
+    // NEW: flag to handle immediate transition after last flick
+    private boolean justEmptiedOnLastFlick = false;
+
     public Storage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "STM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -54,9 +57,9 @@ public class Storage {
 
         pidController = new PIDController(StorageConfig.KP, StorageConfig.KI, StorageConfig.KD, StorageConfig.KF);
 
-        if(emptyStorage){
+        if (emptyStorage) {
             slots = new Color[]{null, null, null};
-        }else{
+        } else {
             slots = new Color[]{Color.PURPLE, Color.PURPLE, Color.GREEN};
         }
 
@@ -77,75 +80,89 @@ public class Storage {
         pidController.setTolerance(StorageConfig.TICK_TOLERANCE);
         elapsedTime = new ElapsedTime();
     }
+
     public void updateFlick() {
         if (!isFlicking) return;
 
         if (flickTimer.milliseconds() < StorageConfig.FLICK_FORWARD_TIME) {
             servo.setPosition(StorageConfig.FLICK_SERVO_MAX);
-        }
-        else if (flickTimer.milliseconds() < StorageConfig.FLICK_RETURN_TIME) {
+        } else if (flickTimer.milliseconds() < StorageConfig.FLICK_RETURN_TIME) {
             servo.setPosition(StorageConfig.FLICK_SERVO_MIN);
-        }
-        else {
+        } else {
+            // Flick complete
             isFlicking = false;
+            queue.removeFirst();
+            slots[focusedIndex] = null;
+
+            // Critical fix: if this was the last pixel, immediately transition to intake mode
+            if (queue.isEmpty()) {
+                justEmptiedOnLastFlick = true;
+                intakeMode = true;                  // force now
+                goToSlot0AlignedWithIntake();       // force target to intake side now
+            }
         }
     }
+
     public void startFlick() {
-        if (isFlicking) return; // prevent double flicks
+        if (isFlicking || queue.isEmpty()) return;  // prevent flick after queue empty
         isFlicking = true;
         flickTimer.reset();
     }
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return intakeMode;
     }
-    public void setQueue(LinkedList<Color> colors){
+
+    public void setQueue(LinkedList<Color> colors) {
         queue.clear();
         queue.addAll(colors);
     }
-    public boolean queueIsEmpty(){ return queue.isEmpty(); }
-    public void rotate1Slot(boolean anticlockwise){
-        if(!pidController.atTarget() || isFlicking) return;
 
-        if(anticlockwise){
+    public boolean queueIsEmpty() {
+        return queue.isEmpty();
+    }
+
+    public void rotate1Slot(boolean anticlockwise) {
+        if (!pidController.atTarget() || isFlicking) return;
+
+        if (anticlockwise) {
             focusedIndex = (focusedIndex + 1) % 3;
         } else {
             focusedIndex = (focusedIndex - 1 + 3) % 3;
         }
 
         double target;
-        // Absolute target instead of cumulative
-        if(intakeMode){
+        if (intakeMode) {
             target = basePosition + focusedIndex * ticksPerThird;
-        }
-        else{
+        } else {
             target = basePosition + ticksPerHalf + focusedIndex * ticksPerThird;
         }
         pidController.setTarget(target);
     }
 
-
-    public void goToSlot0AlignedWithShooter(){
+    public void goToSlot0AlignedWithShooter() {
         focusedIndex = 0;
         pidController.setTarget(basePosition + ticksPerHalf);
     }
-    public void goToSlot0AlignedWithIntake(){
+
+    public void goToSlot0AlignedWithIntake() {
         focusedIndex = 0;
         pidController.setTarget(basePosition);
     }
+
     public void update(boolean shootable) {
         intakeMode = ((slots[0] == null || slots[1] == null || slots[2] == null) && queueIsEmpty());
 
-        // Detect transitions
+        if (justEmptiedOnLastFlick) {
+            justEmptiedOnLastFlick = false;
+            intakeMode = true;
+        }
+
         boolean justBecameFull  = wasIntakeMode && !intakeMode;
-        boolean justBecameEmpty = !wasIntakeMode && intakeMode;
 
         updateFlick();
 
         if (intakeMode) {
-            if(justBecameEmpty){
-                setQueue(Scoring.NONE);
-                goToSlot0AlignedWithIntake();
-            }
             intakeUpdate();
         } else {
             if (justBecameFull) {
@@ -156,26 +173,27 @@ public class Storage {
 
         wasIntakeMode = intakeMode;
 
-        if(!isFlicking){
+        if (!isFlicking) {
             double power = pidController.calculate(motor.getCurrentPosition());
             motor.setPower(power);
-        }
-        else{
+        } else {
             motor.setPower(0);
         }
     }
-    public void intakeUpdate(){
-        if(!pidController.atTarget() || isFlicking){
+
+    public void intakeUpdate() {
+        if (!pidController.atTarget() || isFlicking) {
             return;
         }
 
         currentColor = ColorMethods.fromSensor(colorSensor);
 
-        if(currentColor != Color.NONE){
+        if (currentColor != Color.NONE) {
             slots[focusedIndex] = currentColor;
             rotate1Slot(true);
         }
     }
+
     public void transferUpdate(boolean shootable) {
         if (!pidController.atTarget() || isFlicking || queueIsEmpty()) {
             return;
@@ -184,34 +202,26 @@ public class Storage {
         Color desired = queue.peekFirst();
 
         if (desired == slots[focusedIndex]) {
-            if(shootable){
+            if (shootable) {
                 startFlick();
-                slots[focusedIndex] = null;
-                queue.removeFirst();
             }
-        }
-        else if (desired == slots[(focusedIndex + 1) % 3]) {
+        } else if (desired == slots[(focusedIndex + 1) % 3]) {
             rotate1Slot(true);
-        }
-        else if (desired == slots[(focusedIndex -1 + 3) % 3]) {
+        } else if (desired == slots[(focusedIndex - 1 + 3) % 3]) {
             rotate1Slot(false);
-        }
-        else {
+        } else {
             if (slots[focusedIndex] != null) {
-                if(shootable){
+                if (shootable) {
                     startFlick();
-                    slots[focusedIndex] = null;
-                    queue.removeFirst();
                 }
-            }
-            else if (slots[(focusedIndex + 1) % 3] != null) {
+            } else if (slots[(focusedIndex + 1) % 3] != null) {
                 rotate1Slot(false);
-            }
-            else if (slots[(focusedIndex -1 + 3) % 3] != null) {
+            } else if (slots[(focusedIndex - 1 + 3) % 3] != null) {
                 rotate1Slot(true);
             }
         }
     }
+
     public void sendTelemetry() {
         telemetry.addLine("STORAGE - HARDWARE\n");
         telemetry.addData("SERVO POS", servo.getPosition());

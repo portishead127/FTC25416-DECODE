@@ -71,8 +71,7 @@ public class Shooter {
         else{
             target = 0;
         }
-        pidController.setTarget(target);
-        motor.setVelocity(pidController.calculate(motor.getVelocity()));
+        motor.setVelocity(target);
 //        sendTelemetry();
     }
     public void dynamicUpdate(boolean queueEmpty, double range, double robotVelAlongShot){
@@ -80,7 +79,7 @@ public class Shooter {
         double servoPos = calculateServoPos(dynamicRange);
 
 
-//        setServo(servoPos);
+        setServo(servoPos);
         if(!queueEmpty){
             target = calculateVelocity(dynamicRange);
         }
@@ -116,7 +115,7 @@ public class Shooter {
     public double calculateVelocity(double range){
         //GET FORMULA FOR THIS... SEE SHOOTERTEST
         //E.G Velocity = 2692 - 10 * range + 0.32 * range^2
-        return 0;
+        return 1500;
     }
     public void sendTelemetry() {
         telemetry.addLine("SHOOTER\n");

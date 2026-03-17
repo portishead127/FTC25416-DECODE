@@ -32,15 +32,11 @@ public class ShooterPIDTest extends OpMode {
         if(gamepad1.triangleWasPressed()) target = 500;
         if(gamepad1.circleWasPressed()) target =0;
         shooter.fire(target);
+        shooter.sendTelemetry();
 
 
         telemetry.addData("LOOP TIME", timer.milliseconds());
         telemetry.update();
         timer.reset();
-
-//        TelemetryPacket packet = new TelemetryPacket();
-//        packet.put("VEL", shooter.motor.getVelocity());
-//        packet.put("TARGET", shooter.pidController.getTarget());
-//        f.sendTelemetryPacket(packet);
     }
 }
