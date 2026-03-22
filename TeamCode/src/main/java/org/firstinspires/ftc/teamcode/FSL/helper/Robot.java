@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.FSL.helper;
 
+import android.graphics.pdf.content.PdfPageGotoLinkContent;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
@@ -8,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.TurretConfig;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Camera;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
@@ -44,20 +47,21 @@ public class Robot {
     // Constructors
     // ===========================
     public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage) {
-        camera = new Camera(hm, telemetry, isBlue);
         shooter = new Shooter(hm, telemetry);
-        storage = new Storage(hm, telemetry, emptyStorage);
+        storage = new Storage(hm, telemetry, false);
         intake = new Intake(hm, telemetry);
         turret = new Turret(hm, telemetry);
+
         determineGoalPos(isBlue);
     }
 
     public Robot(HardwareMap hm, Telemetry telemetry, boolean isBlue, boolean emptyStorage, Pose startingPose) {
-        camera = new Camera(hm, telemetry, isBlue);
         shooter = new Shooter(hm, telemetry);
-        storage = new Storage(hm, telemetry, emptyStorage);
+        storage = new Storage(hm, telemetry, true);
         intake = new Intake(hm, telemetry);
-        pedroFollowerDriveTrain = new PedroFollowerDriveTrain(hm, telemetry, startingPose);
+        driveTrain = new DriveTrain(hm, telemetry);
+        turret = new Turret(hm, telemetry);
+        turret.pidController.setTarget(0);
         determineGoalPos(isBlue);
     }
 
@@ -70,96 +74,71 @@ public class Robot {
         public double shotDirY;
         public double robotVelAlongShot;
     }
-    private ShotInfo computeHybridTarget(Pose odomPose, Vector odomVel) {
-        ShotInfo info = new ShotInfo();
-
-        double dx;
-        double dy;
-
-        if (camera.locked) {
-
-            // Camera gives robot-relative coordinates:
-            // +x = right
-            // +y = forward
-
-            double relRight = camera.x;
-            double relForward = camera.y;
-
-            // Convert robot-relative to field-relative
-            double heading = odomPose.getHeading();
-
-            double forwardFieldX = Math.cos(heading);
-            double forwardFieldY = Math.sin(heading);
-
-            double leftFieldX = -Math.sin(heading);
-            double leftFieldY = Math.cos(heading);
-
-            // Convert right to left
-            double relLeft = -relRight;
-
-            dx = relForward * forwardFieldX + relLeft * leftFieldX;
-            dy = relForward * forwardFieldY + relLeft * leftFieldY;
-
-        } else {
-
-            // Pure odometry fallback
-            dx = goalFieldX - odomPose.getX();
-            dy = goalFieldY - odomPose.getY();
-        }
-
-        info.range = Math.hypot(dx, dy);
-
-        if (info.range > 1e-6) {
-            info.shotDirX = dx / info.range;
-            info.shotDirY = dy / info.range;
-        } else {
-            info.shotDirX = 0;
-            info.shotDirY = 0;
-        }
-
-        // Project velocity along shot
-        info.robotVelAlongShot =
-                odomVel.getXComponent() * info.shotDirX +
-                        odomVel.getYComponent() * info.shotDirY;
-        return info;
-    }
-    private void calculateTurretAngle(ShotInfo info, Pose odomPose) {
-        double fieldAngle = Math.atan2(info.shotDirY, info.shotDirX);
-        double robotAngle = fieldAngle - odomPose.getHeading();
-
-        turret.pidController.setTarget(robotAngle * TurretConfig.TICKS_PER_RADIAN);
-        turret.update();
-    }
     private void updateSubsystems(boolean queueEmpty, double range, double robotVelAlongShot) {
         shooter.dynamicUpdate(queueEmpty, range, robotVelAlongShot);
         storage.update(shooter.isWarmedUp());
-        intake.update(storage.isEmpty());
-    }
-    private void handleQueueButtons(Gamepad gamepad) {
-        if (gamepad.squareWasPressed()) storage.setQueue(Scoring.convertToScoringPattern(camera.motif));
-        if (gamepad.triangleWasPressed()) storage.setQueue(Scoring.G);
-        if (gamepad.crossWasPressed()) storage.setQueue(Scoring.P);
-        if (gamepad.circleWasPressed()) storage.setQueue(Scoring.NONE);
     }
     public void update(Gamepad gamepad1, Gamepad gamepad2) {
-        Pose odomPose = pedroFollowerDriveTrain.follower.getPose();
-        Vector odomVel = pedroFollowerDriveTrain.follower.getVelocity();
+        if (gamepad2.triangleWasPressed()) {
 
-        ShotInfo shot = computeHybridTarget(odomPose, odomVel);
-        calculateTurretAngle(shot, odomPose);
-        updateSubsystems(storage.queueIsEmpty(), shot.range, shot.robotVelAlongShot);
+            //TODODODOODOD
 
-        //specific for tele
-        pedroFollowerDriveTrain.update(gamepad1);
-        handleQueueButtons(gamepad2);
+
+
+
+            storage.setQueue(Scoring.convertToScoringPattern(Motif.PPG));
+            shooter.fire(1900);
+            shooter.setServo(0.9);
+
+
+
+
+
+
+
+
+
+        }
+        if (gamepad2.squareWasPressed()) {
+            storage.setQueue(Scoring.convertToScoringPattern(Motif.PPG));
+            shooter.fire(1900);
+            shooter.setServo(0.9);
+        }
+        if(gamepad2.crossWasPressed()){
+            storage.setQueue(Scoring.convertToScoringPattern(Motif.PPG));
+            shooter.fire(2100);
+            shooter.setServo(0.85);
+        }
+
+        if(gamepad2.circleWasPressed()){
+            storage.setQueue(Scoring.NONE);
+            shooter.fire(0);
+        }
+        storage.update(gamepad2.dpadUpWasPressed());
+        if(gamepad2.right_trigger_pressed){
+            if(storage.isEmpty()){
+                intake.runForwards();
+            }
+        }
+        else{
+            if(!storage.isEmpty()){
+                intake.runBackwards();
+            }
+            else{
+                intake.stop();
+            }
+        }
+
+        if(gamepad2.dpadRightWasPressed()){
+            storage.setQueue(Scoring.G);
+        }
+
+        if(gamepad2.dpadLeftWasPressed()){
+            storage.setQueue(Scoring.P);
+        }
+        turret.update();
+        driveTrain.update(gamepad1, gamepad1.right_trigger_pressed, gamepad1.left_trigger_pressed);
     }
     public void autoUpdate(Follower follower) {
-        Pose odomPose = follower.getPose();
-        Vector odomVel = follower.getVelocity();
-
-        ShotInfo shot = computeHybridTarget(odomPose, odomVel);
-        calculateTurretAngle(shot, odomPose);
-
-        updateSubsystems(storage.queueIsEmpty(), shot.range, shot.robotVelAlongShot);
     }
 }

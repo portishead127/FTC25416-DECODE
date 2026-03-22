@@ -17,14 +17,11 @@ public class CompetitionTeleOpBlue extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap, telemetry, true, false, startingPose);
-        robot.camera.motif = motif;
         telemetry.addData("STATUS", "INITIALISED");
-        telemetry.addData("MOTIF", motif.name());
         telemetry.update();
     }
     @Override
     public void loop() {
         robot.update(gamepad1, gamepad2);
-        telemetry.update();
     }
 }

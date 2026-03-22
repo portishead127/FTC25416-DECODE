@@ -51,9 +51,10 @@ public class NoCamTest extends OpMode {
     @Override
     public void loop() {
         shooter.staticUpdate(storage.queueIsEmpty(), 50);
-        storage.update(shooter.isWarmedUp() || gamepad1.dpadUpWasPressed());
-        intake.update(storage.isEmpty());
+        storage.update(gamepad1.dpadUpWasPressed());
         driveTrain.update(gamepad1);
+
+        storage.sendTelemetry();
 
         if (gamepad1.squareWasPressed()) { storage.setQueue(Scoring.PPG); }
         if (gamepad1.crossWasPressed()) { storage.setQueue(Scoring.P); }

@@ -6,10 +6,10 @@ import com.bylazar.configurables.annotations.Configurable;
 @Config
 @Configurable
 public class ShooterConfig {
-    public static double KP = 10;
+    public static double KP = 12;
     public static double KI = 0;
     public static double KD = 0;
-    public static double KF = 12;
+    public static double KF = 13;
     public static int LIMIT_FOR_3_POINTER_RANGE = 100;
     public static double MOTOR_VEL_SCALAR_FOR_3_POINTER = 0.9;
     public static double MOTOR_VEL_SCALAR_FOR_LAYUP = 0.75;

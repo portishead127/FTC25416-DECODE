@@ -169,12 +169,12 @@ public class BlueSafeAuto extends OpMode {
     public void autonomousPathUpdate(){
         switch (pathState) {
             case 0:
-                robot.camera.readMotif();
-                robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
-                if(robot.storage.queueIsEmpty()){
+//                robot.camera.readMotif();
+//                robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
+//                if(robot.storage.queueIsEmpty()){
                     follower.followPath(paths.InfrontOfLowRow);
                     setPathState(1);
-                }
+//                }
                 break;
             case 1:
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
@@ -196,11 +196,11 @@ public class BlueSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
-                    if(robot.storage.queueIsEmpty()){
+//                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
+//                    if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.InfrontOfMiddleRow, true);
                         setPathState(4);
-                    }
+//                    }
                 }
                 break;
             case 4:
@@ -216,7 +216,7 @@ public class BlueSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
                     /* Score Sample */
-                    robot.intake.stop();
+//                    robot.intake.stop();
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
                     follower.followPath(paths.TipOfTriangle2,true);
                     setPathState(6);
@@ -226,11 +226,11 @@ public class BlueSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
-                    if(robot.storage.queueIsEmpty()){
+//                    robot.storage.setQueue(Scoring.convertToScoringPattern(robot.camera.motif));
+//                    if(robot.storage.queueIsEmpty()){
                         follower.followPath(paths.InfrontOfHighRow, true);
                         setPathState(7);
-                    }
+//                    }
                 }
             case 7:
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
@@ -245,7 +245,7 @@ public class BlueSafeAuto extends OpMode {
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if(!follower.isBusy()) {
                     /* Grab Sample */
-                    robot.intake.stop();
+//                    robot.intake.stop();
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
                     follower.followPath(paths.Escape, true);
                     setPathState(9);

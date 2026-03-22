@@ -76,7 +76,7 @@ public class TurretCameraLocalizationTest extends OpMode {
     }
     private void calculateAndSetTurretPIDTarget(Robot.ShotInfo info, Pose odomPose) {
         double fieldAngle = Math.atan2(info.shotDirY, info.shotDirX);
-        double robotAngle = fieldAngle - odomPose.getHeading();
+        double robotAngle = fieldAngle + odomPose.getHeading();
 
         turret.pidController.setTarget(TurretConfig.TICKS_PER_RADIAN * robotAngle);
         turret.update();

@@ -29,8 +29,8 @@ public class ShooterTest extends OpMode {
 
     @Override
     public void loop(){
-        if(gamepad1.squareWasPressed()){ shooter.pidController.setTarget(target); }
-        if(gamepad1.crossWasPressed()){ shooter.pidController.setTarget(0); }
+        if(gamepad1.squareWasPressed()){ shooter.fire(target); }
+        if(gamepad1.crossWasPressed()){ shooter.fire(0); }
 
         if(gamepad1.rightBumperWasPressed()){ target += targetStep; }
         if(gamepad1.leftBumperWasPressed()){ target -= targetStep; }
@@ -45,9 +45,6 @@ public class ShooterTest extends OpMode {
 
         if(gamepad1.psWasPressed()){ targetStep += 50; }
         if(gamepad1.touchpadWasPressed()){ targetStep -= 50; }
-
-        shooter.motor.setPower(shooter.pidController.calculate(shooter.motor.getVelocity()));
-        shooter.setServo(servoPos);
 
         telemetry.addLine("TEST VARIABLES\n");
         telemetry.addData("VARIABLE POWER SCALAR", target);

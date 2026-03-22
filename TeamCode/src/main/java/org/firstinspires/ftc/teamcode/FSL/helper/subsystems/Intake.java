@@ -19,13 +19,11 @@ public class Intake{
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.telemetry = telemetry;
     }
-    public void update(boolean forward){
-        if(forward){
-            motor.setPower(IntakeConfig.FORWARD_SCALAR);
-        }
-        else{
-            motor.setPower(IntakeConfig.BACKWARD_SCALAR);
-        }
+    public void runForwards(){
+        motor.setPower(IntakeConfig.FORWARD_SCALAR);
+    }
+    public void runBackwards(){
+        motor.setPower(IntakeConfig.BACKWARD_SCALAR);
     }
     public void stop(){
         motor.setVelocity(0);

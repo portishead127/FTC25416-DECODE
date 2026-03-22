@@ -16,7 +16,6 @@ public class MecanumTest extends OpMode {
     }
     @Override
     public void loop(){
-        driveTrain.update(gamepad1, gamepad1.right_bumper);
         telemetry.update();
     }
 }

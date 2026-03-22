@@ -19,25 +19,30 @@ public class DriveTrain {
     public DriveTrain(HardwareMap hm, Telemetry telemetry){
         frontLeft = hm.get(DcMotorEx.class, "FLW");
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         frontRight = hm.get(DcMotorEx.class, "FRW");
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         backLeft = hm.get(DcMotorEx.class, "BLW");
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         backRight = hm.get(DcMotorEx.class, "BRW");
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         this.telemetry = telemetry;
     }
 
-    public void update(Gamepad gp, boolean isSlow){
+    public void update(Gamepad gp, boolean isSlow, boolean isFast){
         double scalar;
         if(isSlow){
             scalar = MecanumConfig.MECANUM_SLOW_POWER;
+        }
+        else if(isFast){
+            scalar = MecanumConfig.MECANUM_FULL_POWER_SUPER;
         }
         else{
             scalar = MecanumConfig.MECANUM_FULL_POWER;

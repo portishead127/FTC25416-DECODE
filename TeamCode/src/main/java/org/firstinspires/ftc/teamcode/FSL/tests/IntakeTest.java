@@ -17,7 +17,6 @@ public class IntakeTest extends OpMode {
 
     @Override
     public void loop(){
-        intake.update(gamepad1.cross);
         telemetry.update();
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Scoring{
 
-    public static final LinkedList<Color> NONE = new LinkedList<Color>(List.of());
+    public static final LinkedList<Color> NONE = new LinkedList<Color>();
     public static final LinkedList<Color> G = new LinkedList<Color>(List.of(Color.GREEN));
     public static final LinkedList<Color> P = new LinkedList<Color>(List.of(Color.PURPLE));
     public static final LinkedList<Color> PPG = new LinkedList<Color>(List.of(Color.PURPLE, Color.PURPLE, Color.GREEN));

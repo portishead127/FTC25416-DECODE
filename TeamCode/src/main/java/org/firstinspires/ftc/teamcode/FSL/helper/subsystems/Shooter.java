@@ -26,6 +26,7 @@ public class Shooter {
     public Shooter(HardwareMap hm, Telemetry telemetry) {
         motor = hm.get(DcMotorEx.class, "SHM");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,new PIDFCoefficients(ShooterConfig.KP, 0 , 0, ShooterConfig.KF));

@@ -45,7 +45,7 @@ public class Storage {
         motor = hm.get(DcMotorEx.class, "STM");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         servo = hm.get(Servo.class, "FLS");
         servo.setPosition(StorageConfig.FLICK_SERVO_MIN);
@@ -93,12 +93,8 @@ public class Storage {
             isFlicking = false;
             queue.removeFirst();
             slots[focusedIndex] = null;
-
-            // Critical fix: if this was the last pixel, immediately transition to intake mode
-            if (queue.isEmpty()) {
-                justEmptiedOnLastFlick = true;
-                intakeMode = true;                  // force now
-                goToSlot0AlignedWithIntake();       // force target to intake side now
+            if(slots[0] == null && slots[1] == null && slots[2] == null){
+                goToSlot0AlignedWithIntake();
             }
         }
     }
@@ -152,12 +148,6 @@ public class Storage {
 
     public void update(boolean shootable) {
         intakeMode = ((slots[0] == null || slots[1] == null || slots[2] == null) && queueIsEmpty());
-
-        if (justEmptiedOnLastFlick) {
-            justEmptiedOnLastFlick = false;
-            intakeMode = true;
-        }
-
         boolean justBecameFull  = wasIntakeMode && !intakeMode;
 
         updateFlick();
@@ -172,13 +162,8 @@ public class Storage {
         }
 
         wasIntakeMode = intakeMode;
-
-        if (!isFlicking) {
-            double power = pidController.calculate(motor.getCurrentPosition());
-            motor.setPower(power);
-        } else {
-            motor.setPower(0);
-        }
+        double power = pidController.calculate(motor.getCurrentPosition());
+        motor.setPower(power);
     }
 
     public void intakeUpdate() {
@@ -218,6 +203,9 @@ public class Storage {
                 rotate1Slot(false);
             } else if (slots[(focusedIndex - 1 + 3) % 3] != null) {
                 rotate1Slot(true);
+            }
+            else{
+                setQueue(Scoring.NONE);
             }
         }
     }

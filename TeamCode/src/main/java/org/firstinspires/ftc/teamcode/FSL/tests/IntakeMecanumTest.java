@@ -23,8 +23,6 @@ public class IntakeMecanumTest extends OpMode {
 
     @Override
     public void loop() {
-        intake.update(gamepad1.square);
-        driveTrain.update(gamepad1);
         telemetry.update();
     }
 }
