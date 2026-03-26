@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.FSL.helper.configs;
 import com.acmerobotics.dashboard.config.Config;
 import com.bylazar.configurables.annotations.Configurable;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.constants.UltraplanetaryMotorConstants;
-
 @Config
 @Configurable
 public class TurretConfig {

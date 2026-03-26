@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.ShooterConfig;
-import org.firstinspires.ftc.teamcode.FSL.helper.constants.UltraplanetaryMotorConstants;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 
 public class Shooter {

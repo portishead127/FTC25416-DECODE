@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.IntakeConfig;
-import org.firstinspires.ftc.teamcode.FSL.helper.constants.UltraplanetaryMotorConstants;
 
 public class Intake{
     private final DcMotorEx motor;
