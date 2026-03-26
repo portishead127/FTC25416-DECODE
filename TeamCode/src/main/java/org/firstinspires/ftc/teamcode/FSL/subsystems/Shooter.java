@@ -94,7 +94,7 @@ public class Shooter {
         double currentVelocity = motor.getVelocity();  // ticks per second (actual measured)
 
         // True if within 90% or better, with a small epsilon to stabilize near boundary
-        return currentVelocity >= (target * ShooterConfig.WARM_UP_THRESHOLD) - ShooterConfig.VELOCITY_EPSILON;
+        return currentVelocity >= (target * ShooterConfig.WARM_UP_THRESHOLD);
     }
 
     public void fire(double target) {
