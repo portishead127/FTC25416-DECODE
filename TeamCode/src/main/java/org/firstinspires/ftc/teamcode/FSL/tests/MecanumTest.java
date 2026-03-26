@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.DriveTrain;
 
 @TeleOp(name = "TEST: Mecanum Test", group = "TEST")
 public class MecanumTest extends OpMode {

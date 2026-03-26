@@ -5,8 +5,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Storage;
 
 @TeleOp(name= "TEST: Storage PID Test", group = "TEST")
 public class StoragePIDTest extends OpMode {

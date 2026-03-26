@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Intake;
 
 @TeleOp(name = "TEST: Intake Test", group = "TEST")
 public class IntakeTest extends OpMode {

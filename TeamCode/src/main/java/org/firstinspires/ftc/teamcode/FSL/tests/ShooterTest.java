@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Storage;
 
 @TeleOp(name = "TEST: Shooter Test", group = "TEST")
 public class ShooterTest extends OpMode {

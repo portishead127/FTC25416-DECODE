@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.Robot;
+import org.firstinspires.ftc.teamcode.FSL.Robot;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.TurretConfig;
-import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Camera;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PedroFollowerDriveTrain;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Turret;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.PedroFollowerDriveTrain;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Turret;
 
 @TeleOp(name = "TEST: Turret and Camera Localization Test", group = "TEST")
 public class TurretCameraLocalizationTest extends OpMode {

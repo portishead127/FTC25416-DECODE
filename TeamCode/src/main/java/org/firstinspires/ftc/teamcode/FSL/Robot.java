@@ -1,24 +1,20 @@
-package org.firstinspires.ftc.teamcode.FSL.helper;
-
-import android.graphics.pdf.content.PdfPageGotoLinkContent;
+package org.firstinspires.ftc.teamcode.FSL;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.FSL.helper.configs.TurretConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Camera;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PedroFollowerDriveTrain;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Turret;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Camera;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.PedroFollowerDriveTrain;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Storage;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Turret;
 
 public class Robot {
     public Motif motif = Motif.PPG;

@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
-import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.PedroFollowerDriveTrain;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Storage;
 
 @TeleOp(name = "TEST: Flicker Test", group = "TEST")
 public class FlickerTest extends OpMode {

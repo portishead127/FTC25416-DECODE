@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Camera;
-import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Camera;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Shooter;
 
 @Disabled
 @TeleOp(name= "TEST: Shooter and Camera Test", group = "TEST")

@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.FSL.comp;
+package org.firstinspires.ftc.teamcode.FSL.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -7,7 +7,8 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
 import com.bylazar.telemetry.PanelsTelemetry;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.Robot;
+import org.firstinspires.ftc.teamcode.FSL.teleop.CompetitionTeleOpBlue;
+import org.firstinspires.ftc.teamcode.FSL.Robot;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import com.pedropathing.geometry.BezierCurve;

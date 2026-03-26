@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.FSL.helper.subsystems;
+package org.firstinspires.ftc.teamcode.FSL.subsystems;
 
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import java.util.ArrayDeque;
 import java.util.LinkedList;
 
+@Deprecated
 public class Storage {
     private final ArrayDeque<Color> queue = new ArrayDeque<>();
     public final Color[] slots;

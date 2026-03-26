@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.FSL.comp;
+package org.firstinspires.ftc.teamcode.FSL.auto;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.bylazar.configurables.annotations.Configurable;
 
-import org.firstinspires.ftc.teamcode.FSL.helper.configs.TurretConfig;
-import org.firstinspires.ftc.teamcode.FSL.helper.Robot;
-import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
+import org.firstinspires.ftc.teamcode.FSL.teleop.CompetitionTeleOpBlue;
+import org.firstinspires.ftc.teamcode.FSL.Robot;
 
 
 @Autonomous(name = "EMERGEN", group = "COMP")
