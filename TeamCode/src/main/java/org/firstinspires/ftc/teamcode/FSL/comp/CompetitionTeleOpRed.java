@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.FSL.comp;
 
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.Robot;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
-
+@Disabled
 @TeleOp(name = "RED: Competition", group = "COMP")
 public class CompetitionTeleOpRed extends OpMode {
     public static Pose startingPose;

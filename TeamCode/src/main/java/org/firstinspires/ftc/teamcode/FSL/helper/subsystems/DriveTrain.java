@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.MecanumConfig;
@@ -64,6 +65,21 @@ public class DriveTrain {
         backRight.setPower(backRightPowerMod * scalar);
 
         sendTelemetry();
+    }
+
+    public void auto(){
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        while(timer.milliseconds() < 1000){
+            frontLeft.setPower(0.4);
+            backLeft.setPower(0.4);
+            backRight.setPower(0.4);
+            frontRight.setPower(0.4);
+        }
+        frontLeft.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        frontRight.setPower(0);
     }
 
     public void sendTelemetry(){

@@ -7,5 +7,5 @@ import com.bylazar.configurables.annotations.Configurable;
 @Configurable
 public class IntakeConfig {
     public static double FORWARD_SCALAR = 0.7;
-    public static double BACKWARD_SCALAR = 0.6;
+    public static double BACKWARD_SCALAR = 1;
 }

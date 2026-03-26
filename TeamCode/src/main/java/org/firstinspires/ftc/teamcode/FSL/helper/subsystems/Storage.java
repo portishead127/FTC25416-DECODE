@@ -30,16 +30,14 @@ public class Storage {
     private final ElapsedTime flickTimer;
     private Color currentColor;
     private boolean intakeMode;
-    private boolean isFlicking;
+    private boolean isFlicking = false;
     private boolean wasIntakeMode;
     private int focusedIndex;
     private final double basePosition;
     private final double ticksPerThird;
     private final double ticksPerHalf;
-    private final ElapsedTime elapsedTime;
+    boolean overridden = false;
 
-    // NEW: flag to handle immediate transition after last flick
-    private boolean justEmptiedOnLastFlick = false;
 
     public Storage(HardwareMap hm, Telemetry telemetry, boolean emptyStorage) {
         motor = hm.get(DcMotorEx.class, "STM");
@@ -78,7 +76,6 @@ public class Storage {
 
         pidController.setOutputLimits(-1, 1);
         pidController.setTolerance(StorageConfig.TICK_TOLERANCE);
-        elapsedTime = new ElapsedTime();
     }
 
     public void updateFlick() {
@@ -147,7 +144,19 @@ public class Storage {
     }
 
     public void update(boolean shootable) {
+        if(overridden){
+            overridden = false;
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            goToSlot0AlignedWithIntake();
+            setQueue(Scoring.NONE);
+        }
+
         intakeMode = ((slots[0] == null || slots[1] == null || slots[2] == null) && queueIsEmpty());
+        if(slots[0] == null && slots[1] == null && slots[2] == null){
+            intakeMode = true;
+            setQueue(Scoring.NONE);
+        }
         boolean justBecameFull  = wasIntakeMode && !intakeMode;
 
         updateFlick();
@@ -200,14 +209,32 @@ public class Storage {
                     startFlick();
                 }
             } else if (slots[(focusedIndex + 1) % 3] != null) {
-                rotate1Slot(false);
-            } else if (slots[(focusedIndex - 1 + 3) % 3] != null) {
                 rotate1Slot(true);
+            } else if (slots[(focusedIndex - 1 + 3) % 3] != null) {
+                rotate1Slot(false);
             }
             else{
                 setQueue(Scoring.NONE);
             }
         }
+    }
+
+    public void manualOverride(double override){
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setPower(override * 0.15);
+
+        servo.setPosition(StorageConfig.FLICK_SERVO_MIN);
+        isFlicking = false;
+        pidController.reset();
+        queue.clear();
+
+        pidController.setTarget(0);
+        focusedIndex = 0;
+        intakeMode = true;
+        overridden = true;
+        slots[0] = null;
+        slots[1] = null;
+        slots[2] = null;
     }
 
     public void sendTelemetry() {

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 
 //FTC DASH - 192.168.49.1:8080/dash
 //PANELS - 192.168.49.1:8001/
-@TeleOp(name = "BLUE: Competition", group = "COMP")
+@TeleOp(name = "COMP", group = "COMP")
 public class CompetitionTeleOpBlue extends OpMode {
     public static Pose startingPose;
     public static Motif motif;
@@ -23,5 +23,8 @@ public class CompetitionTeleOpBlue extends OpMode {
     @Override
     public void loop() {
         robot.update(gamepad1, gamepad2);
+        telemetry.addData("gp2 ps", gamepad2.ps);
+        telemetry.addData("gp2 touch", gamepad2.touchpad);
+        telemetry.update();
     }
 }

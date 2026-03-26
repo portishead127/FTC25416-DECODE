@@ -99,6 +99,7 @@ public class Shooter {
     }
 
     public void fire(double target) {
+        this.target = target;
         motor.setVelocity(target);
     }
     public void setServo(double pos){

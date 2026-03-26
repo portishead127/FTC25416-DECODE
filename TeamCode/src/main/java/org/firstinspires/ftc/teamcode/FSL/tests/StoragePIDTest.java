@@ -29,7 +29,6 @@ public class StoragePIDTest extends OpMode {
         if(gamepad1.circleWasPressed()){storage.goToSlot0AlignedWithShooter();}
         if(gamepad1.leftBumperWasPressed()){storage.rotate1Slot(true);}
         if(gamepad1.rightBumperWasPressed()){storage.rotate1Slot(false);}
-        intake.update(gamepad1.cross);
         telemetry.update();
 
 

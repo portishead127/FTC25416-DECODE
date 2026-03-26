@@ -6,11 +6,11 @@ import com.bylazar.configurables.annotations.Configurable;
 @Configurable
 @Config
 public class StorageConfig {
-   public static double KP = 0.0042;
-   public static double KI = 0;
-   public static double KD = 0;
+   public static double KP = 0.00420;
+   public static double KI;
+   public static double KD = 0.00001;
    public static double KF = 0;
-   public static double ENCODER_RES = 288;
+   public static double ENCODER_RES = 292;
    public static double TICK_TOLERANCE = 20;
    public static double FLICK_SERVO_MAX = 0;
    public static double FLICK_SERVO_MIN = 1;

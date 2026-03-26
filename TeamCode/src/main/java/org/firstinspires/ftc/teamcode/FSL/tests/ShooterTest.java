@@ -4,16 +4,20 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Storage;
+
 @TeleOp(name = "TEST: Shooter Test", group = "TEST")
 public class ShooterTest extends OpMode {
     double target;
     double servoPos;
+    Storage storage;
     Shooter shooter;
     double targetStep;
     double servoStep;
     @Override
     public void init() {
         shooter = new Shooter(hardwareMap, telemetry);
+        storage = new Storage(hardwareMap, telemetry, true);
         target = 0;
         servoPos = 0.5;
         targetStep = 50;
@@ -45,6 +49,11 @@ public class ShooterTest extends OpMode {
 
         if(gamepad1.psWasPressed()){ targetStep += 50; }
         if(gamepad1.touchpadWasPressed()){ targetStep -= 50; }
+
+        if(gamepad1.circleWasPressed()){
+            storage.startFlick();
+        }
+        storage.updateFlick();
 
         telemetry.addLine("TEST VARIABLES\n");
         telemetry.addData("VARIABLE POWER SCALAR", target);

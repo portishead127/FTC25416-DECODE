@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.FSL.helper.subsystems.Turret;
 
 public class Robot {
+    public Motif motif = Motif.PPG;
 
     public Camera camera;
     public Turret turret;
@@ -51,6 +52,8 @@ public class Robot {
         storage = new Storage(hm, telemetry, false);
         intake = new Intake(hm, telemetry);
         turret = new Turret(hm, telemetry);
+        driveTrain = new DriveTrain(hm, telemetry);
+        camera = new Camera(hm, telemetry, isBlue);
 
         determineGoalPos(isBlue);
     }
@@ -61,6 +64,8 @@ public class Robot {
         intake = new Intake(hm, telemetry);
         driveTrain = new DriveTrain(hm, telemetry);
         turret = new Turret(hm, telemetry);
+
+
         turret.pidController.setTarget(0);
         determineGoalPos(isBlue);
     }
@@ -79,63 +84,74 @@ public class Robot {
         storage.update(shooter.isWarmedUp());
     }
     public void update(Gamepad gamepad1, Gamepad gamepad2) {
+        if(gamepad1.dpadLeftWasPressed()){
+            motif = Motif.GPP;
+        }
+        if(gamepad1.dpadUpWasPressed()){
+            motif = Motif.PGP;
+        }
+        if(gamepad1.dpadRightWasPressed()){
+            motif = Motif.PPG;
+        }
+
+
+
+        // ====================== SCORING / SHOOTER COMMANDS ======================
         if (gamepad2.triangleWasPressed()) {
-
-            //TODODODOODOD
-
-
-
-
-            storage.setQueue(Scoring.convertToScoringPattern(Motif.PPG));
-            shooter.fire(1900);
-            shooter.setServo(0.9);
-
-
-
-
-
-
-
-
-
-        }
-        if (gamepad2.squareWasPressed()) {
-            storage.setQueue(Scoring.convertToScoringPattern(Motif.PPG));
+            storage.setQueue(Scoring.convertToScoringPattern(motif));
+            shooter.fire(1700);
+            shooter.setServo(0.92);
+        }if (gamepad2.squareWasPressed()) {
+            storage.setQueue(Scoring.convertToScoringPattern(motif));
             shooter.fire(1900);
             shooter.setServo(0.9);
         }
-        if(gamepad2.crossWasPressed()){
-            storage.setQueue(Scoring.convertToScoringPattern(Motif.PPG));
+        if (gamepad2.crossWasPressed()) {
+            storage.setQueue(Scoring.convertToScoringPattern(motif));
             shooter.fire(2100);
             shooter.setServo(0.85);
         }
 
-        if(gamepad2.circleWasPressed()){
+        if (gamepad2.circleWasPressed()) {
             storage.setQueue(Scoring.NONE);
             shooter.fire(0);
+            // optionally: shooter.setServo(whatever your idle position is);
         }
-        storage.update(gamepad2.dpadUpWasPressed());
-        if(gamepad2.right_trigger_pressed){
-            if(storage.isEmpty()){
+
+        if (gamepad2.dpadRightWasPressed()) {
+            storage.setQueue(Scoring.G);
+        }
+        if (gamepad2.dpadLeftWasPressed()) {
+            storage.setQueue(Scoring.P);
+        }
+
+        // ====================== STORAGE & INTAKE ======================
+        boolean manualOverrideActive = gamepad2.ps;   // held behavior
+
+        if (manualOverrideActive) {
+            storage.manualOverride(gamepad2.right_stick_x);   // your improved version from before
+            shooter.fire(0);
+        } else {
+            // Normal autonomous storage control
+            storage.update(gamepad2.dpadUpWasPressed());
+        }
+
+        // Intake logic
+        if (gamepad2.right_trigger_pressed) {
+            if (storage.isEmpty()) {
                 intake.runForwards();
+            }else{
+                intake.stop();
             }
-        }
-        else{
-            if(!storage.isEmpty()){
-                intake.runBackwards();
-            }
-            else{
+        } else {
+            if (!storage.isEmpty()) {
+                intake.runBackwards();   // reverse to help transfer
+            } else {
                 intake.stop();
             }
         }
 
-        if(gamepad2.dpadRightWasPressed()){
-            storage.setQueue(Scoring.G);
-        }
-
-        if(gamepad2.dpadLeftWasPressed()){
-            storage.setQueue(Scoring.P);
-        }
+        // ====================== OTHER SUBSYSTEMS ======================
         turret.update();
         driveTrain.update(gamepad1, gamepad1.right_trigger_pressed, gamepad1.left_trigger_pressed);
     }

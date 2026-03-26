@@ -22,7 +22,7 @@ public class Camera {
     private final Telemetry telemetry;
     private final VisionPortal visionPortal;
     private final AprilTagProcessor aprilTagProcessor;
-    public Motif motif;
+    public Motif motif = Motif.PPG;
     private final int targetID;
     public double x;
     public double y;

@@ -1,5 +1,6 @@
 
 package org.firstinspires.ftc.teamcode.FSL.comp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.bylazar.configurables.annotations.Configurable;
@@ -15,6 +16,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.geometry.Pose;
 
+@Disabled
 @Autonomous(name = "BLUE: Greedy", group = "COMP")
 @Configurable // Panels
 public class BlueGreedyAuto extends OpMode {

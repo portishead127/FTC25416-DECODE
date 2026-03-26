@@ -12,14 +12,13 @@ public class CameraTest extends OpMode {
     public void init() {
         camera = new Camera(hardwareMap, telemetry, true);
         telemetry.addData("STATUS:", "INITIALISED");
-        telemetry.addData("MOTIF:", camera.motif.name());
         camera.resumeStreaming();
         telemetry.update();
     }
 
     @Override
     public void loop() {
-        camera.focusOnAprilTag();
+        camera.readMotif();
         camera.sendTelemetry();
         telemetry.update();
     }
