@@ -57,6 +57,9 @@ public class ServoStorage {
         if(focusedSlot == 4){ focusedSlot = 1; }
         setServos(getServoPosFromSlotNum(intaking));
     }
+    public boolean atPosition(boolean intaking){
+        return Math.abs(encoder.getCurrentPosition() - getEncoderPosFromSlotNum(intaking)) <= Configuration.StorageConfig.ENCODER_TOLERANCE;
+    }
     private void setServos(double pos){
         servo1.setPosition(pos);
         servo2.setPosition(pos);

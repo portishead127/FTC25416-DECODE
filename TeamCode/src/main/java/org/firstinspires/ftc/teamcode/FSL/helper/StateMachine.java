@@ -13,7 +13,7 @@ public class StateMachine {
         TRANSFERING,
         OFF
     }
-    public enum SHOOTER{
+    public enum ShooterStates{
         OFF,
         WARMING_UP,
         ON
