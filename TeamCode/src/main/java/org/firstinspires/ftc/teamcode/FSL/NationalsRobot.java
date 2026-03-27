@@ -14,23 +14,4 @@ public class NationalsRobot {
 
         storageState = StateMachine.StorageStates.INTAKING;
     }
-
-    public void manageStorage(){
-        switch(storageState){
-            case INTAKING:
-                storage.intake();
-                if(storage.foundColor()) {
-                    storage.cycleSlot(true);
-                    storageState = StateMachine.StorageStates.ROTATING_WHILE_INTAKING;
-                }
-                break;
-            case ROTATING_WHILE_FLICKING:
-                if(!storage.atPosition(true)){
-                    break;
-                }
-                if(/*IGNORE THIS - I HAVEN'T GOT A METHOD YET*/true){
-                    storageState = StateMachine.StorageStates.AWAITING_FLICK;
-                }
-        }
-    }
 }

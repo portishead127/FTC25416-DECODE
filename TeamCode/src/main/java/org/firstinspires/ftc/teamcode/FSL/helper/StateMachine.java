@@ -3,10 +3,11 @@ package org.firstinspires.ftc.teamcode.FSL.helper;
 public class StateMachine {
     public enum StorageStates{
         INTAKING,
-        ROTATING_WHILE_INTAKING,
+        ROTATING,
         AWAITING_FLICK,
         FLICKING,
-        ROTATING_WHILE_FLICKING,
+        FLICKING_ALL,
+        ROTATING_ALL
     }
     public enum IntakeStates{
         INTAKING,
