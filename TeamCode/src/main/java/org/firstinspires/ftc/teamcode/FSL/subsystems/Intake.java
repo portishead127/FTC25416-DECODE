@@ -19,10 +19,10 @@ public class Intake{
         this.telemetry = telemetry;
     }
     public void runForwards(){
-        motor.setPower(IntakeConfig.FORWARD_SCALAR);
+        motor.setPower(IntakeConfig.INTAKE_SCALAR);
     }
     public void runBackwards(){
-        motor.setPower(IntakeConfig.BACKWARD_SCALAR);
+        motor.setPower(IntakeConfig.TRANSFER_SCALAR);
     }
     public void stop(){
         motor.setVelocity(0);

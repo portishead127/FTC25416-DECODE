@@ -11,8 +11,10 @@ import org.firstinspires.ftc.teamcode.FSL.helper.StateMachine;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.Configuration;
+import org.firstinspires.ftc.teamcode.FSL.helper.control.ShooterReadyProvider;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 
 public class ServoStorage {
     private final ArrayDeque<Color> queue;
@@ -22,6 +24,7 @@ public class ServoStorage {
     public final Servo servo1, servo2, servo3;
     public final CRServo flickServo;
     private final Telemetry telemetry;
+    private final ShooterReadyProvider shooterReadyProvider;
     private Color currentColor;
     private boolean intaking;
     private boolean allowAny;
@@ -68,9 +71,10 @@ public class ServoStorage {
         }
     }
     public ServoStorage(HardwareMap hm, Telemetry telemetry){
-        this(hm, telemetry, true);
+        this(hm, telemetry, true, () -> true);
     }
-    public ServoStorage(HardwareMap hm, Telemetry telemetry, boolean empty){
+    public ServoStorage(HardwareMap hm, Telemetry telemetry, boolean empty, ShooterReadyProvider shooterReadyProvider){
+        this.shooterReadyProvider = shooterReadyProvider;
         encoder = hm.get(DcMotorEx.class, "ENC");
         servo1 = hm.get(Servo.class, "S1");
         servo2 = hm.get(Servo.class, "S2");
@@ -80,7 +84,6 @@ public class ServoStorage {
 
         focusedSlot = 1;
         intaking = true;
-        currentState = StateMachine.StorageStates.INTAKING;
 
         queue = new ArrayDeque<>();
         slots = new Color[3];
@@ -89,18 +92,30 @@ public class ServoStorage {
             slots[0] = Color.PURPLE;
             slots[1] = Color.PURPLE;
             slots[2] = Color.GREEN;
+            currentState = StateMachine.StorageStates.AWAITING_FLICK;
+        }
+        else{
+            currentState = StateMachine.StorageStates.INTAKING;
         }
         this.telemetry = telemetry;
     }
-    public void manageStorage(){
+    public void update(){
         switch(currentState){
             case INTAKING:
+                if (slots[focusedSlot - 1] != Color.NONE) {
+                    cycleSlot();
+                    currentState = StateMachine.StorageStates.ROTATING;
+                    break;
+                }
+
                 checkForColour();
-                if(foundColor()) {
+                if (foundColor()) {
                     slots[focusedSlot - 1] = currentColor;
-                    if(allSlotsFull()){
+
+                    if (allSlotsFull()) {
                         intaking = false;
                     }
+
                     cycleSlot();
                     currentState = StateMachine.StorageStates.ROTATING;
                 }
@@ -113,13 +128,18 @@ public class ServoStorage {
                 else currentState = StateMachine.StorageStates.AWAITING_FLICK;
                 break;
             case AWAITING_FLICK:
-                intaking = false;
                 if(allSlotsEmpty()){
                     resetToIntake();
                     break;
                 }
                 if(allowAny){
-                    currentState = StateMachine.StorageStates.FLICKING_ALL;
+                    if(focusedSlot == 1){
+                        currentState = StateMachine.StorageStates.FLICKING_ALL;
+                    }
+                    else{
+                        resetToShoot();
+                        allowAny = true;
+                    }
                     break;
                 }
                 if(queue.isEmpty()) {
@@ -128,12 +148,13 @@ public class ServoStorage {
                 }
 
                 Color desired = queue.peekFirst();
-                if(slots[focusedSlot - 1] == desired){
+                if(slots[focusedSlot - 1] == desired && shooterReadyProvider.isShooterReady()){
                     currentState = StateMachine.StorageStates.FLICKING;
                     break;
                 }
                 focusedSlot = findSuitableSlot(desired);
-                setServos();
+                moveToCurrentSlot();
+                currentState = StateMachine.StorageStates.ROTATING;
                 break;
             case FLICKING:
                 spinFlicker();
@@ -157,11 +178,48 @@ public class ServoStorage {
                 resetToIntake();
         }
     }
+    public void forceIntake(){
+        if(currentState == StateMachine.StorageStates.AWAITING_FLICK && !allSlotsFull()){
+            resetToIntake();
+        }
+    }
+    public void forceShoot(){
+        if(currentState == StateMachine.StorageStates.FLICKING && !allSlotsEmpty()){
+            resetToShoot();
+        }
+    }
+    public void allowAny(){
+        allowAny = true;
+    }
+    public boolean isBusy() {
+        return currentState == StateMachine.StorageStates.ROTATING
+                || currentState == StateMachine.StorageStates.FLICKING
+                || currentState == StateMachine.StorageStates.ROTATING_ALL;
+    }
+    public void clearQueue(){
+        if(isBusy()) return;
+        queue.clear();
+    }
+    public void setQueue(Color color){
+        if(isBusy()) return;
+        queue.clear();
+        queue.addFirst(color);
+    }
+    public void setQueue(Collection<Color> colors){
+        if(isBusy()) return;
+        queue.clear();
+        for (Color color: colors) {
+            queue.addLast(color);
+        }
+    }
     public void spinFlicker(){
         flickServo.setPower(Configuration.StorageConfig.FLICK_SPEED);
     }
     public void stopFlicker(){
         flickServo.setPower(0);
+    }
+    public boolean isIntaking(){
+        return intaking;
     }
     private boolean foundColor(){
         return currentColor != Color.NONE;
@@ -169,23 +227,27 @@ public class ServoStorage {
     private void cycleSlot(){
         focusedSlot += 1;
         if(focusedSlot == 4){ focusedSlot = 1; }
-        setServos();
+        moveToCurrentSlot();
     }
     private boolean atPosition(){
         return Math.abs(encoder.getCurrentPosition() - getEncoderTarget()) <= Configuration.StorageConfig.ENCODER_TOLERANCE;
     }
-    public void resetToIntake(){
+    private void resetToIntake(){
         stopFlicker();
         intaking = true;
+        allowAny = false;
         focusedSlot = 1;
-        setServos();
+        clearQueue();
+        moveToCurrentSlot();
         currentState = StateMachine.StorageStates.ROTATING;
     }
-    public void resetToShoot(){
+    private void resetToShoot(){
         stopFlicker();
         intaking = false;
+        allowAny = false;
         focusedSlot = 1;
-        setServos();
+        clearQueue();
+        moveToCurrentSlot();
         currentState = StateMachine.StorageStates.ROTATING;
     }
     private int findSuitableSlot(Color desired){
@@ -200,7 +262,7 @@ public class ServoStorage {
     private boolean allSlotsFull(){
         return slots[0] != null && slots[1] != null && slots[2] != null;
     }
-    private void setServos() {
+    private void moveToCurrentSlot() {
         double pos = getCurrentSlot().getServoPos(intaking);
         servo1.setPosition(pos);
         servo2.setPosition(pos);
@@ -221,5 +283,18 @@ public class ServoStorage {
     }
     private void checkForColour(){
         currentColor = ColorMethods.fromSensor(colorSensor);
+    }
+    public void sendTelemetry(){
+        if (telemetry == null) return;
+        telemetry.addData("Storage State", currentState);
+        telemetry.addData("Focused Slot", focusedSlot);
+        telemetry.addData("Intaking", intaking);
+        telemetry.addData("Detected Color", currentColor);
+        telemetry.addData("Slot1", slots[0]);
+        telemetry.addData("Slot2", slots[1]);
+        telemetry.addData("Slot3", slots[2]);
+        telemetry.addData("Queue", queue.size());
+        telemetry.addData("Encoder", encoder.getCurrentPosition());
+        telemetry.addData("Target Enc", getEncoderTarget());
     }
 }

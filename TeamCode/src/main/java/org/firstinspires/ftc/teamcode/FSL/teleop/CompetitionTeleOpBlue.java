@@ -23,8 +23,6 @@ public class CompetitionTeleOpBlue extends OpMode {
     @Override
     public void loop() {
         robot.update(gamepad1, gamepad2);
-        telemetry.addData("gp2 ps", gamepad2.ps);
-        telemetry.addData("gp2 touch", gamepad2.touchpad);
         telemetry.update();
     }
 }

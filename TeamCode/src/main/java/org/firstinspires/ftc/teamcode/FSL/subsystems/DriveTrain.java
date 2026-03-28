@@ -11,12 +11,22 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.MecanumConfig;
 
 public class DriveTrain {
-    private static final double MAX_MOTOR_VEL = 2800;
     private final DcMotorEx frontLeft;
     private final DcMotorEx frontRight;
     private final DcMotorEx backRight;
     private final DcMotorEx backLeft;
     private final Telemetry telemetry;
+    private final DriveCoefficients driveCoefficients;
+    private static class DriveCoefficients{
+        public double y;
+        public double x;
+        public double rx;
+        public void setDriveCoefficients(double x, double y, double rx){
+            this.x = x;
+            this.y = y;
+            this.rx = rx;
+        }
+    }
     public DriveTrain(HardwareMap hm, Telemetry telemetry){
         frontLeft = hm.get(DcMotorEx.class, "FLW");
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -34,39 +44,29 @@ public class DriveTrain {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        driveCoefficients = new DriveCoefficients();
+
         this.telemetry = telemetry;
     }
 
-    public void update(Gamepad gp, boolean isSlow, boolean isFast){
-        double scalar;
-        if(isSlow){
-            scalar = MecanumConfig.MECANUM_SLOW_POWER;
-        }
-        else if(isFast){
-            scalar = MecanumConfig.MECANUM_FULL_POWER_SUPER;
-        }
-        else{
-            scalar = MecanumConfig.MECANUM_FULL_POWER;
-        }
+    public void update(){
+        double scalar = 1;
 
-        double y = -gp.left_stick_y;
-        double x = gp.left_stick_x * 1.1;
-        double rx = gp.right_stick_x;
-
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPowerMod = (y + x + rx) / denominator;
-        double backLeftPowerMod = (y - x + rx) / denominator;
-        double frontRightPowerMod = (y - x - rx) / denominator;
-        double backRightPowerMod = (y + x - rx) / denominator;
+        double denominator = Math.max(Math.abs(driveCoefficients.y) + Math.abs(driveCoefficients.x) + Math.abs(driveCoefficients.rx), 1);
+        double frontLeftPowerMod = (driveCoefficients.y + driveCoefficients.x + driveCoefficients.rx) / denominator;
+        double backLeftPowerMod = (driveCoefficients.y - driveCoefficients.x + driveCoefficients.rx) / denominator;
+        double frontRightPowerMod = (driveCoefficients.y - driveCoefficients.x - driveCoefficients.rx) / denominator;
+        double backRightPowerMod = (driveCoefficients.y + driveCoefficients.x - driveCoefficients.rx) / denominator;
 
         frontLeft.setPower(frontLeftPowerMod * scalar);
         backLeft.setPower(backLeftPowerMod * scalar);
         frontRight.setPower(frontRightPowerMod * scalar);
         backRight.setPower(backRightPowerMod * scalar);
-
-        sendTelemetry();
     }
 
+    public void setDriveCoefficients(double x, double y, double rx){
+        driveCoefficients.setDriveCoefficients(x,y,rx);
+    }
     public void auto(){
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
