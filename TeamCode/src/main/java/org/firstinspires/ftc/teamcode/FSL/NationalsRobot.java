@@ -54,8 +54,10 @@ public class NationalsRobot {
         intakeRequested = value;
     }
 
-    public void setDriveTrain(double x, double y, double rx){
+    public void setDriveTrain(double x, double y, double rx, boolean slow, boolean fast){
         driveTrain.setDriveCoefficients(x,y,rx);
+        driveTrain.setFast(fast);
+        driveTrain.setSlow(slow);
     }
 
     private void switchToShootingMode() {

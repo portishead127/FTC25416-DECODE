@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.Configuration;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.MecanumConfig;
 
 public class DriveTrain {
@@ -17,6 +18,7 @@ public class DriveTrain {
     private final DcMotorEx backLeft;
     private final Telemetry telemetry;
     private final DriveCoefficients driveCoefficients;
+    private double scalar;
     private static class DriveCoefficients{
         public double y;
         public double x;
@@ -45,13 +47,12 @@ public class DriveTrain {
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         driveCoefficients = new DriveCoefficients();
+        scalar = Configuration.MecanumConfig.MECANUM_MED_POWER;
 
         this.telemetry = telemetry;
     }
 
     public void update(){
-        double scalar = 1;
-
         double denominator = Math.max(Math.abs(driveCoefficients.y) + Math.abs(driveCoefficients.x) + Math.abs(driveCoefficients.rx), 1);
         double frontLeftPowerMod = (driveCoefficients.y + driveCoefficients.x + driveCoefficients.rx) / denominator;
         double backLeftPowerMod = (driveCoefficients.y - driveCoefficients.x + driveCoefficients.rx) / denominator;
@@ -63,9 +64,14 @@ public class DriveTrain {
         frontRight.setPower(frontRightPowerMod * scalar);
         backRight.setPower(backRightPowerMod * scalar);
     }
-
     public void setDriveCoefficients(double x, double y, double rx){
         driveCoefficients.setDriveCoefficients(x,y,rx);
+    }
+    public void setSlow(boolean slow){
+        if(slow) scalar = Configuration.MecanumConfig.MECANUM_SLOW_POWER;
+    }
+    public void setFast(boolean fast){
+        if(fast) scalar = Configuration.MecanumConfig.MECANUM_FULL_POWER;
     }
     public void auto(){
         ElapsedTime timer = new ElapsedTime();

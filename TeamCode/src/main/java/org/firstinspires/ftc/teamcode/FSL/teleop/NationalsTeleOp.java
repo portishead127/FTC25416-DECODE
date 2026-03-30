@@ -21,7 +21,7 @@ public class NationalsTeleOp extends OpMode {
 
         if(gamepad2.dpadDownWasPressed()){robot.forceIntake();}
 
-        robot.setDriveTrain(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        robot.setDriveTrain(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger_pressed, gamepad1.left_trigger_pressed);
         robot.update();
     }
 }

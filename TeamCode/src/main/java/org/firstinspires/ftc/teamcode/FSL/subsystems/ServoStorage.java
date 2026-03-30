@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FSL.subsystems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,17 +13,18 @@ import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.Configuration;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.ShooterReadyProvider;
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
 
 public class ServoStorage {
     private final ArrayDeque<Color> queue;
-    public final Color[] slots;
+    private final Color[] slots;
     private final ColorRangeSensor colorSensor;
-    public final DcMotorEx encoder;
-    public final Servo servo1, servo2, servo3;
-    public final CRServo flickServo;
+    private final DcMotorEx encoder;
+    private final Servo servo1, servo2, servo3;
+    private final CRServo flickServo;
     private final Telemetry telemetry;
     private final ShooterReadyProvider shooterReadyProvider;
     private Color currentColor;
@@ -76,6 +78,7 @@ public class ServoStorage {
     public ServoStorage(HardwareMap hm, Telemetry telemetry, boolean empty, ShooterReadyProvider shooterReadyProvider){
         this.shooterReadyProvider = shooterReadyProvider;
         encoder = hm.get(DcMotorEx.class, "ENC");
+        encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         servo1 = hm.get(Servo.class, "S1");
         servo2 = hm.get(Servo.class, "S2");
         servo3 = hm.get(Servo.class, "S3");
@@ -97,6 +100,7 @@ public class ServoStorage {
         else{
             currentState = StateMachine.StorageStates.INTAKING;
         }
+        moveToCurrentSlot();
         this.telemetry = telemetry;
     }
     public void update(){
@@ -267,6 +271,20 @@ public class ServoStorage {
         servo1.setPosition(pos);
         servo2.setPosition(pos);
         servo3.setPosition(pos);
+    }
+    @TestOnly
+    public void setServos(double pos){
+        servo1.setPosition(pos);
+        servo2.setPosition(pos);
+        servo3.setPosition(pos);
+    }
+    @TestOnly
+    public double getServoPos(){
+        return servo1.getPosition();
+    }
+    @TestOnly
+    public double getEncoderPos(){
+        return encoder.getCurrentPosition();
     }
     private double getEncoderTarget() {
         return getCurrentSlot().getEncoderPos(intaking);
