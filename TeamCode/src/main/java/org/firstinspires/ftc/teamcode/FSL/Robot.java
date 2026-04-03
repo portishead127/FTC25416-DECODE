@@ -60,9 +60,6 @@ public class Robot {
         intake = new Intake(hm, telemetry);
         driveTrain = new DriveTrain(hm, telemetry);
         turret = new Turret(hm, telemetry);
-
-
-        turret.pidController.setTarget(0);
         determineGoalPos(isBlue);
     }
 

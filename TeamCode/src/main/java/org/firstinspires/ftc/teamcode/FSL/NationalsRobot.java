@@ -1,47 +1,59 @@
 package org.firstinspires.ftc.teamcode.FSL;
 
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
+import org.firstinspires.ftc.teamcode.FSL.helper.control.TurretLocalization;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.GoalPose;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.NationalsIntake;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.NationalsShooter;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.ServoStorage;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Turret;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 public class NationalsRobot {
+    private final Turret turret;
     private final ServoStorage storage;
     private final NationalsShooter shooter;
     private final NationalsIntake intake;
     private final DriveTrain driveTrain;
+    private final Follower follower;
     private boolean intakeRequested;
 
-    public NationalsRobot(HardwareMap hm, Telemetry telemetry, boolean empty) {
+    public NationalsRobot(HardwareMap hm, Telemetry telemetry, boolean empty, boolean isBlue) {
         shooter = new NationalsShooter(hm, telemetry);
         storage = new ServoStorage(hm, telemetry, empty, shooter);
         intake = new NationalsIntake(hm);
         driveTrain = new DriveTrain(hm, telemetry);
+        turret = new Turret(hm, telemetry);
+        follower = Constants.createFollower(hm);
+
+        if(isBlue) TurretLocalization.setDesiredGoalPose(GoalPose.blueGoal);
+        else TurretLocalization.setDesiredGoalPose(GoalPose.redGoal);
 
         intakeRequested = false;
     }
 
     public NationalsRobot(HardwareMap hm, Telemetry telemetry) {
-        this(hm, telemetry, true);
+        this(hm, telemetry, true, true);
     }
 
     public void update() {
-        storage.update();
-
+        turret.setTargetAsRad(TurretLocalization.calculateTurretAngle(follower.getPose()));
         handleIntake();
         handleShooter();
 
+        turret.update();
         shooter.update();
         intake.update();
+        storage.update();
         driveTrain.update();
     }
-
     private void handleShooter() {
         if (storage.isIntaking()) {
             shooter.stop();
@@ -49,7 +61,6 @@ public class NationalsRobot {
             shooter.prepareForShot(0);
         }
     }
-
     public void setIntakeRequested(boolean value) {
         intakeRequested = value;
     }
@@ -59,7 +70,6 @@ public class NationalsRobot {
         driveTrain.setFast(fast);
         driveTrain.setSlow(slow);
     }
-
     private void switchToShootingMode() {
         if (storage.isIntaking()) {
             storage.forceShoot();
