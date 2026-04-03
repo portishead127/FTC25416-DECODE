@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.FSL;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
-import org.firstinspires.ftc.teamcode.FSL.helper.control.TurretLocalization;
+import org.firstinspires.ftc.teamcode.FSL.helper.control.Localization;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.GoalPose;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
@@ -33,18 +34,19 @@ public class NationalsRobot {
         turret = new Turret(hm, telemetry);
         follower = Constants.createFollower(hm);
 
-        if(isBlue) TurretLocalization.setDesiredGoalPose(GoalPose.blueGoal);
-        else TurretLocalization.setDesiredGoalPose(GoalPose.redGoal);
+        if(isBlue) Localization.setDesiredGoalPose(GoalPose.blueGoal);
+        else Localization.setDesiredGoalPose(GoalPose.redGoal);
 
         intakeRequested = false;
     }
-
+    public void setStartingPose(Pose pose){
+        follower.setStartingPose(pose);
+    }
     public NationalsRobot(HardwareMap hm, Telemetry telemetry) {
         this(hm, telemetry, true, true);
     }
-
     public void update() {
-        turret.setTargetAsRad(TurretLocalization.calculateTurretAngle(follower.getPose()));
+        turret.setTargetAsRad(Localization.calculateTurretAngle(follower.getPose()));
         handleIntake();
         handleShooter();
 
@@ -53,18 +55,18 @@ public class NationalsRobot {
         intake.update();
         storage.update();
         driveTrain.update();
+        follower.update();
     }
     private void handleShooter() {
         if (storage.isIntaking()) {
             shooter.stop();
         } else {
-            shooter.prepareForShot(0);
+            shooter.prepareForShot(Localization.calculateDistance(follower.getPose()));
         }
     }
     public void setIntakeRequested(boolean value) {
         intakeRequested = value;
     }
-
     public void setDriveTrain(double x, double y, double rx, boolean slow, boolean fast){
         driveTrain.setDriveCoefficients(x,y,rx);
         driveTrain.setFast(fast);
@@ -75,33 +77,27 @@ public class NationalsRobot {
             storage.forceShoot();
         }
     }
-
     public void fireGreen() {
         switchToShootingMode();
         storage.setQueue(Color.GREEN);
     }
-
     public void firePurple() {
         switchToShootingMode();
         storage.setQueue(Color.PURPLE);
     }
-
     public void fireMotif() {
         switchToShootingMode();
         storage.setQueue(Scoring.convertToScoringPattern(Motif.PPG));
     }
-
     public void fireAny() {
         switchToShootingMode();
         storage.allowAny();
     }
-
     public void forceIntake(){
         if(!storage.isIntaking()){
             storage.forceIntake();
         }
     }
-
     private void handleIntake() {
         if (storage.isIntaking()) {
             if (intakeRequested) {

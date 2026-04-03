@@ -4,7 +4,7 @@ import com.pedropathing.geometry.Pose;
 
 import org.jetbrains.annotations.TestOnly;
 
-public class TurretLocalization {
+public class Localization {
     private static Pose desiredGoalPose;
     public static void setDesiredGoalPose(Pose goalPose){
         desiredGoalPose = goalPose;
