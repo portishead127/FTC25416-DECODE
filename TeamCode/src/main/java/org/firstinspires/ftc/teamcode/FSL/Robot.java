@@ -149,7 +149,6 @@ public class Robot {
 
         // ====================== OTHER SUBSYSTEMS ======================
         turret.update();
-        driveTrain.update(gamepad1, gamepad1.right_trigger_pressed, gamepad1.left_trigger_pressed);
     }
     public void autoUpdate(Follower follower) {
     }
