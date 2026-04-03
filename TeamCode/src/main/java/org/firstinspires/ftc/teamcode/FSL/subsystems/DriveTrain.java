@@ -44,7 +44,7 @@ public class DriveTrain {
 
         backRight = hm.get(DcMotorEx.class, "BRW");
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE); //used to be forward
 
         driveCoefficients = new DriveCoefficients();
         scalar = Configuration.MecanumConfig.MECANUM_MED_POWER;
@@ -72,6 +72,9 @@ public class DriveTrain {
     }
     public void setFast(boolean fast){
         if(fast) scalar = Configuration.MecanumConfig.MECANUM_FULL_POWER;
+    }
+    public void setMed(boolean medium){
+        if(medium) scalar = Configuration.MecanumConfig.MECANUM_MED_POWER;
     }
     public void auto(){
         ElapsedTime timer = new ElapsedTime();

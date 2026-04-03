@@ -10,8 +10,8 @@ public class Configuration {
     }
     @Config
     public static class IntakeConfig {
-        public static double FORWARD_SCALAR = 0.7;
-        public static double BACKWARD_SCALAR = 0.6;
+        public static double INTAKE_SCALAR = 0.7;
+        public static double TRANSFER_SCALAR = 1;
     }
     @Config
     public static class MecanumConfig {

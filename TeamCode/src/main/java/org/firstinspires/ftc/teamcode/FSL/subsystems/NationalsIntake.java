@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.FSL.helper.configs.Configuration;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.StateMachine;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.IntakeConfig;
 
@@ -23,8 +24,8 @@ public class NationalsIntake{
     public void update(){
         switch (currentState){
             case OFF -> motor.setPower(0);
-            case INTAKING -> motor.setPower(IntakeConfig.INTAKE_SCALAR);
-            case TRANSFERING -> motor.setPower(IntakeConfig.TRANSFER_SCALAR);
+            case INTAKING -> motor.setPower(Configuration.IntakeConfig.INTAKE_SCALAR);
+            case TRANSFERING -> motor.setPower(Configuration.IntakeConfig.TRANSFER_SCALAR);
         }
     }
     public void runIntake(){

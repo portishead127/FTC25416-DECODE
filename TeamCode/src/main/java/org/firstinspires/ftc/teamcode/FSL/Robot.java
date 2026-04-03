@@ -49,7 +49,7 @@ public class Robot {
         intake = new Intake(hm, telemetry);
         turret = new Turret(hm, telemetry);
         driveTrain = new DriveTrain(hm, telemetry);
-        camera = new Camera(hm, telemetry, isBlue);
+        camera = new Camera();
 
         determineGoalPos(isBlue);
     }

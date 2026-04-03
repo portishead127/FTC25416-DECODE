@@ -51,7 +51,7 @@ public class NationalsShooter implements ShooterReadyProvider {
         double vel = calculateVelocity(range);
         double pos = calculateServoPos(range);
 
-        fire(targetVel);
+        fire(vel);
         setServo(pos);
     }
     public void fire(double target) {
@@ -69,13 +69,10 @@ public class NationalsShooter implements ShooterReadyProvider {
         servo.setPosition(servoPos);
     }
     public double calculateServoPos(double range){
-        return 0.9;
+        return 0.01 * range;
     }
     public double calculateVelocity(double range){
-        return 1900;
-    }
-    public boolean isOff(){
-        return targetVel == 0 && currentState == StateMachine.ShooterStates.OFF;
+        return 10 * range;
     }
     @Override
     public boolean isShooterReady() {

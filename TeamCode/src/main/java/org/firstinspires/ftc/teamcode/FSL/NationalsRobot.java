@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.control.Localization;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.GoalPose;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Scoring;
+import org.firstinspires.ftc.teamcode.FSL.subsystems.Camera;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.NationalsIntake;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.NationalsShooter;
@@ -24,6 +25,7 @@ public class NationalsRobot {
     private final NationalsIntake intake;
     private final DriveTrain driveTrain;
     private final Follower follower;
+    private final Camera camera;
     private boolean intakeRequested;
 
     public NationalsRobot(HardwareMap hm, Telemetry telemetry, boolean empty, boolean isBlue) {
@@ -32,6 +34,7 @@ public class NationalsRobot {
         intake = new NationalsIntake(hm);
         driveTrain = new DriveTrain(hm, telemetry);
         turret = new Turret(hm, telemetry);
+        camera = new Camera();
         follower = Constants.createFollower(hm);
 
         if(isBlue) Localization.setDesiredGoalPose(GoalPose.blueGoal);
@@ -41,6 +44,9 @@ public class NationalsRobot {
     }
     public void setStartingPose(Pose pose){
         follower.setStartingPose(pose);
+    }
+    public void readMotif(){
+        camera.readMotif();
     }
     public NationalsRobot(HardwareMap hm, Telemetry telemetry) {
         this(hm, telemetry, true, true);
@@ -69,8 +75,9 @@ public class NationalsRobot {
     }
     public void setDriveTrain(double x, double y, double rx, boolean slow, boolean fast){
         driveTrain.setDriveCoefficients(x,y,rx);
-        driveTrain.setFast(fast);
-        driveTrain.setSlow(slow);
+        driveTrain.setFast(fast && !slow);
+        driveTrain.setSlow(slow && !fast);
+        driveTrain.setMed(!slow && !fast);
     }
     private void switchToShootingMode() {
         if (storage.isIntaking()) {
@@ -87,7 +94,7 @@ public class NationalsRobot {
     }
     public void fireMotif() {
         switchToShootingMode();
-        storage.setQueue(Scoring.convertToScoringPattern(Motif.PPG));
+        storage.setQueue(Scoring.convertToScoringPattern(camera.getMotif()));
     }
     public void fireAny() {
         switchToShootingMode();

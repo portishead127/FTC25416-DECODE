@@ -10,16 +10,14 @@ public class CameraTest extends OpMode {
     Camera camera;
     @Override
     public void init() {
-        camera = new Camera(hardwareMap, telemetry, true);
+        camera = new Camera();
         telemetry.addData("STATUS:", "INITIALISED");
-        camera.resumeStreaming();
         telemetry.update();
     }
 
     @Override
     public void loop() {
         camera.readMotif();
-        camera.sendTelemetry();
         telemetry.update();
     }
 }
