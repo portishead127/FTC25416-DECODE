@@ -47,9 +47,9 @@ public class TurretLocalizationTest extends OpMode {
         telemetry.addData("X TO GOAL", xToGoal);
         telemetry.addData("Y TO GOAL", yToGoal);
 
-        telemetry.addData("FIELD ANGLE", Localization.calculateFieldCentricAngle(robotPose));
-        telemetry.addData("ROBOT ANGLE", robotPose.getHeading());
-        telemetry.addData("TURRET ANGLE", Localization.calculateTurretAngle(robotPose));
+        telemetry.addData("FIELD ANGLE", Math.toDegrees(Localization.calculateFieldCentricAngle(robotPose)));
+        telemetry.addData("ROBOT ANGLE", Math.toDegrees(robotPose.getHeading()));
+        telemetry.addData("TURRET ANGLE", Math.toDegrees(Localization.calculateTurretAngle(robotPose)));
 
         follower.update();
         turret.update();
