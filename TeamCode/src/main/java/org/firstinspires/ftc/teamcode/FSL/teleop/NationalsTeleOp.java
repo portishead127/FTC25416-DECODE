@@ -15,6 +15,7 @@ public class NationalsTeleOp extends OpMode {
     public void init() {
         robot = new NationalsRobot(hardwareMap, telemetry);
         robot.setStartingPose(startingPose);
+        robot.setControllers(gamepad1, gamepad2);
     }
 
     @Override

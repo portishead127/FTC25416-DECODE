@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.FSL.subsystems;
 
+import com.bylazar.gamepad.GamepadPluginConfig;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -31,6 +33,9 @@ public class ServoStorage {
     private boolean intaking;
     private boolean allowAny;
     private int focusedSlot;
+    private Gamepad gamepad1;
+    private Gamepad gamepad2;
+    boolean usingControllers;
     private StateMachine.StorageStates currentState;
     private enum Slot {
         SLOT1(
@@ -101,6 +106,7 @@ public class ServoStorage {
             currentState = StateMachine.StorageStates.INTAKING;
         }
         moveToCurrentSlot();
+        usingControllers = false;
         this.telemetry = telemetry;
     }
     public void update(){
@@ -237,6 +243,7 @@ public class ServoStorage {
         return Math.abs(encoder.getCurrentPosition() - getEncoderTarget()) <= Configuration.StorageConfig.ENCODER_TOLERANCE;
     }
     private void resetToIntake(){
+        rumbleControllers();
         stopFlicker();
         intaking = true;
         allowAny = false;
@@ -246,6 +253,7 @@ public class ServoStorage {
         currentState = StateMachine.StorageStates.ROTATING;
     }
     private void resetToShoot(){
+        rumbleControllers();
         stopFlicker();
         intaking = false;
         allowAny = false;
@@ -301,6 +309,16 @@ public class ServoStorage {
     }
     private void checkForColour(){
         currentColor = ColorMethods.fromSensor(colorSensor);
+    }
+    public void setControllers(Gamepad gamepad1, Gamepad gamepad2){
+        usingControllers = true;
+        this.gamepad1 = gamepad1;
+        this.gamepad2 = gamepad2;
+    }
+    private void rumbleControllers(){
+        if(!usingControllers) return;
+        gamepad1.rumbleBlips(1);
+        gamepad2.rumbleBlips(1);
     }
     public void sendTelemetry(){
         if (telemetry == null) return;

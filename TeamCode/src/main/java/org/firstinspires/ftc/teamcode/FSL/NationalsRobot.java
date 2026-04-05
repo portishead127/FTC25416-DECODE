@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.FSL;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -41,6 +42,9 @@ public class NationalsRobot {
         else Localization.setDesiredGoalPose(GoalPose.redGoal);
 
         intakeRequested = false;
+    }
+    public void setControllers(Gamepad gamepad1, Gamepad gamepad2){
+        storage.setControllers(gamepad1, gamepad2);
     }
     public void setStartingPose(Pose pose){
         follower.setStartingPose(pose);
