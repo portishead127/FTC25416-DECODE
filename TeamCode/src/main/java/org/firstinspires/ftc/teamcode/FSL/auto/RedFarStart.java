@@ -88,7 +88,7 @@ public class RedFarStart extends OpMode {
     }
     @Override
     public void init() {
-        robot = new NationalsRobot(hardwareMap, telemetry,false, true);
+        robot = new NationalsRobot(hardwareMap, telemetry,false, false);
         paths = new Paths(robot.getFollower());
         robot.setStartingPose(paths.GetMotifShoot.firstPath().getFirstControlPoint().withHeading(Math.toRadians(90)));
         pathState = 0;

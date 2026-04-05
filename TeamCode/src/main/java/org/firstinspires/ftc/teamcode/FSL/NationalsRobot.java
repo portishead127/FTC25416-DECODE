@@ -28,7 +28,6 @@ public class NationalsRobot {
     private final Follower follower;
     private final Camera camera;
     private boolean intakeRequested;
-
     public NationalsRobot(HardwareMap hm, Telemetry telemetry, boolean empty, boolean isBlue) {
         shooter = new NationalsShooter(hm, telemetry);
         storage = new ServoStorage(hm, telemetry, empty, shooter);
@@ -49,6 +48,9 @@ public class NationalsRobot {
     public void readMotif(){
         camera.readMotif();
     }
+    public void setMotif(Motif motif){
+        camera.setMotif(motif);
+    }
     public NationalsRobot(HardwareMap hm, Telemetry telemetry) {
         this(hm, telemetry, true, true);
     }
@@ -63,6 +65,9 @@ public class NationalsRobot {
         storage.update();
         driveTrain.update();
         follower.update();
+    }
+    public void emergencyAuto(){
+        driveTrain.auto();
     }
     private void handleShooter() {
         if (storage.isIntaking()) {
@@ -133,9 +138,6 @@ public class NationalsRobot {
     }
     public boolean isFollowerBusy() {
         return follower.isBusy();
-    }
-    public void followPath(PathChain path) {
-        follower.followPath(path);
     }
     public void followPath(PathChain path, boolean holdEnd) {
         follower.followPath(path, holdEnd);

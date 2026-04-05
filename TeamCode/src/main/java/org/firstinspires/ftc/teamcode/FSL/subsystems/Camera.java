@@ -41,6 +41,9 @@ public class Camera {
         }
         motif = Motif.PPG;
     }
+    public void setMotif(Motif motif){
+        this.motif = motif;
+    }
     public Motif getMotif(){
         return motif;
     }

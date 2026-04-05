@@ -89,7 +89,7 @@ public class RedGoalStart extends OpMode {
 
     @Override
     public void init() {
-        robot = new NationalsRobot(hardwareMap, telemetry,false, true);
+        robot = new NationalsRobot(hardwareMap, telemetry,false, false);
         paths = new Paths(robot.getFollower());
         robot.setStartingPose(paths.TipOfTriangle.firstPath().getFirstControlPoint().withHeading(Math.toRadians(-45)));
         pathState = 0;

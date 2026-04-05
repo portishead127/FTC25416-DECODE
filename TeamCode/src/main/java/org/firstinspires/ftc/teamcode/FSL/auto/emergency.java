@@ -3,6 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.bylazar.configurables.annotations.Configurable;
 
+import org.firstinspires.ftc.teamcode.FSL.NationalsRobot;
 import org.firstinspires.ftc.teamcode.FSL.teleop.CompetitionTeleOpBlue;
 import org.firstinspires.ftc.teamcode.FSL.Robot;
 
@@ -10,28 +11,21 @@ import org.firstinspires.ftc.teamcode.FSL.Robot;
 @Autonomous(name = "EMERGEN", group = "COMP")
 @Configurable // Panels
 public class emergency extends OpMode {
-    private Robot robot;
+    private NationalsRobot robot;
     private int pathState = 0; // Current autonomous path state (state machine)
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry, true, false);
+        robot = new NationalsRobot(hardwareMap, telemetry);
     }
-
     @Override
     public void loop() {
         autonomousPathUpdate(); // Update autonomous state machine
     }
-
-    @Override
-    public void stop() {
-        CompetitionTeleOpBlue.motif = robot.camera.motif;
-    }
     public void autonomousPathUpdate(){
-        switch (pathState) {
-            case 0:
-                    robot.driveTrain.auto();
-                    setPathState(-1);
+        if (pathState == 0) {
+            robot.emergencyAuto();
+            setPathState(-1);
         }
     }
 
