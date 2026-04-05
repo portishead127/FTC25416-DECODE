@@ -12,76 +12,76 @@ import org.firstinspires.ftc.teamcode.FSL.NationalsRobot;
 import org.firstinspires.ftc.teamcode.FSL.Robot;
 import org.firstinspires.ftc.teamcode.FSL.teleop.NationalsTeleOp;
 
-@Autonomous(name = "RED: Far Start", group = "RED")
-public class RedFarStart extends OpMode {
+@Autonomous(name = "BLUE: Goal Start", group = "BLUE")
+public class BlueGoalStart extends OpMode {
     NationalsRobot robot;
     Paths paths;
     int pathState;
     public static class Paths {
-        public PathChain GetMotifShoot;
-        public PathChain GetBottomRow;
-        public PathChain Shoot;
-        public PathChain HumanPlayerIntake;
-        public PathChain ThreePointer;
+        public PathChain TipOfTriangle;
+        public PathChain IntakeTopRow;
+        public PathChain TipOfTriangle2;
+        public PathChain IntakeMiddleRow;
+        public PathChain TipOfTriangle3;
         public PathChain Escape;
         public Paths(Follower follower) {
-            GetMotifShoot = follower.pathBuilder().addPath(
+            TipOfTriangle = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(81.000, 9.000),
+                                    new Pose(20.000, 123.000),
 
                                     new Pose(72.000, 72.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(90))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-35), Math.toRadians(90))
 
                     .build();
 
-            GetBottomRow = follower.pathBuilder().addPath(
+            IntakeTopRow = follower.pathBuilder().addPath(
                             new BezierCurve(
                                     new Pose(72.000, 72.000),
-                                    new Pose(59.519, 33.649),
-                                    new Pose(135.000, 36.000)
+                                    new Pose(70.687, 85.506),
+                                    new Pose(15.660, 84.278)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(0))
+                    ).setConstantHeadingInterpolation(Math.toRadians(180))
 
                     .build();
 
-            Shoot = follower.pathBuilder().addPath(
-                            new BezierCurve(
-                                    new Pose(135.000, 36.000),
-                                    new Pose(78.983, 37.266),
+            TipOfTriangle2 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(15.660, 84.278),
+
                                     new Pose(72.000, 72.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(45))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(135))
 
                     .build();
 
-            HumanPlayerIntake = follower.pathBuilder().addPath(
+            IntakeMiddleRow = follower.pathBuilder().addPath(
                             new BezierCurve(
                                     new Pose(72.000, 72.000),
-                                    new Pose(72.755, 6.585),
-                                    new Pose(135.000, 9.000)
+                                    new Pose(72.000, 60.000),
+                                    new Pose(12.046, 59.444)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(0))
+                    ).setConstantHeadingInterpolation(Math.toRadians(180))
 
                     .build();
 
-            ThreePointer = follower.pathBuilder().addPath(
+            TipOfTriangle3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(135.000, 9.000),
+                                    new Pose(12.046, 59.444),
 
-                                    new Pose(81.174, 14.548)
+                                    new Pose(72.000, 72.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(45))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(135))
 
                     .build();
 
             Escape = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(81.174, 14.548),
+                                    new Pose(72.000, 72.000),
 
-                                    new Pose(85.386, 36.089)
+                                    new Pose(55.166, 121.066)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(90))
+                    ).setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(90))
 
                     .build();
         }
@@ -90,7 +90,7 @@ public class RedFarStart extends OpMode {
     public void init() {
         robot = new NationalsRobot(hardwareMap, telemetry,false, true);
         paths = new Paths(robot.getFollower());
-        robot.setStartingPose(paths.GetMotifShoot.firstPath().getFirstControlPoint().withHeading(Math.toRadians(90)));
+        robot.setStartingPose(paths.TipOfTriangle.firstPath().getFirstControlPoint().withHeading(Math.toRadians(-45)));
         pathState = 0;
     }
     @Override
@@ -101,27 +101,25 @@ public class RedFarStart extends OpMode {
     public void doAuto(){
         switch(pathState){
             case 0:
-                robot.followPath(paths.GetMotifShoot, true);
+                robot.followPath(paths.TipOfTriangle, true);
                 pathState = 1;
                 break;
             case 1:
                 robot.readMotif();
-                if(!robot.isFollowerBusy()){
-                    robot.fireMotif();
-                    pathState = 2;
-                }
+                robot.fireMotif();
+                pathState = 2;
                 break;
             case 2:
                 if(robot.isIntaking()){
                     robot.setIntakeRequested(true);
-                    robot.followPath(paths.GetBottomRow, true);
+                    robot.followPath(paths.IntakeTopRow, true);
                     pathState = 3;
                 }
                 break;
             case 3:
                 if(!robot.isFollowerBusy()){
                     robot.setIntakeRequested(false);
-                    robot.followPath(paths.Shoot, true);
+                    robot.followPath(paths.TipOfTriangle2, true);
                     pathState = 4;
                 }
                 break;
@@ -134,14 +132,14 @@ public class RedFarStart extends OpMode {
             case 5:
                 if(robot.isIntaking()){
                     robot.setIntakeRequested(true);
-                    robot.followPath(paths.HumanPlayerIntake, true);
+                    robot.followPath(paths.IntakeMiddleRow, true);
                     pathState = 6;
                 }
                 break;
             case 6:
                 if(!robot.isFollowerBusy()){
                     robot.setIntakeRequested(false);
-                    robot.followPath(paths.ThreePointer, true);
+                    robot.followPath(paths.TipOfTriangle3, true);
                     pathState = 7;
                 }
                 break;
