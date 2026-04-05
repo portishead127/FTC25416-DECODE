@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.Configuration;
-import org.firstinspires.ftc.teamcode.FSL.helper.configs.TurretConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 
 public class Turret {
     Telemetry telemetry;
+    private boolean faceForward;
     private final DcMotorEx motor;
     private final PIDController pidController;
     public Turret(HardwareMap hm, Telemetry telemetry){
@@ -23,6 +23,7 @@ public class Turret {
 
         pidController = new PIDController(Configuration.TurretConfig.KP,0,0);
         pidController.setOutputLimits(-1,1);
+        faceForward = false;
         this.telemetry = telemetry;
     }
     public void update(){
@@ -30,7 +31,11 @@ public class Turret {
         motor.setPower(pidController.calculate(motor.getCurrentPosition()));
     }
     public void setTargetAsRad(double target){
-        pidController.setTarget(Configuration.TurretConfig.TICKS_PER_RADIAN * target);
+        if(!faceForward) pidController.setTarget(Configuration.TurretConfig.TICKS_PER_RADIAN * target);
+        else pidController.setTarget(0);
+    }
+    public void toggleFaceForward(){
+        faceForward = !faceForward;
     }
     public void sendTelemetry(){
         telemetry.addLine("TURRET - HARDWARE\n");

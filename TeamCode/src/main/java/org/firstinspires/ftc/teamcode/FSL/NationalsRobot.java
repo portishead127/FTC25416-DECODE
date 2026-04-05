@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FSL;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -70,6 +71,9 @@ public class NationalsRobot {
             shooter.prepareForShot(Localization.calculateDistance(follower.getPose()));
         }
     }
+    public void toggleFaceForward(){
+        turret.toggleFaceForward();
+    }
     public void setIntakeRequested(boolean value) {
         intakeRequested = value;
     }
@@ -120,5 +124,23 @@ public class NationalsRobot {
                 intake.runTransfer();
             }
         }
+    }
+    public boolean isIntaking(){
+        return storage.isIntaking();
+    }
+    public Follower getFollower() {
+        return follower;
+    }
+    public boolean isFollowerBusy() {
+        return follower.isBusy();
+    }
+    public void followPath(PathChain path) {
+        follower.followPath(path);
+    }
+    public void followPath(PathChain path, boolean holdEnd) {
+        follower.followPath(path, holdEnd);
+    }
+    public Pose getPose() {
+        return follower.getPose();
     }
 }
