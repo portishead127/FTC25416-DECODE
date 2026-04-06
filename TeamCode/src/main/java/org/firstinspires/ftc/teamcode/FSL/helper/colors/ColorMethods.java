@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.FSL.helper.colors;
 
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.jetbrains.annotations.TestOnly;
 
 public class ColorMethods {
     public static Color fromSensor(ColorRangeSensor sensor) {
@@ -27,6 +27,7 @@ public class ColorMethods {
         }
     }
 
+    @TestOnly
     public static Color fromHsv(float[] hsv) {
         float hue = hsv[0];
         if ((hue >= 150 && hue < 170)) {
