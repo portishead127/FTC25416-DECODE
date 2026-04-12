@@ -6,7 +6,7 @@ import com.bylazar.configurables.annotations.Configurable;
 @Config
 @Configurable
 public class ShooterConfig {
-    public static double KP = 12;
+    public static double KP = 180;
     public static double KI = 0;
     public static double KD = 0;
     public static double KF = 13;
@@ -16,4 +16,7 @@ public class ShooterConfig {
     public static double SERVO_POS_FOR_3_POINTER = 0.3;
     public static double SERVO_POS_FOR_LAYUP = 0.7;
     public static double WARM_UP_THRESHOLD = 0.95;
+    public static double BLOCKER_OPEN = 0.95;
+    public static double BLOCKER_CLOSED = 0.95;
+
 }

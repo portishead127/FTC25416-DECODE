@@ -42,7 +42,7 @@ public class Configuration {
         public static double SHOOTING_FROM_SLOT2_ENCODER_POS;
         public static double SHOOTING_FROM_SLOT3_ENCODER_POS;
         public static double ENCODER_TOLERANCE;
-        public static double FLICK_SPEED;
+        public static double FLICK_SPEED = 1;
     }
     @Config
     public static class TurretConfig {

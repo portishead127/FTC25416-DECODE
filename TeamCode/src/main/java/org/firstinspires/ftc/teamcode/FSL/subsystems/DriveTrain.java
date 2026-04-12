@@ -44,7 +44,7 @@ public class DriveTrain {
 
         backRight = hm.get(DcMotorEx.class, "BRW");
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE); //used to be forward
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD); //idek
 
         driveCoefficients = new DriveCoefficients();
         scalar = Configuration.MecanumConfig.MECANUM_MED_POWER;

@@ -15,7 +15,6 @@ public class ShooterCameraTest extends OpMode {
     Shooter shooter;
     @Override
     public void init() {
-        camera = new Camera(hardwareMap, telemetry, true);
         shooter = new Shooter(hardwareMap, telemetry);
         telemetry.addData("STATUS", "INITIALISED");
         telemetry.update();
@@ -23,8 +22,6 @@ public class ShooterCameraTest extends OpMode {
 
     @Override
     public void loop(){
-        camera.update();
-        shooter.simpleUpdate(gamepad1.right_bumper, Math.sqrt(camera.x * camera.x + camera.y * camera.y));
         telemetry.update();
     }
 }

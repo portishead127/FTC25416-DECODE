@@ -11,10 +11,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.StateMachine;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.ShooterConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.ShooterReadyProvider;
+import org.firstinspires.ftc.teamcode.FSL.helper.scoring.ShotPos;
 
 public class NationalsShooter implements ShooterReadyProvider {
     public final DcMotorEx motor;
     private final Servo servo;
+    private final Servo blocker;
     private final Telemetry telemetry;
     private StateMachine.ShooterStates currentState;
     private double targetVel;
@@ -27,6 +29,8 @@ public class NationalsShooter implements ShooterReadyProvider {
         motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,new PIDFCoefficients(ShooterConfig.KP, 0 , 0, ShooterConfig.KF));
         servo = hm.get(Servo.class, "SHS");
         servo.setPosition(0.5);
+        blocker = hm.get(Servo.class, "SHS");
+        blocker.setPosition(0.5);
 
         targetVel = 0;
         currentState = StateMachine.ShooterStates.OFF;
@@ -37,17 +41,33 @@ public class NationalsShooter implements ShooterReadyProvider {
         switch(currentState){
             case OFF:
                 motor.setVelocity(0);
+                blocker.setPosition(ShooterConfig.BLOCKER_CLOSED);
                 break;
             case WARMING_UP:
                 motor.setVelocity(targetVel);
+                blocker.setPosition(ShooterConfig.BLOCKER_CLOSED);
                 if(isWarmedUp()) currentState = StateMachine.ShooterStates.ON;
                 break;
             case ON:
                 motor.setVelocity(targetVel);
+                blocker.setPosition(ShooterConfig.BLOCKER_OPEN);
                 break;
         }
     }
     public void prepareForShot(double range){
+        double vel = calculateVelocity(range);
+        double pos = calculateServoPos(range);
+
+        fire(vel);
+        setServo(pos);
+    }
+    public void prepareForShot(ShotPos shotPos){
+        switch (shotPos){
+            case LAYUP:
+                double vel = calculateVelocity();
+                double pos = calculateServoPos(range);
+                break;
+        }
         double vel = calculateVelocity(range);
         double pos = calculateServoPos(range);
 

@@ -10,14 +10,12 @@ import org.firstinspires.ftc.teamcode.FSL.subsystems.Storage;
 public class ShooterTest extends OpMode {
     double target;
     double servoPos;
-    Storage storage;
     Shooter shooter;
     double targetStep;
     double servoStep;
     @Override
     public void init() {
         shooter = new Shooter(hardwareMap, telemetry);
-        storage = new Storage(hardwareMap, telemetry, true);
         target = 0;
         servoPos = 0.5;
         targetStep = 50;
@@ -50,16 +48,13 @@ public class ShooterTest extends OpMode {
         if(gamepad1.psWasPressed()){ targetStep += 50; }
         if(gamepad1.touchpadWasPressed()){ targetStep -= 50; }
 
-        if(gamepad1.circleWasPressed()){
-            storage.startFlick();
-        }
-        storage.updateFlick();
-
         telemetry.addLine("TEST VARIABLES\n");
         telemetry.addData("VARIABLE POWER SCALAR", target);
         telemetry.addData("VARIABLE SERVO POS", servoPos);
         telemetry.addData("TARGET STEP", targetStep);
         telemetry.addData("SERVO STEP", servoStep);
+
+        shooter.sendTelemetry();
 
         telemetry.update();
     }

@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 public class Shooter {
     public final DcMotorEx motor;
     private final Servo servo;
+    private final Servo blocker;
     private final Telemetry telemetry;
     private double target;
     public final PIDController pidController;
@@ -32,6 +33,9 @@ public class Shooter {
 
         servo = hm.get(Servo.class, "SHS");
         servo.setPosition(0.5);
+
+        blocker = hm.get(Servo.class, "SHS");
+        blocker.setPosition(0.5);
 
         pidController = new PIDController(ShooterConfig.KP, ShooterConfig.KI, ShooterConfig.KD, ShooterConfig.KF);
         pidController.setOutputLimits(-1,1);
