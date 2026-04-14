@@ -18,12 +18,6 @@ public class Intake{
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.telemetry = telemetry;
     }
-    public void runForwards(){
-        motor.setPower(IntakeConfig.INTAKE_SCALAR);
-    }
-    public void runBackwards(){
-        motor.setPower(IntakeConfig.TRANSFER_SCALAR);
-    }
     public void stop(){
         motor.setVelocity(0);
     }

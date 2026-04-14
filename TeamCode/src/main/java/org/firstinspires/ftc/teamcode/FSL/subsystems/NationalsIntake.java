@@ -23,7 +23,7 @@ public class NationalsIntake{
         transferMotor = hm.get(DcMotorEx.class, "TRM");
         transferMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         transferMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        transferMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        transferMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         currentState = StateMachine.IntakeStates.OFF;
     }
@@ -43,6 +43,7 @@ public class NationalsIntake{
                 break;
         }
     }
+    public void runJustIntake(){intakeMotor.setPower(IntakeConfig.INTAKE_MOTOR_INTAKE_SCALAR);}
     public void runIntake(){
         currentState = StateMachine.IntakeStates.INTAKING;
     }

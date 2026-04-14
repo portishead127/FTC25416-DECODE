@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.StateMachine;
@@ -19,6 +20,7 @@ public class NationalsShooter implements ShooterReadyProvider {
     private final Servo blocker;
     private final Telemetry telemetry;
     private StateMachine.ShooterStates currentState;
+    private final ElapsedTime timer;
     private double targetVel;
 
     public NationalsShooter(HardwareMap hm, Telemetry telemetry) {
@@ -29,11 +31,13 @@ public class NationalsShooter implements ShooterReadyProvider {
         motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,new PIDFCoefficients(ShooterConfig.KP, 0 , 0, ShooterConfig.KF));
         servo = hm.get(Servo.class, "SHS");
         servo.setPosition(0.5);
-        blocker = hm.get(Servo.class, "SHS");
+        blocker = hm.get(Servo.class, "BLK");
         blocker.setPosition(0.5);
 
         targetVel = 0;
         currentState = StateMachine.ShooterStates.OFF;
+
+        timer = new ElapsedTime();
 
         this.telemetry = telemetry;
     }
@@ -41,18 +45,43 @@ public class NationalsShooter implements ShooterReadyProvider {
         switch(currentState){
             case OFF:
                 motor.setVelocity(0);
-                blocker.setPosition(ShooterConfig.BLOCKER_CLOSED);
+                setBlocker(ShooterConfig.BLOCKER_CLOSED);
                 break;
             case WARMING_UP:
                 motor.setVelocity(targetVel);
-                blocker.setPosition(ShooterConfig.BLOCKER_CLOSED);
+                setBlocker(ShooterConfig.BLOCKER_CLOSED);
                 if(isWarmedUp()) currentState = StateMachine.ShooterStates.ON;
                 break;
             case ON:
                 motor.setVelocity(targetVel);
-                blocker.setPosition(ShooterConfig.BLOCKER_OPEN);
                 break;
         }
+    }
+    public void autoUpdate(){
+        switch(currentState){
+            case OFF:
+                motor.setVelocity(0);
+                setBlocker(ShooterConfig.BLOCKER_CLOSED);
+                break;
+            case WARMING_UP:
+                motor.setVelocity(targetVel);
+                setBlocker(ShooterConfig.BLOCKER_CLOSED);
+                if(isWarmedUp()) currentState = StateMachine.ShooterStates.ON;
+                break;
+            case ON:
+                motor.setVelocity(targetVel);
+                setBlockerOpen();
+                break;
+        }
+    }
+    public void setBlockerOpen(){
+        if(isWarmedUp()){
+            setBlocker(ShooterConfig.BLOCKER_OPEN);
+            timer.reset();
+        }
+    }
+    public void setBlocker(double pos){
+        blocker.setPosition(pos);
     }
     public void prepareForShot(double range){
         double vel = calculateVelocity(range);
@@ -64,15 +93,18 @@ public class NationalsShooter implements ShooterReadyProvider {
     public void prepareForShot(ShotPos shotPos){
         switch (shotPos){
             case LAYUP:
-                double vel = calculateVelocity();
-                double pos = calculateServoPos(range);
+                fire(ShooterConfig.MOTOR_VEL_SCALAR_FOR_LAYUP);
+                setServo(ShooterConfig.SERVO_POS_FOR_LAYUP);
+                break;
+            case TIP_OF_TRIANGLE:
+                fire(ShooterConfig.MOTOR_VEL_SCALAR_FOR_TIP);
+                setServo(ShooterConfig.SERVO_POS_FOR_TIP);
+                break;
+            case THREE_POINTER:
+                fire(ShooterConfig.MOTOR_VEL_SCALAR_FOR_3_POINTER);
+                setServo(ShooterConfig.SERVO_POS_FOR_3_POINTER);
                 break;
         }
-        double vel = calculateVelocity(range);
-        double pos = calculateServoPos(range);
-
-        fire(vel);
-        setServo(pos);
     }
     public void fire(double target) {
         targetVel = target;
@@ -96,7 +128,7 @@ public class NationalsShooter implements ShooterReadyProvider {
     }
     @Override
     public boolean isShooterReady() {
-        return currentState == StateMachine.ShooterStates.ON && isWarmedUp();
+        return currentState == StateMachine.ShooterStates.ON && isWarmedUp() && blocker.getPosition() == ShooterConfig.BLOCKER_OPEN;
     }
     private boolean isWarmedUp(){
         if (targetVel <= 0) return false;
@@ -108,7 +140,8 @@ public class NationalsShooter implements ShooterReadyProvider {
         telemetry.addData("SERVO POS", servo.getPosition());
         telemetry.addData("MOTOR VEL", motor.getVelocity());
         telemetry.addData("TARGET VEL", targetVel);
-        telemetry.addData("WARMED UP", isWarmedUp());
+        telemetry.addData("WARMED UP", isShooterReady());
         telemetry.addData("% OF TARGET", (100 * motor.getVelocity())/(targetVel));
+        telemetry.update();
     }
 }

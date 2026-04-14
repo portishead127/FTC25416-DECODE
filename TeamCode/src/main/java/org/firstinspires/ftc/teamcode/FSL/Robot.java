@@ -130,19 +130,19 @@ public class Robot {
         }
 
         // Intake logic
-        if (gamepad2.right_trigger_pressed) {
-            if (storage.isEmpty()) {
-                intake.runForwards();
-            }else{
-                intake.stop();
-            }
-        } else {
-            if (!storage.isEmpty()) {
-                intake.runBackwards();   // reverse to help transfer
-            } else {
-                intake.stop();
-            }
-        }
+//        if (gamepad2.right_trigger_pressed) {
+//            if (storage.isEmpty()) {
+//                intake.runForwards();
+//            }else{
+//                intake.stop();
+//            }
+//        } else {
+//            if (!storage.isEmpty()) {
+//                intake.runBackwards();   // reverse to help transfer
+//            } else {
+//                intake.stop();
+//            }
+//        }
 
         // ====================== OTHER SUBSYSTEMS ======================
         turret.update();
