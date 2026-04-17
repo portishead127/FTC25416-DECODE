@@ -10,15 +10,17 @@ import org.firstinspires.ftc.teamcode.FSL.helper.scoring.GoalPose;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.ShotPos;
 
-@TeleOp(name = "comp fr")
+@TeleOp(name = "COMP")
 public class NationalsTeleOp extends OpMode {
     public static Pose startingPose;
     NationalsRobot robot;
     @Override
     public void init() {
         robot = new NationalsRobot(hardwareMap, telemetry);
-//        robot.setStartingPose(startingPose);
-//        robot.setControllers(gamepad1, gamepad2);
+        robot.setStartingPose(startingPose);
+        telemetry.addData("STARTING X", startingPose.getX());
+        telemetry.addData("STARTING Y", startingPose.getY());
+        telemetry.update();
     }
 
     @Override

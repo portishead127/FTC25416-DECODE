@@ -9,12 +9,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.FSL.NationalsRobot;
-import org.firstinspires.ftc.teamcode.FSL.Robot;
 import org.firstinspires.ftc.teamcode.FSL.helper.scoring.ShotPos;
 import org.firstinspires.ftc.teamcode.FSL.teleop.NationalsTeleOp;
 
-@Autonomous(name = "RED: Far Start", group = "RED")
-public class RedFarStart extends OpMode {
+@Autonomous(name = "RED: Human Player (Far)", group = "RED")
+public class RedHumanPlayer extends OpMode {
     NationalsRobot robot;
     Paths paths;
     int pathState;

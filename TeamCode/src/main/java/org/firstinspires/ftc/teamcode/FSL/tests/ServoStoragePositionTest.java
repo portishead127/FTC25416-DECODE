@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FSL.subsystems.ServoStorage;
-
+@Disabled
 @TeleOp(name = "TEST: Servo Position Test", group = "TEST")
 public class ServoStoragePositionTest extends OpMode {
     ServoStorage storage;

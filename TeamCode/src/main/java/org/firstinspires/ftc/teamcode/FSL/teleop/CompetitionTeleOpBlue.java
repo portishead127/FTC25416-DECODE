@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FSL.teleop;
 
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.scoring.Motif;
 
 //FTC DASH - 192.168.49.1:8080/dash
 //PANELS - 192.168.49.1:8001/
+@Disabled
 @TeleOp(name = "COMP", group = "COMP")
 public class CompetitionTeleOpBlue extends OpMode {
     public static Pose startingPose;

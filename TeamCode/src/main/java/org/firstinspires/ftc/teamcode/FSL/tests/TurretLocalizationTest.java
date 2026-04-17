@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.teamcode.FSL.helper.scoring.GoalPose;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.Turret;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-
+@Disabled
 @TeleOp(name = "TEST: Turret Localization Test", group = "TEST")
 public class TurretLocalizationTest extends OpMode {
     Turret turret;

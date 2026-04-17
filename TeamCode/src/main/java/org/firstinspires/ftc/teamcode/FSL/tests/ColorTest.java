@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -7,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.Color;
 import org.firstinspires.ftc.teamcode.FSL.helper.colors.ColorMethods;
-
+@Disabled
 @TeleOp(name = "TEST - Color Test", group = "TEST")
 public class ColorTest extends OpMode {
     ColorRangeSensor colorSensor;

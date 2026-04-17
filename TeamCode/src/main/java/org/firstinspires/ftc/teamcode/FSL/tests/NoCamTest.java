@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.FSL.subsystems.Storage;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.Shooter;
 
 import java.util.List;
-
+@Disabled
 @TeleOp(name = "TEST: No Camera", group = "TEST")
 public class NoCamTest extends OpMode {
     Storage storage;

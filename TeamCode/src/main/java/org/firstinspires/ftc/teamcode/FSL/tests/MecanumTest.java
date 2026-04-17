@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FSL.subsystems.DriveTrain;
-
+@Disabled
 @TeleOp(name = "TEST: Mecanum Test", group = "TEST")
 public class MecanumTest extends OpMode {
     DriveTrain driveTrain;

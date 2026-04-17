@@ -4,13 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.bylazar.configurables.annotations.Configurable;
 
 import org.firstinspires.ftc.teamcode.FSL.NationalsRobot;
-import org.firstinspires.ftc.teamcode.FSL.teleop.CompetitionTeleOpBlue;
-import org.firstinspires.ftc.teamcode.FSL.Robot;
 
 
-@Autonomous(name = "EMERGEN", group = "COMP")
+@Autonomous(name = "EMERGENCY", group = "COMP")
 @Configurable // Panels
-public class emergency extends OpMode {
+public class Emergency extends OpMode {
     private NationalsRobot robot;
     private int pathState = 0; // Current autonomous path state (state machine)
 

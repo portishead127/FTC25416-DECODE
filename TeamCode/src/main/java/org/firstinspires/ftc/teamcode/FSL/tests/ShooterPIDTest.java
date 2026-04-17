@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.FSL.subsystems.Shooter;
-
+@Disabled
 @TeleOp(name= "TEST: Shooter PID Test", group = "TEST")
 public class ShooterPIDTest extends OpMode {
     FtcDashboard f;

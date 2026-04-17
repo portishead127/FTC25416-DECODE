@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.FSL.tests;
 
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FSL.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.FSL.subsystems.PedroFollowerDriveTrain;
-
+@Disabled
 @TeleOp(name = "TEST: Intake and Mecanum Test", group = "TEST")
 public class IntakeMecanumTest extends OpMode {
 

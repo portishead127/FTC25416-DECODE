@@ -3,12 +3,13 @@ package org.firstinspires.ftc.teamcode.FSL.tests;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.MecanumConfig;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-
+@Disabled
 @TeleOp(name = "TEST: Pedro Mecanum Test", group = "TEST")
 public class PedroMecanumTest extends OpMode {
     private Follower follower;
