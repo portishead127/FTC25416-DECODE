@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.FSL;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.BezierPoint;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -91,7 +94,8 @@ public class NationalsRobot {
 //            shooter.stop();
 //        } else {
 //            shooter.prepareForShot(Localization.calculateDistance(follower.getPose()));
-//        }
+//        }//        robot.setIntakeRequested(gamepad2.right_trigger_pressed);
+
 //    }
 //    public void toggleFaceForward(){
 //        turret.toggleFaceForward();
@@ -104,6 +108,16 @@ public class NationalsRobot {
         driveTrain.setFast(fast && !slow);
         driveTrain.setSlow(slow && !fast);
         driveTrain.setMed(!slow && !fast);
+    }
+    public void faceGoal(){
+        Pose currentPose = getPose();
+        PathChain spinPath = follower.pathBuilder().addPath(
+                new BezierLine(
+                        currentPose,
+                        currentPose.withHeading(Localization.calculateFieldCentricAngle(currentPose))
+                )
+        ).build();
+        followPath(spinPath, false);
     }
     public void setBlockerOpen(){
         shooter.setBlockerOpen();
@@ -178,6 +192,9 @@ public class NationalsRobot {
     }
     public void followPath(PathChain path, boolean holdEnd, double maxPower) {
         follower.followPath(path, maxPower, holdEnd);
+    }
+    public void followPath(Path path){
+        follower.followPath(path);
     }
     public Pose getPose() {
         return follower.getPose();

@@ -28,7 +28,6 @@ public class NationalsTeleOp extends OpMode {
 
     @Override
     public void loop() {
-//        robot.setIntakeRequested(gamepad2.right_trigger_pressed);
         if(gamepad2.right_trigger_pressed) robot.SIMPLEintake();
         else if (gamepad2.rightTriggerWasReleased()) {robot.SIMPLEintakestop();}
         if(gamepad2.triangleWasPressed()){robot.SIMPLEprepareForShot(ShotPos.LAYUP);}
@@ -39,6 +38,7 @@ public class NationalsTeleOp extends OpMode {
         selectArenaProperties();
 
         robot.setDriveTrain(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger_pressed, gamepad1.left_trigger_pressed);
+        if(gamepad1.triangleWasPressed()) robot.faceGoal();
         robot.update();
     }
 
