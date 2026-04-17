@@ -43,11 +43,7 @@ public class NationalsTeleOp extends OpMode {
     }
 
     private void selectArenaProperties(){
-//        if(gamepad1.dpadLeftWasPressed()) robot.setMotif(Motif.GPP);
-//        if(gamepad1.dpadUpWasPressed()) robot.setMotif(Motif.PGP);
-//        if(gamepad1.dpadRightWasPressed()) robot.setMotif(Motif.PPG);
-
-        if(gamepad2.dpadLeftWasPressed()) Localization.setDesiredGoalPose(GoalPose.blueGoal);
-        if(gamepad2.dpadRightWasPressed()) Localization.setDesiredGoalPose(GoalPose.redGoal);
+        if(gamepad1.dpadLeftWasPressed()) Localization.setDesiredGoalPose(GoalPose.blueGoal);
+        if(gamepad1.dpadRightWasPressed()) Localization.setDesiredGoalPose(GoalPose.redGoal);
     }
 }
