@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.FSL.helper.configs.ShooterConfig;
 import org.firstinspires.ftc.teamcode.FSL.helper.control.PIDController;
 
+@Deprecated
 public class Shooter {
     public final DcMotorEx motor;
     private final Servo servo;

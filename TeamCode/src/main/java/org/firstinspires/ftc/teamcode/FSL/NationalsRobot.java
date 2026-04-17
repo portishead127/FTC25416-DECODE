@@ -133,8 +133,11 @@ public class NationalsRobot {
     public void SIMPLEintakestop(){
         intake.stop();
     }
+    public void SIMPLEstopShooter(){
+        shooter.stop();
+    }
     public boolean finishedShooting(){
-        return shootTimer.milliseconds() > 5000;
+        return shootTimer.milliseconds() > 2000;
     }
 //    private void switchToShootingMode() {
 //        if (storage.isIntaking()) {
