@@ -147,5 +147,13 @@ public class Red12Ball extends OpMode {
         }
     }
 
+    @Override
+    public void init() {
 
+    }
+
+    @Override
+    public void loop() {
+
+    }
 }

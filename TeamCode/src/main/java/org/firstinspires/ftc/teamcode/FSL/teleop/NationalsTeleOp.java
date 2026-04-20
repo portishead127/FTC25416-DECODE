@@ -18,8 +18,6 @@ public class NationalsTeleOp extends OpMode {
     public void init() {
         robot = new NationalsRobot(hardwareMap, telemetry);
         robot.setStartingPose(startingPose);
-        telemetry.addData("STARTING X", startingPose.getX());
-        telemetry.addData("STARTING Y", startingPose.getY());
         telemetry.update();
     }
 
@@ -42,6 +40,11 @@ public class NationalsTeleOp extends OpMode {
         robot.setDriveTrain(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger_pressed, gamepad1.left_trigger_pressed);
         if(gamepad1.triangle) robot.faceGoal();
         robot.update();
+        telemetry.addData("triangle", gamepad1.triangle);
+        telemetry.addData("X", robot.getPose().getX());
+        telemetry.addData("Y", robot.getPose().getY());
+        telemetry.addData("Heading", robot.getPose().getHeading());
+        telemetry.update();
     }
 
     private void selectArenaProperties(){

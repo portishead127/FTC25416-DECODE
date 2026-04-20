@@ -113,15 +113,8 @@ public class NationalsRobot {
         driveTrain.setMed(!slow && !fast);
     }
     public void faceGoal(){
-        if(follower.isBusy()) return;
-        Pose currentPose = getPose();
-        PathChain spinPath = follower.pathBuilder().addPath(
-                new BezierLine(
-                        currentPose,
-                        currentPose.withHeading(Localization.calculateFieldCentricAngle(currentPose))
-                )
-        ).build();
-        followPath(spinPath, false);
+        double error = Localization.calculateFieldCentricAngle(getPose()) - getPose().getHeading();
+        setDriveTrain(0,0, -1 * error, false, false);
     }
     public void setBlockerOpen(){
         shooter.setBlockerOpen();
