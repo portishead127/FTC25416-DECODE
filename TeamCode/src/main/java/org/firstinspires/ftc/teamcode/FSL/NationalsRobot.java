@@ -52,6 +52,9 @@ public class NationalsRobot {
 //        storage.setControllers(gamepad1, gamepad2);
 //    }
     public void setStartingPose(Pose pose){
+        if(pose == null){
+            pose = new Pose(0,0, Math.toRadians(90));
+        }
         follower.setStartingPose(pose);
     }
 //    public void readMotif(){
@@ -110,6 +113,7 @@ public class NationalsRobot {
         driveTrain.setMed(!slow && !fast);
     }
     public void faceGoal(){
+        if(follower.isBusy()) return;
         Pose currentPose = getPose();
         PathChain spinPath = follower.pathBuilder().addPath(
                 new BezierLine(

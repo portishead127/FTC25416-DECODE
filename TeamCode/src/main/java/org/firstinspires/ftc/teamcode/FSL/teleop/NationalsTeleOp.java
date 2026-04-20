@@ -40,7 +40,7 @@ public class NationalsTeleOp extends OpMode {
         selectArenaProperties();
 
         robot.setDriveTrain(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger_pressed, gamepad1.left_trigger_pressed);
-        if(gamepad1.triangleWasPressed()) robot.faceGoal();
+        if(gamepad1.triangle) robot.faceGoal();
         robot.update();
     }
 
