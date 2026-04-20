@@ -27,6 +27,11 @@ public class NationalsTeleOp extends OpMode {
     }
 
     @Override
+    public void start() {
+        robot.getFollower().startTeleOpDrive();
+    }
+
+    @Override
     public void loop() {
         if(gamepad2.right_trigger_pressed) robot.SIMPLEintake();
         else if (gamepad2.rightTriggerWasReleased()) {robot.SIMPLEintakestop();}
@@ -37,13 +42,10 @@ public class NationalsTeleOp extends OpMode {
 
         selectArenaProperties();
 
-        robot.setDriveTrain(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger_pressed, gamepad1.left_trigger_pressed);
-        if(gamepad1.triangle) robot.faceGoal();
+        robot.setDriveTrain(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_trigger_pressed, gamepad1.right_trigger_pressed);
+        if(gamepad1.triangleWasPressed()) robot.faceGoal();
+        if(gamepad1.triangleWasReleased()) robot.breakFace();
         robot.update();
-        telemetry.addData("triangle", gamepad1.triangle);
-        telemetry.addData("X", robot.getPose().getX());
-        telemetry.addData("Y", robot.getPose().getY());
-        telemetry.addData("Heading", robot.getPose().getHeading());
         telemetry.update();
     }
 

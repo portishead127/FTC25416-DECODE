@@ -66,6 +66,14 @@ public class NationalsRobot {
     public NationalsRobot(HardwareMap hm, Telemetry telemetry) {
         this(hm, telemetry, true, true);
     }
+    public void potentialUpdate(){
+        if(shooter.isShooterReady()) intake.runTransfer();
+
+        shooter.update();
+        intake.update();
+        follower.update();
+    }
+
     public void update() {
 //        turret.setTargetAsRad(Localization.calculateTurretAngle(follower.getPose()));
 //        handleIntake();
@@ -113,8 +121,10 @@ public class NationalsRobot {
         driveTrain.setMed(!slow && !fast);
     }
     public void faceGoal(){
-        double error = Localization.calculateFieldCentricAngle(getPose()) - getPose().getHeading();
-        setDriveTrain(0,0, -1 * error, false, false);
+        follower.holdPoint(getPose().withHeading(Localization.calculateFieldCentricAngle(getPose())), true);
+    }
+    public void breakFace(){
+        follower.breakFollowing();
     }
     public void setBlockerOpen(){
         shooter.setBlockerOpen();

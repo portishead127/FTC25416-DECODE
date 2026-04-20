@@ -180,8 +180,95 @@ public class Blue12Ball extends OpMode {
             case 2:
                 if(robot.finishedShooting()){
                     robot.followPath(paths.Path2, true);
-                    pathState = 2;
+                    pathState = 3;
                 }
+                break;
+            case 3:
+                if(!robot.isFollowerBusy()){
+                    robot.SIMPLEintake();
+                    robot.followPath(paths.Path3, true, 0.4);
+                    pathState = 4;
+                }
+                break;
+            case 4:
+                if(!robot.isFollowerBusy()){
+                    robot.SIMPLEintakestop();
+                    robot.followPath(paths.Path4, true);
+                    pathState = 5;
+                }
+                break;
+            case 5:
+                if(!robot.isFollowerBusy()){
+                    robot.followPath(paths.Path5, true);
+                    pathState = 6;
+                }
+                break;
+            case 6:
+                if(!robot.isFollowerBusy()){
+                    robot.SIMPLEprepareForShot(ShotPos.LAYUP);
+                    pathState = 7;
+                }
+                break;
+            case 7:
+                if(robot.finishedShooting()){
+                    robot.followPath(paths.Path6, true);
+                    pathState = 8;
+                }
+                break;
+            case 8:
+                if(!robot.isFollowerBusy()){
+                    robot.SIMPLEintake();
+                    robot.followPath(paths.Path7, true, 0.4);
+                    pathState = 9;
+                }
+                break;
+            case 9:
+                if(!robot.isFollowerBusy()){
+                    robot.SIMPLEintakestop();
+                    robot.followPath(paths.Path8, true);
+                    pathState = 10;
+                }
+                break;
+            case 10:
+                if(!robot.isFollowerBusy()){
+                    robot.SIMPLEprepareForShot(ShotPos.LAYUP);
+                    pathState = 11;
+                }
+                break;
+            case 11:
+                if(robot.finishedShooting()){
+                    robot.followPath(paths.Path9, true);
+                    pathState = 12;
+                }
+                break;
+            case 12:
+                if(!robot.isFollowerBusy()){
+                    robot.SIMPLEintake();
+                    robot.followPath(paths.Path10, true, 0.4);
+                    pathState = 13;
+                }
+                break;
+            case 13:
+                if(!robot.isFollowerBusy()){
+                    robot.SIMPLEintakestop();
+                    robot.followPath(paths.Path11, true);
+                    pathState = 14;
+                }
+                break;
+            case 14:
+                if(!robot.isFollowerBusy()){
+                    robot.SIMPLEprepareForShot(ShotPos.LAYUP);
+                    pathState = 15;
+                }
+                break;
+            case 15:
+                if(robot.finishedShooting()){
+                    robot.followPath(paths.Path12, true);
+                    pathState = 16;
+                }
+                break;
+            case 16:
+                break;
         }
     }
 }
